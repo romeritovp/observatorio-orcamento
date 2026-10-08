@@ -1,0 +1,17 @@
+# Configuração das fontes ESTADUAIS do Rio de Janeiro.
+# Sigla e código IBGE vêm de dicionarios/nacional/ufs.csv (não repetir aqui).
+uf: RJ
+
+fontes:
+  tce:
+    descricao: Dados abertos TCE-RJ
+    url: null            # preencher na Fase 6
+    encoding: latin-1    # confirmar
+    separador: ";"
+    decimal: ","
+
+# Totais oficiais para validação dos extractors estaduais
+totais_oficiais:
+  2025:
+    dotacao_inicial: null   # valor da LOA
+    pago: null

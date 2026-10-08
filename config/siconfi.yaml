@@ -1,0 +1,16 @@
+# Configuração da API do SICONFI (fonte nacional)
+url_base: https://apidatalake.tesouro.gov.br/ords/siconfi/tt
+pausa_segundos: 1.1        # pausa entre chamadas, para não sobrecarregar a API
+tentativas: 3
+timeout_segundos: 60
+
+# Anexos que o projeto extrai por padrão (confirmar nomes exatos na Fase 1)
+anexos:
+  rreo:
+    - RREO-Anexo 01   # balanço orçamentário
+    - RREO-Anexo 02   # despesa por função/subfunção
+    - RREO-Anexo 03   # receita corrente líquida
+  rgf:
+    - RGF-Anexo 01    # despesa com pessoal
+  dca:
+    - DCA-Anexo I-E   # despesa por função/subfunção
