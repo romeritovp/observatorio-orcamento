@@ -109,6 +109,7 @@ def test_extrair_le_do_cache_e_grava(tmp_path, resposta, ente):
     assert (lido["cod_ibge"] == cod_ibge).all()
     assert (lido["fonte_dado"] == dca.FONTE_DADO).all()
     assert lido["periodo"].isna().all()  # DCA é anual
+    assert (lido["extraido_em"] == "teste").all()  # data da extração vem do cache
 
     pop = pd.read_parquet(tmp_path / "processed" / "populacao" / f"uf={uf}" / f"ano={ano}" / f"{dca.NOME_ARQUIVO}.parquet")
     assert pop["populacao"].tolist() == [resposta["items"][0]["populacao"]]

@@ -146,9 +146,10 @@ def extrair_despesa_funcao(uf, ano, *, dir_raw=cliente.DIR_RAW, dir_processed=ba
     if not itens:
         raise ConsultaVazia(f"DCA I-E vazia para {uf} {ano}")
 
-    df = transformar_despesa_funcao(itens, uf, cod_ibge, ano)
+    extraido_em = cliente.data_extracao("dca", params, dir_raw)
+    df = transformar_despesa_funcao(itens, uf, cod_ibge, ano).assign(extraido_em=extraido_em)
     validar_despesa_funcao(df)
-    populacao = transformar_populacao(itens, uf, cod_ibge, ano)
+    populacao = transformar_populacao(itens, uf, cod_ibge, ano).assign(extraido_em=extraido_em)
     base.gravar(df, "despesa", NOME_ARQUIVO, dir_processed=dir_processed)
     base.gravar(populacao, "populacao", NOME_ARQUIVO, dir_processed=dir_processed)
     return base.validar_esquema(df, "despesa")

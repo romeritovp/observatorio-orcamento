@@ -1,0 +1,18 @@
+setor,funcao_cod,correspondencia,justificativa
+ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS,20,direta,subfunção 605 (Abastecimento) é típica da função Agricultura; inclui Ceasas e armazéns
+COMUNICAÇÃO,24,parcial,"rádio e TV são da função Comunicações, mas imprensa oficial e gráficas costumam ficar em Administração (04)"
+DESENVOLVIMENTO REGIONAL,,nenhuma,"fomento econômico geral: pode cair em Indústria, Comércio e Serviços, Agricultura ou Urbanismo conforme a empresa"
+GÁS E DERIVADOS,25,direta,distribuição de gás canalizado é da função Energia (subfunção 753 Combustíveis Minerais)
+ENERGIA,25,direta,"geração, transmissão e distribuição de energia elétrica"
+FINANCEIRO,,nenhuma,bancos e agências de fomento atendem a várias áreas; não há função orçamentária própria
+GESTÃO DE ATIVOS,,nenhuma,"gestão de patrimônio, PPP e securitização; atividade-meio sem função própria"
+HABITAÇÃO E URBANIZAÇÃO,16,parcial,"as companhias de habitação são da função Habitação, mas o setor junta obras públicas e urbanização, que ficam em Urbanismo (15)"
+INFORMÁTICA E TECNOLOGIA DA INFORMAÇÃO,,nenhuma,"processamento de dados para o próprio governo; atividade-meio, em geral classificada em Administração junto com tudo o mais"
+MINERAÇÃO,22,direta,subfunção 663 (Mineração) pertence à função Indústria
+PESQUISA E ASSISTÊNCIA TÉCNICA AGROPECUÁRIA,20,direta,subfunção 606 (Extensão Rural) e pesquisa agropecuária ficam na função Agricultura
+PORTOS E HIDROVIAS,26,direta,subfunção 784 (Transporte Hidroviário) pertence à função Transporte
+SAÚDE,10,direta,laboratórios e indústria farmacêutica (subfunção 303 Suporte Profilático e Terapêutico)
+SANEAMENTO,17,direta,tratamento de água e esgoto e drenagem
+TRANSPORTE,26,direta,"transporte rodoviário, ferroviário e metroviário"
+TURISMO,23,direta,subfunção 695 (Turismo) pertence à função Comércio e Serviços
+OUTROS,,nenhuma,setor residual da fonte; sem correspondência possível

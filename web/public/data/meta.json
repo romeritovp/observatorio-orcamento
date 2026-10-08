@@ -1,0 +1,157 @@
+{
+  "gerado_em": "2026-10-08T15:40:33+00:00",
+  "versao_esquema": 1,
+  "arquivos": {
+    "meta.json": "este arquivo",
+    "dicionarios.json": "UFs, funções e subfunções (código → nome)",
+    "ipca.json": "variação anual dez/dez do IPCA, para deflacionar no front",
+    "despesa.json": "despesa por UF, ano, função e subfunção, em R$ nominais",
+    "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
+    "gabarito.json": "só para teste do front; não exibir"
+  },
+  "ufs": [
+    "AC",
+    "AL",
+    "AM",
+    "AP",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MG",
+    "MS",
+    "MT",
+    "PA",
+    "PB",
+    "PE",
+    "PI",
+    "PR",
+    "RJ",
+    "RN",
+    "RO",
+    "RR",
+    "RS",
+    "SC",
+    "SE",
+    "SP",
+    "TO"
+  ],
+  "anos": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "fontes": [
+    {
+      "fonte_dado": "siconfi_dca",
+      "descricao": "SICONFI/Tesouro Nacional, DCA Anexo I-E (despesa por função e subfunção), dado anual",
+      "nome_curto": "SICONFI, DCA Anexo I-E",
+      "extraido_em_min": "2026-10-08T12:30:52+00:00",
+      "extraido_em_max": "2026-10-08T12:45:11+00:00"
+    }
+  ],
+  "atribuicoes": [
+    {
+      "id": "tesouro_estatais",
+      "dicionario": "dicionarios/nacional/estatais.csv",
+      "texto": "Dados de empresas estatais: Tesouro Nacional, painel \"Raio X das Empresas dos Estados Brasileiros\" (github.com/tesouro/empresas-estados).",
+      "fonte_curta": "Tesouro Nacional, Raio X das Empresas dos Estados Brasileiros",
+      "url": "https://github.com/tesouro/empresas-estados",
+      "licenca": "o repositório não declara licença; usados só dados cadastrais, com atribuição",
+      "versoes": [
+        "tesouro/empresas-estados@b7f456b:v2025/dados/dados-originais/dados_raw.xlsx#ex2023",
+        "tesouro/empresas-estados@b7f456b:v2025/dados/dados-originais/dados_raw.xlsx#ex2024"
+      ]
+    }
+  ],
+  "ressalvas": [
+    {
+      "id": "municipios",
+      "titulo": "Não inclui os municípios",
+      "texto": "Os números mostram só a despesa do governo estadual. O que as prefeituras gastam com recursos próprios não aparece, então o gasto total com a área dentro do estado é maior. A divisão de tarefas entre estado e municípios muda de um estado para outro."
+    },
+    {
+      "id": "intra",
+      "titulo": "Intraorçamentárias excluídas",
+      "texto": "Pagamentos entre órgãos e entidades do próprio estado (despesas intraorçamentárias) ficam de fora para não contar o mesmo gasto duas vezes. Em alguns estados eles são grandes, sobretudo na saúde, e incluí-los mudaria a posição no ranking."
+    },
+    {
+      "id": "populacao",
+      "titulo": "População do cadastro do Tesouro",
+      "texto": "O valor por habitante usa a população cadastrada pelo Tesouro Nacional no SICONFI, que se repete entre alguns anos. Não é a estimativa anual do IBGE."
+    },
+    {
+      "id": "valores",
+      "titulo": "Despesa liquidada, corrigida pela inflação",
+      "texto": "Despesa liquidada é a que foi reconhecida como entregue no ano. Valores por habitante estão corrigidos pelo IPCA até dezembro do último ano disponível."
+    },
+    {
+      "id": "declarado",
+      "titulo": "Dados declarados pelos estados",
+      "texto": "Os dados vêm da Declaração de Contas Anuais enviada por cada estado ao Tesouro Nacional (SICONFI) e podem ser retificados depois."
+    }
+  ],
+  "ressalvas_por_funcao": {
+    "17": [
+      {
+        "id": "saneamento_companhias",
+        "titulo": "Companhias estaduais de saneamento",
+        "texto": "Boa parte do saneamento é feita por companhias estaduais com orçamento próprio, que não aparecem nestas contas."
+      }
+    ]
+  },
+  "colunas_despesa": {
+    "uf": "sigla da UF",
+    "ano": "exercício",
+    "nivel": "nível da linha: total, funcao, subfuncao ou demais (subfunções não listadas da função)",
+    "funcao_cod": "código da função (2 dígitos); nulo no nível total",
+    "subfuncao_cod": "código da subfunção (3 dígitos); só no nível subfuncao",
+    "empenhado": "R$ nominais; nulo se a fonte não informa",
+    "liquidado": "R$ nominais; nulo se a fonte não informa (padrão de despesa executada)",
+    "pago": "R$ nominais; nulo se a fonte não informa",
+    "intra": "true para despesas intraorçamentárias (dupla contagem se somadas às demais)",
+    "populacao": "população da UF no ano (cadastro do SICONFI, não estimativa do IBGE)",
+    "fonte_dado": "origem da linha (ex.: siconfi_dca)",
+    "extraido_em": "data da extração na API (ISO 8601, UTC)"
+  },
+  "niveis": {
+    "total": "total do ente (uma linha sem intra e uma intra)",
+    "funcao": "uma linha por função",
+    "subfuncao": "uma linha por subfunção listada",
+    "demais": "soma das subfunções não listadas daquela função"
+  },
+  "regras": [
+    "Nunca somar linhas de níveis diferentes: filtrar um nivel antes de agregar.",
+    "Soma das linhas nivel=funcao com intra=false = linha nivel=total com intra=false.",
+    "Subfunções + demais de uma função = a função.",
+    "As intraorçamentárias (intra=true) vêm só como total, sem detalhe por função; somá-las às demais conta o mesmo gasto duas vezes.",
+    "Despesa executada padrão: liquidado.",
+    "Valores em R$ nominais. Valores reais e per capita são calculados no front.",
+    "Comparar UFs só com valores normalizados (per capita ou % da despesa total).",
+    "UF que entregou a DCA no ano e não tem linha numa função entra com 0 nessa função (sem gasto declarado), no ranking, na mediana e na tabela.",
+    "A população é a do cadastro do SICONFI e repete entre alguns anos."
+  ],
+  "deflacao": {
+    "fonte": "ipca.json",
+    "metodo": "fator = I(ano_base) / I(ano), com I encadeado de variacao_pct (dez/dez)",
+    "ano_base_padrao": 2025,
+    "anos_ipca": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "linhas": {
+    "despesa": 23344
+  }
+}

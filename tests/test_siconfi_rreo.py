@@ -98,7 +98,8 @@ def test_extrair_le_do_cache_e_grava(tmp_path, resposta, ente):
     }
     arquivo = cliente.caminho_cache("rreo", params, tmp_path / "raw")
     arquivo.parent.mkdir(parents=True)
-    arquivo.write_text(json.dumps({"paginas": [resposta]}), encoding="utf-8")
+    arquivo.write_text(json.dumps({"extraido_em": "2026-01-02T03:04:05+00:00", "paginas": [resposta]}),
+                       encoding="utf-8")
     sem_rede = httpx.Client(transport=httpx.MockTransport(lambda r: pytest.fail("chamou a API")))
 
     df = rreo.extrair_anexo_02(uf, ano, periodo, dir_raw=tmp_path / "raw",
@@ -109,6 +110,7 @@ def test_extrair_le_do_cache_e_grava(tmp_path, resposta, ente):
     lido = pd.read_parquet(gravado)
     assert len(lido) == len(df) == len(resposta["items"])
     assert set(lido["cod_conta"]) == set(rreo.BLOCOS)
+    assert (lido["extraido_em"] == "2026-01-02T03:04:05+00:00").all()
 
 
 def test_extrair_resposta_vazia(tmp_path, ente):

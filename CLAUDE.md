@@ -24,11 +24,12 @@ Em qualquer outro lugar, a UF é parâmetro. Nunca escrever "RJ", "33" ou outra 
 - A tradução sigla ↔ código vem sempre de `dicionarios/nacional/ufs.csv`, nunca de dicionário escrito no código.
 
 ## Regras de arquitetura
-- Fluxo numa direção só: `data/raw` → `extractors` → `data/processed` → `analytics` → `analyses` → `outputs`.
+- Fluxo numa direção só: `data/raw` → `extractors` → `data/processed` → `analytics` → `analyses` → `outputs`. Publicação: `data/processed` → `publicacao` → `web/public/data`.
 - Nunca editar `data/raw/`. Respostas da API são guardadas como vieram (JSON).
 - `extractors/base.py`: contrato comum (valida esquema, valida totais, grava parquet). Extractors só leem e mapeiam, depois delegam ao base.
 - `extractors/nacional/siconfi/`: cliente da API (paginação, cache em `data/raw/`, pausa entre chamadas) + um módulo por endpoint. Recebe a UF como parâmetro.
 - `analytics/`: funções puras (DataFrame entra, DataFrame sai). Não leem arquivos, não conhecem tema nem UF específica. Agrupamentos sempre incluem `uf`.
+- `publicacao/exportar.py`: gera os JSON do front em `web/public/data/` (meta, dicionários, IPCA, despesa em R$ nominais). Não calcula valor real nem per capita: isso é do front. `gabarito.json` (calculado por `analytics/`) serve só para testar o front.
 - `analyses/`: um script por tema, recebe `uf` (ou lista de UFs) como argumento. Só lê `data/processed/`, só usa `analytics/`. Grava em `outputs/<uf>/<tema>/`.
 - Lógica reutilizável vai para `analytics/`, nunca fica em `analyses/`.
 
@@ -46,13 +47,13 @@ Em qualquer outro lugar, a UF é parâmetro. Nunca escrever "RJ", "33" ou outra 
 
 ## Tabelas canônicas
 **`despesa`** — execução por classificação (formato largo):
-uf, cod_ibge, ano, periodo, fonte_dado, nivel, intra, orgao_cod, funcao_cod, subfuncao_cod, programa_cod, acao_cod, natureza_cod, fonte_recurso_cod, dotacao_inicial, dotacao_atualizada, empenhado, liquidado, pago
+uf, cod_ibge, ano, periodo, fonte_dado, extraido_em, nivel, intra, orgao_cod, funcao_cod, subfuncao_cod, programa_cod, acao_cod, natureza_cod, fonte_recurso_cod, dotacao_inicial, dotacao_atualizada, empenhado, liquidado, pago
 
 **`demonstrativo`** — RREO, RGF e DCA do SICONFI (formato longo):
-uf, cod_ibge, ano, periodo, demonstrativo, anexo, rotulo, cod_conta, conta, coluna, valor
+uf, cod_ibge, ano, periodo, extraido_em, demonstrativo, anexo, rotulo, cod_conta, conta, coluna, valor
 
 **`populacao`** — uma linha por UF e ano (campo `populacao` da DCA do SICONFI):
-uf, cod_ibge, ano, fonte_dado, populacao
+uf, cod_ibge, ano, fonte_dado, extraido_em, populacao
 
 Detalhes em `docs/dicionario.md`.
 
@@ -69,8 +70,18 @@ Detalhes em `docs/dicionario.md`.
 - **Não comparáveis**: programa, ação e órgão. Nunca cruzar entre UFs.
 - Comparações entre estados sempre normalizadas (per capita ou % da RCL).
 
+## Front (`web/`)
+Vite + React, site estático publicado na Hostgator.
+- **Todas as contas ficam em `web/src/calculos.js`** (deflação, per capita, % da despesa total, ranking): funções puras, espelho de `analytics/`. Componentes só exibem: nada de conta, filtro de nível ou soma dentro de componente.
+- **Dados só de `web/public/data/`**, gerados por `uv run python -m publicacao.exportar`; nunca editar à mão. O front recebe R$ nominais e calcula o resto. Deflação encadeando `variacao_pct` do `ipca.json` (como diz o `meta.json`), não `indice_dez`.
+- **`calculos.js` é testado contra `gabarito.json`** (`npm test`, Vitest): toda mudança em conta tem de continuar batendo com o Python. O gabarito não vai para o site (o build o remove de `dist/`).
+- **Estado da tela na URL** (UF, pares, função, ano, medida...), em parâmetros de busca: qualquer visão pode ser copiada, compartilhada e recarregada. Nada de estado só em memória para o que muda a visão.
+- **Site estático para Hostgator:** `npm run build` gera `web/dist/` para subir por FTP. Sem servidor, sem API, sem rotas no servidor; `base: './'` no Vite para funcionar em qualquer pasta.
+- As mesmas regras de dados valem no front: nunca somar níveis diferentes, intraorçamentárias à parte, comparar UFs só normalizado (per capita ou %).
+
 ## Stack
 Python 3.12+, pandas, pyarrow, duckdb, httpx, matplotlib, pytest, pyyaml. Gerenciador: uv.
+Front: Node 20+, Vite, React, Vitest (`web/`, gerenciador npm).
 
 ## Como trabalhar
 - Um passo por vez, conforme `docs/guia-desenvolvimento.md`.

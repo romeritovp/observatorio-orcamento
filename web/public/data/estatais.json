@@ -1,0 +1,2227 @@
+{
+  "aviso": "Só informativo: gera avisos na tela, nunca altera valores de despesa.",
+  "criterio": "estatais ativas e não dependentes, com função orçamentária pelo setor (setor_funcao.csv) ou por ajuste da empresa (estatais_ajustes.csv)",
+  "edicoes": [
+    2023,
+    2024
+  ],
+  "regra_edicao": "para cada ano, a edição mais recente que não passa do ano; anos anteriores à primeira edição usam a primeira",
+  "edicao_por_ano": {
+    "2019": 2023,
+    "2020": 2023,
+    "2021": 2023,
+    "2022": 2023,
+    "2023": 2023,
+    "2024": 2024,
+    "2025": 2024
+  },
+  "atribuicao": "Dados de empresas estatais: Tesouro Nacional, painel \"Raio X das Empresas dos Estados Brasileiros\" (github.com/tesouro/empresas-estados).",
+  "fonte_curta": "Tesouro Nacional, Raio X das Empresas dos Estados Brasileiros",
+  "correspondencia": {
+    "direta": "o setor corresponde à função",
+    "parcial": "parte do setor cai em outra função",
+    "ajuste": "função definida para a empresa, não pelo setor"
+  },
+  "por_edicao": {
+    "2023": {
+      "AL": {
+        "17": [
+          {
+            "sigla": "CASAL",
+            "empresa": "Companhia de Saneamento de Alagoas",
+            "cnpj": "12294708000181",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CASAL",
+            "nome_exibicao": "Companhia de Saneamento de Alagoas",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "CEPAL",
+            "empresa": "Companhia de Edição Impressão e Publicação de Alagoas",
+            "cnpj": "04308836000109",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CEPAL",
+            "nome_exibicao": "Companhia de Edição Impressão e Publicação de Alagoas",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "ALGÁS",
+            "empresa": "Gás de Alagoas S/A",
+            "cnpj": "69983484000132",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "ALGÁS",
+            "nome_exibicao": "Gás de Alagoas S.A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "AM": {
+        "25": [
+          {
+            "sigla": "CIGÁS",
+            "empresa": "Companhia de Gás do Amazonas",
+            "cnpj": "00624964000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CIGÁS",
+            "nome_exibicao": "Cia. de Gás do Amazonas",
+            "nome_manual": false
+          }
+        ]
+      },
+      "AP": {
+        "25": [
+          {
+            "sigla": "GASAP",
+            "empresa": "Companhia de Gás do Amapá",
+            "cnpj": "05943400000154",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASAP",
+            "nome_exibicao": "COMPANHIA DE GÁS DO AMAPÁ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "BA": {
+        "17": [
+          {
+            "sigla": "EMBASA",
+            "empresa": "Empresa Baiana de Águas e Saneamento",
+            "cnpj": "13504675000110",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMBASA",
+            "nome_exibicao": "EMPRESA BAIANA DE ÁGUAS E SANEAMENTO",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "EGBA",
+            "empresa": "Empresa Gráfica da Bahia",
+            "cnpj": "15257819000106",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "EGBA",
+            "nome_exibicao": "EMPRESA GRÁFICA DA BAHIA",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "Bahiagás",
+            "empresa": "Companhia de Gás da Bahia",
+            "cnpj": "34432153000120",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "BAHIAGÁS",
+            "nome_exibicao": "COMPANHIA DE GÁS DA BAHIA",
+            "nome_manual": false
+          }
+        ]
+      },
+      "CE": {
+        "17": [
+          {
+            "sigla": "CAGECE",
+            "empresa": "Companhia de Água e Esgoto do Ceará",
+            "cnpj": "07040108000157",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAGECE",
+            "nome_exibicao": "Companhia de Água e Esgoto do Ceará",
+            "nome_manual": false
+          },
+          {
+            "sigla": "COGERH",
+            "empresa": "Companhia de Gestão dos Recursos Hídricos",
+            "cnpj": "74075938000107",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COGERH",
+            "nome_exibicao": "Companhia de Gestão dos Recursos Hídricos",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA CE",
+            "empresa": "Centrais de Abastecimento do Ceará S/A",
+            "cnpj": "07029051000195",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Ceará S/A",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEGAS",
+            "empresa": "Companhia de Gás do Ceará",
+            "cnpj": "73759185000196",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEGAS",
+            "nome_exibicao": "Companhia de Gás do Ceará",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "CIPP",
+            "empresa": "Companhia de Desenvolvimento do Complexo Industrial e Portuário do Pecém",
+            "cnpj": "01256678000100",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CIPP",
+            "nome_exibicao": "Companhia de Desenvolvimento do Complexo Industrial e Portuário do Pecém - CIPP S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "METROFOR",
+            "empresa": "Companhia Cearense de Transportes Metropolitanos",
+            "cnpj": "02003575000193",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "METROFOR",
+            "nome_exibicao": "Companhia Cearense de Transportes Metropolitanos",
+            "nome_manual": false
+          },
+          {
+            "sigla": "ZPE CE",
+            "empresa": "ZPE Ceará",
+            "cnpj": "13006170000125",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "ZPE",
+            "nome_exibicao": "ZPE Ceará",
+            "nome_manual": false
+          }
+        ]
+      },
+      "DF": {
+        "16": [
+          {
+            "sigla": "Terracap",
+            "empresa": "Companhia Imobiliária de Brasília",
+            "cnpj": "00359877000173",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "Terracap",
+            "nome_exibicao": "Companhia Imobiliária de Brasília",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "CAESB",
+            "empresa": "Companhia de Saneamento Ambiental do Distrito Federal",
+            "cnpj": "00082024000137",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAESB",
+            "nome_exibicao": "Companhia de Saneamento Ambiental do Distrito Federal",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA DF",
+            "empresa": "Centrais de Abastecimento do Distrito Federal",
+            "cnpj": "00314310000180",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA DF",
+            "nome_exibicao": "Centrais de Abastecimento do Distrito Federal",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEB",
+            "empresa": "Companhia Energética de Brasília",
+            "cnpj": "00070698000111",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB",
+            "nome_exibicao": "Companhia Energética de Brasília",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEB Geração",
+            "empresa": "CEB Geração",
+            "cnpj": "04232314000170",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB Geração",
+            "nome_exibicao": "CEB Geração",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEB IPES",
+            "empresa": "CEB Iluminação Pública e Serviços",
+            "cnpj": "39683726000101",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB IPES",
+            "nome_exibicao": "CEB Iluminação Pública e Serviços",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEB L",
+            "empresa": "CEB Lajeado",
+            "cnpj": "03677638000150",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB L",
+            "nome_exibicao": "CEB Lajeado",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEBGAS",
+            "empresa": "Companhia Brasiliense de Gás",
+            "cnpj": "04363670000123",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEBGAS",
+            "nome_exibicao": "Companhia Brasiliense de Gás",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEBPAR",
+            "empresa": "CEB Participações",
+            "cnpj": "03682014000120",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEBPAR",
+            "nome_exibicao": "CEB Participações",
+            "nome_manual": false
+          }
+        ]
+      },
+      "ES": {
+        "17": [
+          {
+            "sigla": "CESAN",
+            "empresa": "Companhia Espírito Santense de Saneamento",
+            "cnpj": "28151363000147",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CESAN",
+            "nome_exibicao": "Companhia Espírito Santense de Saneamento",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "CETURB",
+            "empresa": "Companhia Estadual de Transportes Coletivos de Passageiros do Espírito Santo",
+            "cnpj": "28503894000151",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CETURB",
+            "nome_exibicao": "Companhia Estadual de Transportes Coletivos de Passageiros do Espírito Santo",
+            "nome_manual": false
+          }
+        ]
+      },
+      "GO": {
+        "17": [
+          {
+            "sigla": "SANEAGO",
+            "empresa": "Saneamento de Goiás S/A",
+            "cnpj": "01616929000102",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANEAGO",
+            "nome_exibicao": "Saneamento de Goiás S/A",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA-GO",
+            "empresa": "Centrais de Abastecimento de Goiás S/A",
+            "cnpj": "01098797000174",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA-GO",
+            "nome_exibicao": "Centrais de Abastecimento de Goiás S/A",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CELGPAR",
+            "empresa": "Companhia Celg de Participações",
+            "cnpj": "08560444000193",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CELGPAR",
+            "nome_exibicao": "Companhia Celg de Participações",
+            "nome_manual": false
+          },
+          {
+            "sigla": "FTSA",
+            "empresa": "Firminópolis Transmissão S/A",
+            "cnpj": "24253735000195",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "FTSA",
+            "nome_exibicao": "Firminópolis Transmissão S.A.",
+            "nome_manual": false
+          },
+          {
+            "sigla": "GOIASGÁS",
+            "empresa": "Agência Goiana de Gás Canalizado S/A",
+            "cnpj": "04583057000111",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GOIASGÁS",
+            "nome_exibicao": "Agência Goiana de Gás Canalizado S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "LAZ",
+            "empresa": "Lago Azul Transmissão S/A",
+            "cnpj": "19698987000198",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "LAZ",
+            "nome_exibicao": "Lago Azul Transmissão S.A.",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MA": {
+        "10": [
+          {
+            "sigla": "EMSERH",
+            "empresa": "Empresa Maranhense de Serviços Hospitalares",
+            "cnpj": "18519709000163",
+            "setor": "SAÚDE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMSERH",
+            "nome_exibicao": "Empresa Maranhense de Serviços Hospitalares",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "CAEMA",
+            "empresa": "Companhia de Saneamento Ambiental do Maranhão",
+            "cnpj": "06274757008487",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAEMA",
+            "nome_exibicao": "Companhia de Saneamento Ambiental do Maranhão",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "GASMAR",
+            "empresa": "Companhia Maranhense de Gás",
+            "cnpj": "05121359000130",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASMAR",
+            "nome_exibicao": "Companhia Maranhense de Gás",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EMAP",
+            "empresa": "Empresa Maranhense de Administração Portuária",
+            "cnpj": "03650060000148",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMAP",
+            "nome_exibicao": "Empresa Maranhense de Administração Portuária",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MG": {
+        "16": [
+          {
+            "sigla": "COHAB MINAS",
+            "empresa": "Companhia de Habitação do Estado de Minas Gerais",
+            "cnpj": "17161837000115",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "COHAB MINAS",
+            "nome_exibicao": "COMPANHIA DE HABITAÇÃO DO ESTADO DE MINAS GERAIS - COHAB MINAS",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "COPANOR",
+            "empresa": "Copasa Serviços de Saneamento Integrado do Norte e Nordeste de Minas Gerais S/A",
+            "cnpj": "09104426000160",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPANOR",
+            "nome_exibicao": "COPASA SERVIÇOS DE SANEAMENTO INTEGRADO DO NORTE E NORDESTE DE MINAS GERAIS S/A - COPANOR",
+            "nome_manual": false
+          },
+          {
+            "sigla": "COPASA MG",
+            "empresa": "Companhia de Saneamento de Minas Gerais",
+            "cnpj": "17281106000103",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPASA MG",
+            "nome_exibicao": "COMPANHIA DE SANEAMENTO DE MINAS GERAIS - COPASA MG",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEMIG",
+            "empresa": "Companhia Energética de Minas Gerais",
+            "cnpj": "17155730000164",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEMIG",
+            "nome_exibicao": "COMPANHIA ENERGÉTICA DE MINAS GERAIS - CEMIG (*)",
+            "nome_manual": false
+          },
+          {
+            "sigla": "GASMIG",
+            "empresa": "Companhia de Gás de Minas Gerais",
+            "cnpj": "22261473000185",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASMIG",
+            "nome_exibicao": "COMPANHIA DE GÁS DE MINAS GERAIS - GASMIG",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "METROMINAS",
+            "empresa": "Trem Metropolitano de Belo Horizonte S/A",
+            "cnpj": "03919139000121",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "METROMINAS",
+            "nome_exibicao": "TREM METROPOLITANO DE BELO HORIZONTE S.A - METROMINAS",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MS": {
+        "17": [
+          {
+            "sigla": "SANESUL",
+            "empresa": "Empresa de Saneamento de Mato Grosso do Sul S/A",
+            "cnpj": "03982931000120",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANESUL",
+            "nome_exibicao": "EMPRESA DE SANEAMENTO DE MATO GROSSO DO SUL S.A - SANESUL",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA MS",
+            "empresa": "Centrais de Abastecimento de Mato Grosso do Sul S/A",
+            "cnpj": "15414410000156",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "CENTRAIS DE ABASTECIMENTO DE MATO GROSSO DO SUL S/A - CEASA/MS",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "MS GÁS",
+            "empresa": "Companhia de Gás do Estado de Mato Grosso do Sul",
+            "cnpj": "02741679000103",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "MS GÁS",
+            "nome_exibicao": "Companhia de Gás do Estado de Mato Grosso do Sul",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MT": {
+        "26": [
+          {
+            "sigla": "NOVA ROTA DO OESTE",
+            "empresa": "Concessionaria Rota do Oeste S/A (Subsidiaria)",
+            "cnpj": "19521322000104",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "NOVA ROTA DO OESTE",
+            "nome_exibicao": "CONCESSIONARIA ROTA DO OESTE S.A (subsidiaria)",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PA": {
+        "17": [
+          {
+            "sigla": "COSANPA",
+            "empresa": "Companhia de Saneamento do Pará",
+            "cnpj": "04945341000190",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COSANPA",
+            "nome_exibicao": "COMPANHIA DE SANEAMENTO DO PARÁ",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "GASPARÁ",
+            "empresa": "Companhia de Gás do Pará",
+            "cnpj": "08454441000175",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASPARÁ",
+            "nome_exibicao": "COMPANHIA DE GÁS DO PARÁ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PB": {
+        "17": [
+          {
+            "sigla": "CAGEPA",
+            "empresa": "Companhia de Água e Esgotos da Paraíba",
+            "cnpj": "09123654000187",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAGEPA",
+            "nome_exibicao": "Companhia de Água e Esgotos da Paraíba",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "EPC PB",
+            "empresa": "Empresa Paraibana de Comunicação",
+            "cnpj": "09366790000106",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "EPC",
+            "nome_exibicao": "Empresa Paraibana de Comunicação",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "PBGÁS",
+            "empresa": "Companhia Paraibana de Gás",
+            "cnpj": "00371600000166",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PBGÁS",
+            "nome_exibicao": "Companhia Paraibana de Gás",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "DOCAS",
+            "empresa": "Companhia Docas da Paraíba",
+            "cnpj": "02343132000141",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "DOCAS",
+            "nome_exibicao": "Companhia Docas da Paraíba",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PE": {
+        "10": [
+          {
+            "sigla": "LAFEPE",
+            "empresa": "Laboratório Farmacêutico do Estado de PE Gov. Miguel Arraes S/A",
+            "cnpj": "10877926000113",
+            "setor": "SAÚDE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "LAFEPE",
+            "nome_exibicao": "LABORATÓRIO FARMACÊUTICO DO ESTADO DE PE GOV. MIGUEL ARRAES S/A",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "COMPESA",
+            "empresa": "Companhia Pernambucana de Saneamento",
+            "cnpj": "09769035000164",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COMPESA",
+            "nome_exibicao": "COMPANHIA PERNAMBUCANA DE SANEAMENTO",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "CEPE",
+            "empresa": "Companhia Editora de Pernambuco",
+            "cnpj": "10921252000107",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CEPE",
+            "nome_exibicao": "COMPANHIA EDITORA DE PERNAMBUCO",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "COPERGÁS",
+            "empresa": "Companhia Pernambucana de Gás",
+            "cnpj": "41025313000181",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPERGÁS",
+            "nome_exibicao": "COMPANHIA PERNAMBUCANA DE GÁS",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "PORTO DO RECIFE",
+            "empresa": "Porto do Recife S/A",
+            "cnpj": "04417870000111",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTO DO RECIFE",
+            "nome_exibicao": "PORTO DO RECIFE S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "SUAPE",
+            "empresa": "Complexo Industrial Portuário Governador Eraldo Gueiros",
+            "cnpj": "11448933000162",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SUAPE",
+            "nome_exibicao": "Complexo Industrial Portuário Governador Eraldo Gueiros",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PI": {
+        "17": [
+          {
+            "sigla": "AGESPISA",
+            "empresa": "Águas e Esgotos do Piauí S/A",
+            "cnpj": "06845747000127",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "AGESPISA",
+            "nome_exibicao": "AGUAS E ESGOTOS DO PIAUÍ SA",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "GASPISA",
+            "empresa": "Companhia de Gás do Piauí",
+            "cnpj": "04934243000158",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "Gaspisa",
+            "nome_exibicao": "Companhia de Gás do Piauí",
+            "nome_manual": true
+          }
+        ],
+        "26": [
+          {
+            "sigla": "PORTO PIAUI",
+            "empresa": "Companhia de Terminais Alfandegados do Piauí",
+            "cnpj": "19045674000130",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTO PIAUI",
+            "nome_exibicao": "COMPANHIA DE TERMINAIS ALFANDEGADOS DO PIAUÍ - PORTO PIAUÍ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PR": {
+        "17": [
+          {
+            "sigla": "SANEPAR",
+            "empresa": "Companhia de Saneamento do Estado do Paraná",
+            "cnpj": "76484013000145",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANEPAR",
+            "nome_exibicao": "Companhia de Saneamento do Paraná",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA PR",
+            "empresa": "Centrais de Abastecimento do Paraná S/A",
+            "cnpj": "75063164000167",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Paraná S/A",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "APPA",
+            "empresa": "Administração dos Portos de Paranaguá e Antonina",
+            "cnpj": "79621439000191",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "APPA",
+            "nome_exibicao": "Administração dos Portos de Paranaguá e Antonina",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RJ": {
+        "17": [
+          {
+            "sigla": "CEDAE",
+            "empresa": "Companhia Estadual de Águas e Esgotos",
+            "cnpj": "33352394000104",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEDAE",
+            "nome_exibicao": "Companhia Estadual de Águas e Esgotos - CEDAE",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "IOERJ",
+            "empresa": "Imprensa Oficial do Estado do Rio de Janeiro",
+            "cnpj": "28542017000190",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "IOERJ",
+            "nome_exibicao": "IMPRENSA OFICIAL DO ESTADO DO RIO DE JANEIRO",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RN": {
+        "17": [
+          {
+            "sigla": "CAERN",
+            "empresa": "Companhia de Águas e Esgotos do Rio Grande do Norte",
+            "cnpj": "08334385000135",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAERN",
+            "nome_exibicao": "Companhia de Águas e Esgotos do Rio Grande do Norte",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "POTIGÁS",
+            "empresa": "Companhia Potiguar de Gás",
+            "cnpj": "70157896000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "POTIGÁS",
+            "nome_exibicao": "COMPANHIA POTIGUAR DE GÁS",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RO": {
+        "17": [
+          {
+            "sigla": "CAERD",
+            "empresa": "Companhia de Água e Esgoto de Rondônia",
+            "cnpj": "05914254000139",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAERD",
+            "nome_exibicao": "COMPANHIA DE ÁGUA E ESGOTO DE RONDÔNIA- CAERD",
+            "nome_manual": false
+          }
+        ],
+        "22": [
+          {
+            "sigla": "CMR",
+            "empresa": "Companhia de Mineração de Rondônia",
+            "cnpj": "04418471000175",
+            "setor": "MINERAÇÃO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CMR",
+            "nome_exibicao": "COMPANHIA DE MINERAÇÃO DE RONDÔNIA - CMR",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "RONGÁS",
+            "empresa": "Companhia Rondoniense de Gás",
+            "cnpj": "02796830000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "RONGÁS",
+            "nome_exibicao": "COMPANHIA RONDONIENSE DE GÁS - RONGÁS",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "SOPH",
+            "empresa": "Sociedade de Portos e Hidrovias do Estado de Rondônia",
+            "cnpj": "02278152000186",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SOPH",
+            "nome_exibicao": "Sociedade de Portos e Hidrovias do Estado de Rondônia",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RR": {
+        "17": [
+          {
+            "sigla": "CAER",
+            "empresa": "Companhia de Águas e Esgotos de Roraima",
+            "cnpj": "05939467000115",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAER",
+            "nome_exibicao": "COMPANHIA DE ÁGUAS E ESGOTOS DE RORAIMA- CAER",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RS": {
+        "20": [
+          {
+            "sigla": "CEASA RS",
+            "empresa": "Centrais de Abastecimento do Rio Grande do Sul",
+            "cnpj": "92983147000167",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Rio Grande do Sul - CEASA",
+            "nome_manual": false
+          }
+        ],
+        "22": [
+          {
+            "sigla": "CRM",
+            "empresa": "Companhia Riograndense de Mineração",
+            "cnpj": "92724145000153",
+            "setor": "MINERAÇÃO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CRM",
+            "nome_exibicao": "Companhia Riograndense de Mineração - CRM",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EGR",
+            "empresa": "Empresa Gaúcha de Rodovias",
+            "cnpj": "16987837000106",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EGR",
+            "nome_exibicao": "Empresa Gaúcha de Rodovias - EGR",
+            "nome_manual": false
+          },
+          {
+            "sigla": "PORTOS-RS",
+            "empresa": "Autoridade Portuária dos Portos do Rio Grande do Sul S/A",
+            "cnpj": "46191353000117",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTOS-RS",
+            "nome_exibicao": "PORTOS RS - AUTORIDADE PORTUÁRIA DOS PORTOS DO RIO GRANDE DO SUL S.A.",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SC": {
+        "17": [
+          {
+            "sigla": "CASAN",
+            "empresa": "Companhia Catarinense de Águas e Saneamento",
+            "cnpj": "82508433000117",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CASAN",
+            "nome_exibicao": "Companhia Catarinense de Águas e Saneamento",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA SC",
+            "empresa": "Centrais de Abastecimento de Santa Catarina",
+            "cnpj": "83284828000146",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento de Santa Catarina",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CELESC",
+            "empresa": "Centrais Elétricas de Santa Catarina S/A",
+            "cnpj": "83878892000155",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CELESC",
+            "nome_exibicao": "Centrais Elétricas de Santa Catarina S. A.",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SE": {
+        "17": [
+          {
+            "sigla": "DESO",
+            "empresa": "Companhia de Saneamento de Sergipe",
+            "cnpj": "13018171000190",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "DESO",
+            "nome_exibicao": "Companhia de Saneamento de Sergipe",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "IOSE",
+            "empresa": "Imprensa Oficial de Sergipe",
+            "cnpj": "13085519000161",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "IOSE",
+            "nome_exibicao": "Imprensa Oficial de Sergipe",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "SERGAS",
+            "empresa": "Sergipe Gás S/A",
+            "cnpj": "86809043000138",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SERGAS",
+            "nome_exibicao": "Sergipe Gás S.A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SP": {
+        "16": [
+          {
+            "sigla": "CDHU",
+            "empresa": "Companhia de Desenvolvimento Habitacional e Urbano do Estado de São Paulo",
+            "cnpj": "47865597000109",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CDHU",
+            "nome_exibicao": "COMPANHIA DE DESENVOLVIMENTO HABITACIONAL E URBANO DO ESTADO DE SÃO PAULO",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "SABESP",
+            "empresa": "Companhia de Saneamento Básico do Estado de São Paulo",
+            "cnpj": "43776517000180",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SABESP",
+            "nome_exibicao": "Companhia de Saneamento Básico do Estado de São Paulo",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "EMAE",
+            "empresa": "Empresa Metropolitana de Águas e Energia S/A",
+            "cnpj": "02302101000142",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMAE",
+            "nome_exibicao": "Empresa Metropolitana de Águas e Energia S/A",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EMTU/SP",
+            "empresa": "Empresa Metropolitana de Transportes Urbanos de São Paulo S/A",
+            "cnpj": "58518069000191",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMTU/SP",
+            "nome_exibicao": "EMPRESA METROPOLITANA DE TRANSPORTES URBANOS DE SÃO PAULO S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "METRÔ",
+            "empresa": "Companhia do Metropolitano de São Paulo",
+            "cnpj": "62070362000106",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "Metrô",
+            "nome_exibicao": "Companhia do Metropolitano de São Paulo",
+            "nome_manual": true
+          }
+        ]
+      },
+      "TO": {
+        "16": [
+          {
+            "sigla": "TOCANTINS PARCERIAS",
+            "empresa": "Companhia Imobiliária de Participações, Investimentos e Parcerias do Estado do Tocantins",
+            "cnpj": "17579560000145",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "TOCANTINS PARCERIAS",
+            "nome_exibicao": "COMPANHIA IMOBILIÁRIA DE PARTICIPAÇÕES, INVESTIMENTOS E PARCERIAS DO ESTADO DO TOCANTINS - TOCANTINS PARCERIAS",
+            "nome_manual": false
+          }
+        ]
+      }
+    },
+    "2024": {
+      "AL": {
+        "17": [
+          {
+            "sigla": "CASAL",
+            "empresa": "Companhia de Saneamento de Alagoas",
+            "cnpj": "12294708000181",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CASAL",
+            "nome_exibicao": "Companhia de Saneamento de Alagoas",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "CEPAL",
+            "empresa": "Companhia de Edição Impressão e Publicação de Alagoas",
+            "cnpj": "04308836000109",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CEPAL",
+            "nome_exibicao": "Companhia de Edição Impressão e Publicação de Alagoas",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "ALGÁS",
+            "empresa": "Gás de Alagoas S.A",
+            "cnpj": "69983484000132",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "ALGÁS",
+            "nome_exibicao": "Gás de Alagoas S.A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "AM": {
+        "25": [
+          {
+            "sigla": "CIGAS",
+            "empresa": "Cia. de Gás do Amazonas",
+            "cnpj": "00624964000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CIGÁS",
+            "nome_exibicao": "Cia. de Gás do Amazonas",
+            "nome_manual": false
+          }
+        ]
+      },
+      "AP": {
+        "25": [
+          {
+            "sigla": "GASAP",
+            "empresa": "COMPANHIA DE GÁS DO AMAPÁ",
+            "cnpj": "05943400000154",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASAP",
+            "nome_exibicao": "COMPANHIA DE GÁS DO AMAPÁ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "BA": {
+        "17": [
+          {
+            "sigla": "EMBASA",
+            "empresa": "EMPRESA BAIANA DE ÁGUAS E SANEAMENTO",
+            "cnpj": "13504675000110",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMBASA",
+            "nome_exibicao": "EMPRESA BAIANA DE ÁGUAS E SANEAMENTO",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "BAHIAGÁS",
+            "empresa": "COMPANHIA DE GÁS DA BAHIA",
+            "cnpj": "34432153000120",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "BAHIAGÁS",
+            "nome_exibicao": "COMPANHIA DE GÁS DA BAHIA",
+            "nome_manual": false
+          }
+        ]
+      },
+      "CE": {
+        "17": [
+          {
+            "sigla": "CAGECE",
+            "empresa": "Companhia de Água e Esgoto do Ceará",
+            "cnpj": "07040108000157",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAGECE",
+            "nome_exibicao": "Companhia de Água e Esgoto do Ceará",
+            "nome_manual": false
+          },
+          {
+            "sigla": "COGERH",
+            "empresa": "Companhia de Gestão dos Recursos Hídricos",
+            "cnpj": "74075938000107",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COGERH",
+            "nome_exibicao": "Companhia de Gestão dos Recursos Hídricos",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA",
+            "empresa": "Centrais de Abastecimento do Ceará S/A",
+            "cnpj": "07029051000195",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Ceará S/A",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEGAS",
+            "empresa": "Companhia de Gás do Ceará",
+            "cnpj": "73759185000196",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEGAS",
+            "nome_exibicao": "Companhia de Gás do Ceará",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "CIPP",
+            "empresa": "Companhia de Desenvolvimento do Complexo Industrial e Portuário do Pecém - CIPP S/A",
+            "cnpj": "01256678000100",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CIPP",
+            "nome_exibicao": "Companhia de Desenvolvimento do Complexo Industrial e Portuário do Pecém - CIPP S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "METROFOR",
+            "empresa": "Companhia Cearense de Transportes Metropolitanos",
+            "cnpj": "02003575000193",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "METROFOR",
+            "nome_exibicao": "Companhia Cearense de Transportes Metropolitanos",
+            "nome_manual": false
+          }
+        ]
+      },
+      "DF": {
+        "16": [
+          {
+            "sigla": "Terracap",
+            "empresa": "Companhia Imobiliária de Brasília",
+            "cnpj": "00359877000173",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "Terracap",
+            "nome_exibicao": "Companhia Imobiliária de Brasília",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "CAESB",
+            "empresa": "Companhia de Saneamento Ambiental do Distrito Federal",
+            "cnpj": "00082024000137",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAESB",
+            "nome_exibicao": "Companhia de Saneamento Ambiental do Distrito Federal",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA DF",
+            "empresa": "Centrais de Abastecimento do Distrito Federal",
+            "cnpj": "00314310000180",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA DF",
+            "nome_exibicao": "Centrais de Abastecimento do Distrito Federal",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEB",
+            "empresa": "Companhia Energética de Brasília",
+            "cnpj": "00070698000111",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB",
+            "nome_exibicao": "Companhia Energética de Brasília",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEB IPES",
+            "empresa": "CEB Iluminação Pública e Serviços",
+            "cnpj": "39683726000101",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB IPES",
+            "nome_exibicao": "CEB Iluminação Pública e Serviços",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEB L",
+            "empresa": "CEB Lajeado",
+            "cnpj": "03677638000150",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB L",
+            "nome_exibicao": "CEB Lajeado",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEBG",
+            "empresa": "CEB Geração",
+            "cnpj": "04232314000170",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEB Geração",
+            "nome_exibicao": "CEB Geração",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEBGAS",
+            "empresa": "Companhia Brasiliense de Gás",
+            "cnpj": "04363670000123",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEBGAS",
+            "nome_exibicao": "Companhia Brasiliense de Gás",
+            "nome_manual": false
+          },
+          {
+            "sigla": "CEBPAR",
+            "empresa": "CEB Participações",
+            "cnpj": "03682014000120",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEBPAR",
+            "nome_exibicao": "CEB Participações",
+            "nome_manual": false
+          }
+        ]
+      },
+      "ES": {
+        "17": [
+          {
+            "sigla": "CESAN",
+            "empresa": "Cesan - Companhia Espirito Santense de Saneamento",
+            "cnpj": "28151363000147",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CESAN",
+            "nome_exibicao": "Companhia Espírito Santense de Saneamento",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "FUNDAÇÃO CARMELIA",
+            "empresa": "Fundação Carmelia Maria de Souza Cultura e Comunicação Pública",
+            "cnpj": "54715094000104",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "FUNDAÇÃO CARMELIA",
+            "nome_exibicao": "Fundação Carmelia Maria de Souza Cultura e Comunicação Pública",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "CETURB",
+            "empresa": "Ceturb - Companhia Estadual de Transportes Coletivos de Passageiros do Espirito Santo",
+            "cnpj": "28503894000151",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CETURB",
+            "nome_exibicao": "Companhia Estadual de Transportes Coletivos de Passageiros do Espírito Santo",
+            "nome_manual": false
+          }
+        ]
+      },
+      "GO": {
+        "17": [
+          {
+            "sigla": "SANEAGO",
+            "empresa": "Saneamento de Goiás S/A",
+            "cnpj": "01616929000102",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANEAGO",
+            "nome_exibicao": "Saneamento de Goiás S/A",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA-GO",
+            "empresa": "Centrais de Abastecimento de Goiás S/A",
+            "cnpj": "01098797000174",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA-GO",
+            "nome_exibicao": "Centrais de Abastecimento de Goiás S/A",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CELGPAR",
+            "empresa": "Companhia Celg de Participações",
+            "cnpj": "08560444000193",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CELGPAR",
+            "nome_exibicao": "Companhia Celg de Participações",
+            "nome_manual": false
+          },
+          {
+            "sigla": "FTSA",
+            "empresa": "Firminópolis Transmissão S.A.",
+            "cnpj": "24253735000195",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "FTSA",
+            "nome_exibicao": "Firminópolis Transmissão S.A.",
+            "nome_manual": false
+          },
+          {
+            "sigla": "GOIASGÁS",
+            "empresa": "Agência Goiana de Gás Canalizado S/A",
+            "cnpj": "04583057000111",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GOIASGÁS",
+            "nome_exibicao": "Agência Goiana de Gás Canalizado S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "LAZ",
+            "empresa": "Lago Azul Transmissão S.A.",
+            "cnpj": "19698987000198",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "LAZ",
+            "nome_exibicao": "Lago Azul Transmissão S.A.",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "CMTC",
+            "empresa": "Companhia Metropolitana de Transportes Coletivos",
+            "cnpj": "05787273000141",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CMTC",
+            "nome_exibicao": "Companhia Metropolitana de Transportes Coletivos",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MA": {
+        "10": [
+          {
+            "sigla": "EMSERH",
+            "empresa": "Empresa Maranhense de Serviços Hospitalares",
+            "cnpj": "18519709000163",
+            "setor": "SAÚDE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMSERH",
+            "nome_exibicao": "Empresa Maranhense de Serviços Hospitalares",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "CAEMA",
+            "empresa": "Companhia de Saneamento Ambiental do Maranhão",
+            "cnpj": "06274757008487",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAEMA",
+            "nome_exibicao": "Companhia de Saneamento Ambiental do Maranhão",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "GASMAR",
+            "empresa": "Companhia Maranhense de Gás",
+            "cnpj": "05121359000130",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASMAR",
+            "nome_exibicao": "Companhia Maranhense de Gás",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EMAP",
+            "empresa": "Empresa Maranhense de Administração Portuária",
+            "cnpj": "03650060000148",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMAP",
+            "nome_exibicao": "Empresa Maranhense de Administração Portuária",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MG": {
+        "16": [
+          {
+            "sigla": "COHAB MINAS",
+            "empresa": "COMPANHIA DE HABITAÇÃO DO ESTADO DE MINAS GERAIS - COHAB MINAS",
+            "cnpj": "17161837000115",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "COHAB MINAS",
+            "nome_exibicao": "COMPANHIA DE HABITAÇÃO DO ESTADO DE MINAS GERAIS - COHAB MINAS",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "COPANOR",
+            "empresa": "COPASA SERVIÇOS DE SANEAMENTO INTEGRADO DO NORTE E NORDESTE DE MINAS GERAIS S/A - COPANOR",
+            "cnpj": "09104426000160",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPANOR",
+            "nome_exibicao": "COPASA SERVIÇOS DE SANEAMENTO INTEGRADO DO NORTE E NORDESTE DE MINAS GERAIS S/A - COPANOR",
+            "nome_manual": false
+          },
+          {
+            "sigla": "COPASA MG",
+            "empresa": "COMPANHIA DE SANEAMENTO DE MINAS GERAIS - COPASA MG",
+            "cnpj": "17281106000103",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPASA MG",
+            "nome_exibicao": "COMPANHIA DE SANEAMENTO DE MINAS GERAIS - COPASA MG",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CEMIG",
+            "empresa": "COMPANHIA ENERGÉTICA DE MINAS GERAIS - CEMIG (*)",
+            "cnpj": "17155730000164",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEMIG",
+            "nome_exibicao": "COMPANHIA ENERGÉTICA DE MINAS GERAIS - CEMIG (*)",
+            "nome_manual": false
+          },
+          {
+            "sigla": "GASMIG",
+            "empresa": "COMPANHIA DE GÁS DE MINAS GERAIS - GASMIG",
+            "cnpj": "22261473000185",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASMIG",
+            "nome_exibicao": "COMPANHIA DE GÁS DE MINAS GERAIS - GASMIG",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "METROMINAS",
+            "empresa": "TREM METROPOLITANO DE BELO HORIZONTE S.A - METROMINAS",
+            "cnpj": "03919139000121",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "METROMINAS",
+            "nome_exibicao": "TREM METROPOLITANO DE BELO HORIZONTE S.A - METROMINAS",
+            "nome_manual": false
+          }
+        ]
+      },
+      "MS": {
+        "17": [
+          {
+            "sigla": "SANESUL",
+            "empresa": "EMPRESA DE SANEAMENTO DE MATO GROSSO DO SUL S.A - SANESUL",
+            "cnpj": "03982931000120",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANESUL",
+            "nome_exibicao": "EMPRESA DE SANEAMENTO DE MATO GROSSO DO SUL S.A - SANESUL",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA",
+            "empresa": "CENTRAIS DE ABASTECIMENTO DE MATO GROSSO DO SUL S/A - CEASA/MS",
+            "cnpj": "15414410000156",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "CENTRAIS DE ABASTECIMENTO DE MATO GROSSO DO SUL S/A - CEASA/MS",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "MS GÁS",
+            "empresa": "COMPANHIA DE GAS DO ESTADO DE MATO GROSSO DO SUL",
+            "cnpj": "02741679000103",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "MS GÁS",
+            "nome_exibicao": "Companhia de Gás do Estado de Mato Grosso do Sul",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PA": {
+        "17": [
+          {
+            "sigla": "COSANPA",
+            "empresa": "COMPANHIA DE SANEAMENTO DO PARÁ",
+            "cnpj": "04945341000190",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COSANPA",
+            "nome_exibicao": "COMPANHIA DE SANEAMENTO DO PARÁ",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "GASPARÁ",
+            "empresa": "COMPANHIA DE GÁS DO PARÁ",
+            "cnpj": "08454441000175",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "GASPARÁ",
+            "nome_exibicao": "COMPANHIA DE GÁS DO PARÁ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PB": {
+        "17": [
+          {
+            "sigla": "CAGEPA",
+            "empresa": "Companhia de Água e Esgotos da Paraíba",
+            "cnpj": "09123654000187",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAGEPA",
+            "nome_exibicao": "Companhia de Água e Esgotos da Paraíba",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "EPC",
+            "empresa": "Empresa Paraibana de Comunicação",
+            "cnpj": "09366790000106",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "EPC",
+            "nome_exibicao": "Empresa Paraibana de Comunicação",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "PBGÁS",
+            "empresa": "Companhia Paraibana de Gás",
+            "cnpj": "00371600000166",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PBGÁS",
+            "nome_exibicao": "Companhia Paraibana de Gás",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "DOCAS",
+            "empresa": "Companhia Docas da Paraíba",
+            "cnpj": "02343132000141",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "DOCAS",
+            "nome_exibicao": "Companhia Docas da Paraíba",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PE": {
+        "10": [
+          {
+            "sigla": "LAFEPE",
+            "empresa": "LABORATÓRIO FARMACÊUTICO DO ESTADO DE PE GOV. MIGUEL ARRAES S/A",
+            "cnpj": "10877926000113",
+            "setor": "SAÚDE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "LAFEPE",
+            "nome_exibicao": "LABORATÓRIO FARMACÊUTICO DO ESTADO DE PE GOV. MIGUEL ARRAES S/A",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "COMPESA",
+            "empresa": "COMPANHIA PERNAMBUCANA DE SANEAMENTO",
+            "cnpj": "09769035000164",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COMPESA",
+            "nome_exibicao": "COMPANHIA PERNAMBUCANA DE SANEAMENTO",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "CEPE",
+            "empresa": "COMPANHIA EDITORA DE PERNAMBUCO",
+            "cnpj": "10921252000107",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CEPE",
+            "nome_exibicao": "COMPANHIA EDITORA DE PERNAMBUCO",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "COPERGÁS",
+            "empresa": "COMPANHIA PERNAMBUCANA DE GÁS",
+            "cnpj": "41025313000181",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "COPERGÁS",
+            "nome_exibicao": "COMPANHIA PERNAMBUCANA DE GÁS",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "PORTO DO RECIFE",
+            "empresa": "PORTO DO RECIFE S/A",
+            "cnpj": "04417870000111",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTO DO RECIFE",
+            "nome_exibicao": "PORTO DO RECIFE S/A",
+            "nome_manual": false
+          },
+          {
+            "sigla": "SUAPE",
+            "empresa": "SUAPE - COMPLEXO INDUSTRIAL PORTUARIO GOVERNADOR ERALDO GUEIROS",
+            "cnpj": "11448933000162",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SUAPE",
+            "nome_exibicao": "Complexo Industrial Portuário Governador Eraldo Gueiros",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PI": {
+        "17": [
+          {
+            "sigla": "AGESPISA",
+            "empresa": "AGUAS E ESGOTOS DO PIAUÍ SA",
+            "cnpj": "06845747000127",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "AGESPISA",
+            "nome_exibicao": "AGUAS E ESGOTOS DO PIAUÍ SA",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "PORTO PIAUI",
+            "empresa": "COMPANHIA DE TERMINAIS ALFANDEGADOS DO PIAUÍ - PORTO PIAUÍ",
+            "cnpj": "19045674000130",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTO PIAUI",
+            "nome_exibicao": "COMPANHIA DE TERMINAIS ALFANDEGADOS DO PIAUÍ - PORTO PIAUÍ",
+            "nome_manual": false
+          }
+        ]
+      },
+      "PR": {
+        "17": [
+          {
+            "sigla": "SANEPAR",
+            "empresa": "Companhia de Saneamento do Paraná",
+            "cnpj": "76484013000145",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SANEPAR",
+            "nome_exibicao": "Companhia de Saneamento do Paraná",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA",
+            "empresa": "Centrais de Abastecimento do Paraná S/A",
+            "cnpj": "75063164000167",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Paraná S/A",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "APPA",
+            "empresa": "Administração dos Portos de Paranaguá e Antonina",
+            "cnpj": "79621439000191",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "APPA",
+            "nome_exibicao": "Administração dos Portos de Paranaguá e Antonina",
+            "nome_manual": false
+          },
+          {
+            "sigla": "FERROESTE",
+            "empresa": "Estrada de Ferro Paraná Oeste S/A",
+            "cnpj": "80544042000122",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "FERROESTE",
+            "nome_exibicao": "Estrada de Ferro Paraná Oeste S/A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RJ": {
+        "17": [
+          {
+            "sigla": "CEDAE",
+            "empresa": "Companhia Estadual de Águas e Esgotos - CEDAE",
+            "cnpj": "33352394000104",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEDAE",
+            "nome_exibicao": "Companhia Estadual de Águas e Esgotos - CEDAE",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "IOERJ",
+            "empresa": "IMPRENSA OFICIAL DO ESTADO DO RIO DE JANEIRO",
+            "cnpj": "28542017000190",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "IOERJ",
+            "nome_exibicao": "IMPRENSA OFICIAL DO ESTADO DO RIO DE JANEIRO",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RN": {
+        "17": [
+          {
+            "sigla": "CAERN",
+            "empresa": "COMPANHIA DE AGUAS E ESGOTOS DO RIO GRANDE DO NORTE",
+            "cnpj": "08334385000135",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAERN",
+            "nome_exibicao": "Companhia de Águas e Esgotos do Rio Grande do Norte",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "POTIGÁS",
+            "empresa": "COMPANHIA POTIGUAR DE GÁS",
+            "cnpj": "70157896000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "POTIGÁS",
+            "nome_exibicao": "COMPANHIA POTIGUAR DE GÁS",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RO": {
+        "17": [
+          {
+            "sigla": "CAERD",
+            "empresa": "COMPANHIA DE ÁGUA E ESGOTO DE RONDÔNIA- CAERD",
+            "cnpj": "05914254000139",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAERD",
+            "nome_exibicao": "COMPANHIA DE ÁGUA E ESGOTO DE RONDÔNIA- CAERD",
+            "nome_manual": false
+          }
+        ],
+        "22": [
+          {
+            "sigla": "CMR",
+            "empresa": "COMPANHIA DE MINERAÇÃO DE RONDÔNIA - CMR",
+            "cnpj": "04418471000175",
+            "setor": "MINERAÇÃO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CMR",
+            "nome_exibicao": "COMPANHIA DE MINERAÇÃO DE RONDÔNIA - CMR",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "RONGÁS",
+            "empresa": "COMPANHIA RONDONIENSE DE GÁS - RONGÁS",
+            "cnpj": "02796830000100",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "RONGÁS",
+            "nome_exibicao": "COMPANHIA RONDONIENSE DE GÁS - RONGÁS",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "SOPH",
+            "empresa": "SOCIEDADE DE PORTOS E HIDROVIAS DO ESTADO DE RONDONIA-SOPH",
+            "cnpj": "02278152000186",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SOPH",
+            "nome_exibicao": "Sociedade de Portos e Hidrovias do Estado de Rondônia",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RR": {
+        "17": [
+          {
+            "sigla": "CAER",
+            "empresa": "COMPANHIA DE ÁGUAS E ESGOTOS DE RORAIMA- CAER",
+            "cnpj": "05939467000115",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CAER",
+            "nome_exibicao": "COMPANHIA DE ÁGUAS E ESGOTOS DE RORAIMA- CAER",
+            "nome_manual": false
+          }
+        ]
+      },
+      "RS": {
+        "20": [
+          {
+            "sigla": "CEASA",
+            "empresa": "Centrais de Abastecimento do Rio Grande do Sul - CEASA",
+            "cnpj": "92983147000167",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento do Rio Grande do Sul - CEASA",
+            "nome_manual": false
+          }
+        ],
+        "22": [
+          {
+            "sigla": "CRM",
+            "empresa": "Companhia Riograndense de Mineração - CRM",
+            "cnpj": "92724145000153",
+            "setor": "MINERAÇÃO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CRM",
+            "nome_exibicao": "Companhia Riograndense de Mineração - CRM",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EGR",
+            "empresa": "Empresa Gaúcha de Rodovias - EGR",
+            "cnpj": "16987837000106",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EGR",
+            "nome_exibicao": "Empresa Gaúcha de Rodovias - EGR",
+            "nome_manual": false
+          },
+          {
+            "sigla": "PORTOS-RS",
+            "empresa": "PORTOS RS - AUTORIDADE PORTUÁRIA DOS PORTOS DO RIO GRANDE DO SUL S.A.",
+            "cnpj": "46191353000117",
+            "setor": "PORTOS E HIDROVIAS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "PORTOS-RS",
+            "nome_exibicao": "PORTOS RS - AUTORIDADE PORTUÁRIA DOS PORTOS DO RIO GRANDE DO SUL S.A.",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SC": {
+        "16": [
+          {
+            "sigla": "SAPIENS",
+            "empresa": "SAPIENS PARQUE SA",
+            "cnpj": "05563063000170",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "SAPIENS",
+            "nome_exibicao": "SAPIENS PARQUE SA",
+            "nome_manual": false
+          }
+        ],
+        "17": [
+          {
+            "sigla": "CASAN",
+            "empresa": "Companhia Catarinense de Águas e Saneamento",
+            "cnpj": "82508433000117",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CASAN",
+            "nome_exibicao": "Companhia Catarinense de Águas e Saneamento",
+            "nome_manual": false
+          }
+        ],
+        "20": [
+          {
+            "sigla": "CEASA",
+            "empresa": "Centrais de Abastecimento de Santa Catarina",
+            "cnpj": "83284828000146",
+            "setor": "ABASTECIMENTO DE ALIMENTOS E OUTROS INSUMOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CEASA",
+            "nome_exibicao": "Centrais de Abastecimento de Santa Catarina",
+            "nome_manual": false
+          }
+        ],
+        "23": [
+          {
+            "sigla": "HIDROCALDAS",
+            "empresa": "COMPANHIA HIDROMINERAL CALDAS DA IMPERATRIZ",
+            "cnpj": "83470716000180",
+            "setor": "TURISMO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "HIDROCALDAS",
+            "nome_exibicao": "COMPANHIA HIDROMINERAL CALDAS DA IMPERATRIZ",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "CELESC",
+            "empresa": "Centrais Elétricas de Santa Catarina S. A.",
+            "cnpj": "83878892000155",
+            "setor": "ENERGIA",
+            "correspondencia": "direta",
+            "sigla_exibicao": "CELESC",
+            "nome_exibicao": "Centrais Elétricas de Santa Catarina S. A.",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SE": {
+        "17": [
+          {
+            "sigla": "DESO",
+            "empresa": "Companhia de Saneamento de Sergipe",
+            "cnpj": "13018171000190",
+            "setor": "SANEAMENTO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "DESO",
+            "nome_exibicao": "Companhia de Saneamento de Sergipe",
+            "nome_manual": false
+          }
+        ],
+        "24": [
+          {
+            "sigla": "IOSE",
+            "empresa": "Imprensa Oficial de Sergipe",
+            "cnpj": "13085519000161",
+            "setor": "COMUNICAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "IOSE",
+            "nome_exibicao": "Imprensa Oficial de Sergipe",
+            "nome_manual": false
+          }
+        ],
+        "25": [
+          {
+            "sigla": "SERGAS",
+            "empresa": "Sergipe Gás S.A",
+            "cnpj": "86809043000138",
+            "setor": "GÁS E DERIVADOS",
+            "correspondencia": "direta",
+            "sigla_exibicao": "SERGAS",
+            "nome_exibicao": "Sergipe Gás S.A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "SP": {
+        "16": [
+          {
+            "sigla": "CDHU",
+            "empresa": "COMPANHIA DE DESENVOLVIMENTO HABITACIONAL E URBANO DO ESTADO DE SÃO PAULO",
+            "cnpj": "47865597000109",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "CDHU",
+            "nome_exibicao": "COMPANHIA DE DESENVOLVIMENTO HABITACIONAL E URBANO DO ESTADO DE SÃO PAULO",
+            "nome_manual": false
+          }
+        ],
+        "26": [
+          {
+            "sigla": "EMTU/SP",
+            "empresa": "EMPRESA METROPOLITANA DE TRANSPORTES URBANOS DE SÃO PAULO S/A",
+            "cnpj": "58518069000191",
+            "setor": "TRANSPORTE",
+            "correspondencia": "direta",
+            "sigla_exibicao": "EMTU/SP",
+            "nome_exibicao": "EMPRESA METROPOLITANA DE TRANSPORTES URBANOS DE SÃO PAULO S/A",
+            "nome_manual": false
+          }
+        ]
+      },
+      "TO": {
+        "16": [
+          {
+            "sigla": "TOCANTINS PARCERIAS",
+            "empresa": "COMPANHIA IMOBILIÁRIA DE PARTICIPAÇÕES, INVESTIMENTOS E PARCERIAS DO ESTADO DO TOCANTINS - TOCANTINS PARCERIAS",
+            "cnpj": "17579560000145",
+            "setor": "HABITAÇÃO E URBANIZAÇÃO",
+            "correspondencia": "parcial",
+            "sigla_exibicao": "TOCANTINS PARCERIAS",
+            "nome_exibicao": "COMPANHIA IMOBILIÁRIA DE PARTICIPAÇÕES, INVESTIMENTOS E PARCERIAS DO ESTADO DO TOCANTINS - TOCANTINS PARCERIAS",
+            "nome_manual": false
+          }
+        ],
+        "22": [
+          {
+            "sigla": "MINERATINS",
+            "empresa": "COMPANHIA DE MINERAÇÃO DO TOCANTINS",
+            "cnpj": "33195751000160",
+            "setor": "MINERAÇÃO",
+            "correspondencia": "direta",
+            "sigla_exibicao": "MINERATINS",
+            "nome_exibicao": "COMPANHIA DE MINERAÇÃO DO TOCANTINS",
+            "nome_manual": false
+          }
+        ]
+      }
+    }
+  },
+  "mudancas_dependencia": {
+    "PI": {
+      "25": [
+        {
+          "ano": 2024,
+          "ano_anterior": 2023,
+          "sentido": "passou_a_dependente",
+          "sigla": "GASPISA",
+          "empresa": "COMPANHIA DE GAS DO PIAUI - GASPISA",
+          "cnpj": "04934243000158",
+          "sigla_exibicao": "Gaspisa",
+          "nome_exibicao": "Companhia de Gás do Piauí",
+          "nome_manual": true
+        }
+      ]
+    },
+    "SP": {
+      "26": [
+        {
+          "ano": 2024,
+          "ano_anterior": 2023,
+          "sentido": "passou_a_dependente",
+          "sigla": "METRÔ",
+          "empresa": "COMPANHIA DO METROPOLITANO DE SAO PAULO",
+          "cnpj": "62070362000106",
+          "sigla_exibicao": "Metrô",
+          "nome_exibicao": "Companhia do Metropolitano de São Paulo",
+          "nome_manual": true
+        }
+      ]
+    }
+  }
+}

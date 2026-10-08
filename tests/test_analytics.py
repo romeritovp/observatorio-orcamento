@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from analytics import (
-    agregar, deflacionar, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
+    agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
 )
 
 IPCA = pd.DataFrame({"ano": [2021, 2022, 2023], "variacao_pct": [10.0, 5.0, 4.0]})
@@ -200,3 +200,163 @@ def test_agregar_grupo_so_com_nulos_fica_nulo():
 def test_agregar_recusa_niveis_misturados():
     with pytest.raises(ValueError, match="níveis"):
         agregar(despesa().assign(nivel=["funcao", "total"] * 4), ["pago"], ["ano"])
+
+
+# completar_com_zero
+
+def test_completar_com_zero_inclui_uf_sem_linha():
+    df = despesa()
+    df = df[~((df["uf"] == "BB") & (df["funcao_cod"] == "12"))]  # BB não declarou função 12
+    universo = POPULACAO[["uf", "ano", "populacao"]]
+
+    completo = completar_com_zero(df, universo, ["uf", "ano"], ["funcao_cod"], ["pago"])
+
+    assert len(completo) == 8
+    novas = completo[completo["sem_gasto_declarado"]]
+    assert sorted(zip(novas["uf"], novas["ano"], novas["funcao_cod"])) == [("BB", 2022, "12"), ("BB", 2023, "12")]
+    assert (novas["pago"] == 0).all()
+    assert novas["populacao"].tolist() == [500, 400]  # colunas do universo vêm junto
+    assert not completo.loc[~completo["sem_gasto_declarado"], "pago"].eq(0).any()
+
+
+def test_completar_area_que_nenhuma_uf_declarou_num_ano():
+    df = despesa()
+    df = df[~((df["funcao_cod"] == "12") & (df["ano"] == 2023))]
+    universo = POPULACAO[["uf", "ano"]]
+    completo = completar_com_zero(df, universo, ["uf", "ano"], ["funcao_cod"], ["pago"])
+    zerados = completo[(completo["funcao_cod"] == "12") & (completo["ano"] == 2023)]
+    assert len(zerados) == 2 and zerados["sem_gasto_declarado"].all()
+
+
+def test_zero_entra_no_ranking_e_na_mediana():
+    df = despesa()
+    df = df[~((df["uf"] == "BB") & (df["funcao_cod"] == "12"))]
+    universo = pd.DataFrame({"uf": ["AA", "BB", "CC"], "ano": [2022] * 3})
+    df = df[df["ano"] == 2022].assign(uf=lambda d: d["uf"])
+    completo = completar_com_zero(df[df["funcao_cod"] == "12"], universo, ["uf", "ano"], ["funcao_cod"], ["pago"])
+    completo = completo.assign(nivel="funcao")
+    assert ranking(completo, "pago", ["ano"]).set_index("uf")["pago_posicao"].to_dict() == {"AA": 1, "BB": 2, "CC": 2}
+    assert mediana_entre_ufs(completo, "pago", ["ano"])["pago_mediana"].tolist() == [0.0]
+
+
+def test_completar_recusa_universo_repetido():
+    universo = pd.DataFrame({"uf": ["AA", "AA"], "ano": [2022, 2022]})
+    with pytest.raises(ValueError, match="universo"):
+        completar_com_zero(despesa(), universo, ["uf", "ano"], ["funcao_cod"], ["pago"])
+
+
+# estatais (só informativo)
+
+SETOR_FUNCAO = pd.DataFrame({
+    "setor": ["SANEAMENTO", "HABITAÇÃO E URBANIZAÇÃO", "FINANCEIRO"],
+    "funcao_cod": ["17", "16", None],
+    "correspondencia": ["direta", "parcial", "nenhuma"],
+    "justificativa": ["s", "h", "f"],
+})
+
+
+def estatais():
+    """AA e BB, dois exercícios; a mesma empresa de saneamento de AA nos dois."""
+    return pd.DataFrame({
+        "uf": ["AA", "AA", "AA", "BB", "BB", "AA"],
+        "cnpj": ["1", "2", "3", "4", "5", "1"],
+        "sigla": ["SAN", "OBRAS", "BANCO", "SANB", "HAB", "SAN"],
+        "setor": ["SANEAMENTO", "HABITAÇÃO E URBANIZAÇÃO", "FINANCEIRO", "SANEAMENTO", "HABITAÇÃO E URBANIZAÇÃO",
+                  "SANEAMENTO"],
+        "dependente": [False, False, False, True, False, False],
+        "situacao": ["ATIVA", "ATIVA", "ATIVA", "ATIVA", "EM LIQUIDAÇÃO", "ATIVA"],
+        "ano_referencia": [2024, 2024, 2024, 2024, 2024, 2023],
+    })
+
+
+def test_funcao_das_estatais_ajuste_tem_prioridade_sobre_o_setor():
+    ajustes = pd.DataFrame({"cnpj": ["2"], "funcao_cod": ["15"], "justificativa": ["obras públicas"]})
+    df = funcao_das_estatais(estatais(), SETOR_FUNCAO, ajustes)
+    obras = df[df["sigla"] == "OBRAS"].iloc[0]
+    assert obras["funcao_cod"] == "15" and obras["correspondencia"] == "ajuste"
+    assert obras["justificativa_funcao"] == "obras públicas"
+    hab = df[df["sigla"] == "HAB"].iloc[0]
+    assert hab["funcao_cod"] == "16" and hab["correspondencia"] == "parcial"
+    assert pd.isna(df.loc[df["sigla"] == "BANCO", "funcao_cod"].iloc[0])  # sem correspondência fica nula
+    assert len(df) == len(estatais())
+
+
+def test_funcao_das_estatais_recusa_setor_sem_linha_e_ajuste_repetido():
+    sem_ajuste = pd.DataFrame(columns=["cnpj", "funcao_cod", "justificativa"])
+    with pytest.raises(ValueError, match="setores sem linha"):
+        funcao_das_estatais(estatais().assign(setor="NOVO"), SETOR_FUNCAO, sem_ajuste)
+    repetido = pd.DataFrame({"cnpj": ["1", "1"], "funcao_cod": ["17", "18"], "justificativa": ["a", "b"]})
+    with pytest.raises(ValueError, match="CNPJ repetido"):
+        funcao_das_estatais(estatais(), SETOR_FUNCAO, repetido)
+
+
+def test_estatais_fora_das_contas_so_ativas_nao_dependentes_com_funcao_em_cada_edicao():
+    sem_ajuste = pd.DataFrame(columns=["cnpj", "funcao_cod", "justificativa"])
+    df = estatais_fora_das_contas(funcao_das_estatais(estatais(), SETOR_FUNCAO, sem_ajuste))
+    # SANB é dependente, HAB está em liquidação, BANCO não tem função; as duas edições ficam
+    assert df[["ano_referencia", "uf", "sigla", "funcao_cod"]].values.tolist() == [
+        [2023, "AA", "SAN", "17"], [2024, "AA", "OBRAS", "16"], [2024, "AA", "SAN", "17"]]
+
+
+def test_edicao_para_ano_mais_recente_que_nao_passa_do_ano():
+    assert [edicao_para_ano([2024, 2023], a) for a in [2019, 2022, 2023, 2024, 2025]] == [2023, 2023, 2023, 2024, 2024]
+    assert edicao_para_ano(["2023"], 2030) == 2023
+    with pytest.raises(ValueError):
+        edicao_para_ano([], 2024)
+
+
+def test_estatais_fora_das_contas_exige_dependente_booleano():
+    sem_ajuste = pd.DataFrame(columns=["cnpj", "funcao_cod", "justificativa"])
+    df = funcao_das_estatais(estatais(), SETOR_FUNCAO, sem_ajuste)
+    with pytest.raises(TypeError, match="booleano"):
+        estatais_fora_das_contas(df.assign(dependente=df["dependente"].map({True: "true", False: "false"})))
+
+
+def test_mudancas_de_dependencia_nos_dois_sentidos_com_funcao_da_edicao_nova():
+    df = pd.DataFrame({
+        "uf": ["AA", "AA", "BB", "BB", "AA", "AA", "BB", "BB", "BB"],
+        "cnpj": ["1", "1", "2", "2", "3", "3", "4", "4", "5"],
+        "sigla": ["MET", "MET", "GAS", "GAS", "IGUAL", "IGUAL", "BANCO", "BANCO", "NOVA"],
+        "empresa": ["Metrô AA", "Metrô AA", "Gás BB", "Gás BB", "Igual", "Igual", "Banco", "Banco", "Nova"],
+        "funcao_cod": ["26", "26", "25", "25", "17", "17", None, None, "17"],
+        "dependente": [False, True, True, False, False, False, False, True, True],
+        "ano_referencia": [2023, 2024, 2023, 2024, 2023, 2024, 2023, 2024, 2024],
+    })
+    m = mudancas_de_dependencia(df)
+    # IGUAL não mudou; BANCO mudou mas não tem função; NOVA só existe em 2024
+    assert m[["uf", "sigla", "funcao_cod", "ano", "ano_anterior", "sentido"]].values.tolist() == [
+        ["AA", "MET", "26", 2024, 2023, "passou_a_dependente"],
+        ["BB", "GAS", "25", 2024, 2023, "deixou_de_ser_dependente"],
+    ]
+
+
+def test_mudancas_de_dependencia_com_uma_edicao_so_e_vazio():
+    df = pd.DataFrame({"uf": ["AA"], "cnpj": ["1"], "sigla": ["X"], "empresa": ["X"], "funcao_cod": ["17"],
+                       "dependente": [True], "ano_referencia": [2024]})
+    assert mudancas_de_dependencia(df).empty
+
+
+def test_nomes_de_exibicao_manual_depois_acento_depois_mais_recente():
+    df = pd.DataFrame({
+        "uf": ["AA", "AA", "AA", "AA", "BB", "BB", "BB"],
+        "cnpj": ["1", "1", "2", "2", "3", "3", "1"],
+        "sigla": ["GAS", "GAS", "MET", "METRÔ", "X", "X", "GAS"],
+        "empresa": ["Companhia de Gás", "COMPANHIA DE GAS", "METRO DE SAO PAULO", "Metrô de São Paulo",
+                    "Velho Nome", "NOVO NOME", "Companhia de Gás BB"],
+        "ano_referencia": [2023, 2024, 2023, 2024, 2023, 2024, 2024],
+    })
+    correcoes = pd.DataFrame({"cnpj": ["2"], "sigla_exibicao": ["Metrô"], "nome_exibicao": ["Metrô SP"]})
+    n = nomes_de_exibicao(df, correcoes).set_index(["uf", "cnpj"])
+
+    assert n.loc[("AA", "1"), "nome_exibicao"] == "Companhia de Gás"  # edição antiga tem acento
+    assert n.loc[("AA", "1"), "sigla_exibicao"] == "GAS" and not n.loc[("AA", "1"), "nome_manual"]
+    assert n.loc[("AA", "2")].tolist() == ["Metrô", "Metrô SP", True]  # manual tem prioridade
+    assert n.loc[("BB", "3"), "nome_exibicao"] == "NOVO NOME"  # nenhuma com acento: a mais recente
+    assert len(n) == 4  # o dicionário não muda de tamanho nem de conteúdo
+    assert df["empresa"].iloc[1] == "COMPANHIA DE GAS"
+
+
+def test_nomes_de_exibicao_recusa_correcao_repetida():
+    df = pd.DataFrame({"uf": ["AA"], "cnpj": ["1"], "sigla": ["X"], "empresa": ["X"], "ano_referencia": [2024]})
+    with pytest.raises(ValueError, match="repetido"):
+        nomes_de_exibicao(df, pd.DataFrame({"cnpj": ["1", "1"], "sigla_exibicao": ["a", "b"], "nome_exibicao": ["a", "b"]}))

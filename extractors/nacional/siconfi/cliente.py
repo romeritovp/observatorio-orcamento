@@ -73,6 +73,15 @@ def consultar(endpoint, params=None, *, config=None, dir_raw=DIR_RAW, http=None)
     return itens
 
 
+def data_extracao(endpoint, params=None, dir_raw=DIR_RAW):
+    """Data da extração (texto ISO, UTC) gravada no cache da consulta, ou None se não houver."""
+    arquivo = caminho_cache(endpoint, dict(params or {}), dir_raw)
+    if not arquivo.exists():
+        return None
+    with open(arquivo, encoding="utf-8") as f:
+        return json.load(f).get("extraido_em")
+
+
 def _itens(paginas):
     return [item for pagina in paginas for item in pagina.get("items", [])]
 

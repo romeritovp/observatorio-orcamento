@@ -1,28 +1,28 @@
-uf,cod_ibge,nome,regiao
-RO,11,Rondônia,Norte
-AC,12,Acre,Norte
-AM,13,Amazonas,Norte
-RR,14,Roraima,Norte
-PA,15,Pará,Norte
-AP,16,Amapá,Norte
-TO,17,Tocantins,Norte
-MA,21,Maranhão,Nordeste
-PI,22,Piauí,Nordeste
-CE,23,Ceará,Nordeste
-RN,24,Rio Grande do Norte,Nordeste
-PB,25,Paraíba,Nordeste
-PE,26,Pernambuco,Nordeste
-AL,27,Alagoas,Nordeste
-SE,28,Sergipe,Nordeste
-BA,29,Bahia,Nordeste
-MG,31,Minas Gerais,Sudeste
-ES,32,Espírito Santo,Sudeste
-RJ,33,Rio de Janeiro,Sudeste
-SP,35,São Paulo,Sudeste
-PR,41,Paraná,Sul
-SC,42,Santa Catarina,Sul
-RS,43,Rio Grande do Sul,Sul
-MS,50,Mato Grosso do Sul,Centro-Oeste
-MT,51,Mato Grosso,Centro-Oeste
-GO,52,Goiás,Centro-Oeste
-DF,53,Distrito Federal,Centro-Oeste
+uf,cod_ibge,nome,regiao,artigo
+RO,11,Rondônia,Norte,
+AC,12,Acre,Norte,o
+AM,13,Amazonas,Norte,o
+RR,14,Roraima,Norte,
+PA,15,Pará,Norte,o
+AP,16,Amapá,Norte,o
+TO,17,Tocantins,Norte,o
+MA,21,Maranhão,Nordeste,o
+PI,22,Piauí,Nordeste,o
+CE,23,Ceará,Nordeste,o
+RN,24,Rio Grande do Norte,Nordeste,o
+PB,25,Paraíba,Nordeste,a
+PE,26,Pernambuco,Nordeste,
+AL,27,Alagoas,Nordeste,
+SE,28,Sergipe,Nordeste,
+BA,29,Bahia,Nordeste,a
+MG,31,Minas Gerais,Sudeste,
+ES,32,Espírito Santo,Sudeste,o
+RJ,33,Rio de Janeiro,Sudeste,o
+SP,35,São Paulo,Sudeste,
+PR,41,Paraná,Sul,o
+SC,42,Santa Catarina,Sul,
+RS,43,Rio Grande do Sul,Sul,o
+MS,50,Mato Grosso do Sul,Centro-Oeste,o
+MT,51,Mato Grosso,Centro-Oeste,o
+GO,52,Goiás,Centro-Oeste,
+DF,53,Distrito Federal,Centro-Oeste,o

@@ -1,0 +1,41 @@
+{
+  "fonte": "IBGE, SIDRA tabela 1737 (variação acumulada em 12 meses em dezembro)",
+  "descricao": "variacao_pct = variação dez/dez do ano, em %; indice_dez = número-índice de dezembro",
+  "serie": [
+    {
+      "ano": 2019,
+      "variacao_pct": 4.31,
+      "indice_dez": 5320.25
+    },
+    {
+      "ano": 2020,
+      "variacao_pct": 4.52,
+      "indice_dez": 5560.59
+    },
+    {
+      "ano": 2021,
+      "variacao_pct": 10.06,
+      "indice_dez": 6120.04
+    },
+    {
+      "ano": 2022,
+      "variacao_pct": 5.79,
+      "indice_dez": 6474.09
+    },
+    {
+      "ano": 2023,
+      "variacao_pct": 4.62,
+      "indice_dez": 6773.27
+    },
+    {
+      "ano": 2024,
+      "variacao_pct": 4.83,
+      "indice_dez": 7100.5
+    },
+    {
+      "ano": 2025,
+      "variacao_pct": 4.26,
+      "indice_dez": 7403.29
+    }
+  ]
+}

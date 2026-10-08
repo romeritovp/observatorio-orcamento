@@ -11,6 +11,7 @@ Descreve as tabelas canônicas em `data/processed/`. Os valores de código → n
 | ano | int | exercício |
 | periodo | int | bimestre (RREO, 1–6), quadrimestre (RGF, 1–3), mês (MSC, 1–12) ou nulo para dado anual |
 | fonte_dado | str | origem (`siconfi_dca`, `siconfi_msc`, `rj_tce`...) |
+| extraido_em | str | data da extração na API (ISO 8601, UTC), copiada do cache bruto (`data/raw/`) pelo extrator; nula se desconhecida |
 
 ## Tabela `despesa` (formato largo)
 
@@ -62,10 +63,14 @@ Arquivo: `data/processed/populacao/uf=<UF>/ano=<ano>/siconfi_dca_anexo_i_e.parqu
 
 | arquivo | origem | colunas |
 |---|---|---|
-| nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao |
+| nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao, artigo (`o`, `a` ou vazio: "o RJ", "a BA", "SP"; usado nos textos do front) |
 | nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) |
 | nacional/funcoes.csv | SICONFI DCA Anexo I-E em cache (script `extractors/nacional/siconfi/dicionario_funcoes.py`) | funcao_cod, funcao_nome |
 | nacional/subfuncoes.csv | idem | subfuncao_cod, subfuncao_nome |
+| nacional/estatais.csv | Tesouro Nacional, Raio X das Empresas dos Estados (script `extractors/nacional/tesouro_estatais.py`; ver `fontes/tesouro_estatais.md`) | uf, cod_ibge, empresa (como veio), empresa_normalizada, sigla, cnpj (14 dígitos), setor, dependente (`true`/`false`), situacao (`ATIVA`/`EM LIQUIDAÇÃO`), ano_referencia (exercício), fonte. Uma linha por empresa, UF e exercício |
+| nacional/setor_funcao.csv | manual | setor (como em estatais.csv), funcao_cod (nulo quando não há correspondência clara), correspondencia (`direta`, `parcial`, `nenhuma`), justificativa |
+| nacional/estatais_ajustes.csv | manual | cnpj (14 dígitos), funcao_cod, justificativa. Exceções por empresa; têm prioridade sobre `setor_funcao.csv` |
+| nacional/estatais_nomes_exibicao.csv | manual | cnpj (14 dígitos), sigla_exibicao, nome_exibicao. Só exibição no front; prioridade sobre a escolha automática. O nome original continua em `estatais.csv` |
 | nacional/natureza_despesa.csv | STN (MCASP) | natureza_cod, nivel, descricao |
 | ufs/<uf>/orgaos.csv | fonte estadual | orgao_cod, orgao_nome, ano_inicio, ano_fim |
 | ufs/<uf>/correspondencias.csv | manual | campo, cod_antigo, cod_novo, ano_mudanca, observacao |

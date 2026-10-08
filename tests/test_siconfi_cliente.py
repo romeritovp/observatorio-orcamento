@@ -91,6 +91,15 @@ def test_consulta_vazia_nao_grava_cache_e_avisa(tmp_path, params_rreo, caplog):
     assert len(requisicoes) == 2
 
 
+def test_data_extracao_vem_do_cache(tmp_path, resposta_rreo, params_rreo):
+    assert cliente.data_extracao("rreo", params_rreo, tmp_path) is None
+    http, _ = http_falso(lambda req: httpx.Response(200, json=resposta_rreo))
+    cliente.consultar("rreo", params_rreo, config=CONFIG, dir_raw=tmp_path, http=http)
+
+    data = cliente.data_extracao("rreo", params_rreo, tmp_path)
+    assert data and data.endswith("+00:00")
+
+
 def test_caminho_cache_segue_convencao(tmp_path, params_rreo):
     arquivo = cliente.caminho_cache("/rreo", params_rreo, tmp_path)
 

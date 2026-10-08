@@ -1,0 +1,725 @@
+{
+  "ufs": [
+    {
+      "uf": "RO",
+      "cod_ibge": "11",
+      "nome": "Rondônia",
+      "regiao": "Norte",
+      "artigo": null
+    },
+    {
+      "uf": "AC",
+      "cod_ibge": "12",
+      "nome": "Acre",
+      "regiao": "Norte",
+      "artigo": "o"
+    },
+    {
+      "uf": "AM",
+      "cod_ibge": "13",
+      "nome": "Amazonas",
+      "regiao": "Norte",
+      "artigo": "o"
+    },
+    {
+      "uf": "RR",
+      "cod_ibge": "14",
+      "nome": "Roraima",
+      "regiao": "Norte",
+      "artigo": null
+    },
+    {
+      "uf": "PA",
+      "cod_ibge": "15",
+      "nome": "Pará",
+      "regiao": "Norte",
+      "artigo": "o"
+    },
+    {
+      "uf": "AP",
+      "cod_ibge": "16",
+      "nome": "Amapá",
+      "regiao": "Norte",
+      "artigo": "o"
+    },
+    {
+      "uf": "TO",
+      "cod_ibge": "17",
+      "nome": "Tocantins",
+      "regiao": "Norte",
+      "artigo": "o"
+    },
+    {
+      "uf": "MA",
+      "cod_ibge": "21",
+      "nome": "Maranhão",
+      "regiao": "Nordeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "PI",
+      "cod_ibge": "22",
+      "nome": "Piauí",
+      "regiao": "Nordeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "CE",
+      "cod_ibge": "23",
+      "nome": "Ceará",
+      "regiao": "Nordeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "RN",
+      "cod_ibge": "24",
+      "nome": "Rio Grande do Norte",
+      "regiao": "Nordeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "PB",
+      "cod_ibge": "25",
+      "nome": "Paraíba",
+      "regiao": "Nordeste",
+      "artigo": "a"
+    },
+    {
+      "uf": "PE",
+      "cod_ibge": "26",
+      "nome": "Pernambuco",
+      "regiao": "Nordeste",
+      "artigo": null
+    },
+    {
+      "uf": "AL",
+      "cod_ibge": "27",
+      "nome": "Alagoas",
+      "regiao": "Nordeste",
+      "artigo": null
+    },
+    {
+      "uf": "SE",
+      "cod_ibge": "28",
+      "nome": "Sergipe",
+      "regiao": "Nordeste",
+      "artigo": null
+    },
+    {
+      "uf": "BA",
+      "cod_ibge": "29",
+      "nome": "Bahia",
+      "regiao": "Nordeste",
+      "artigo": "a"
+    },
+    {
+      "uf": "MG",
+      "cod_ibge": "31",
+      "nome": "Minas Gerais",
+      "regiao": "Sudeste",
+      "artigo": null
+    },
+    {
+      "uf": "ES",
+      "cod_ibge": "32",
+      "nome": "Espírito Santo",
+      "regiao": "Sudeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "RJ",
+      "cod_ibge": "33",
+      "nome": "Rio de Janeiro",
+      "regiao": "Sudeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "SP",
+      "cod_ibge": "35",
+      "nome": "São Paulo",
+      "regiao": "Sudeste",
+      "artigo": null
+    },
+    {
+      "uf": "PR",
+      "cod_ibge": "41",
+      "nome": "Paraná",
+      "regiao": "Sul",
+      "artigo": "o"
+    },
+    {
+      "uf": "SC",
+      "cod_ibge": "42",
+      "nome": "Santa Catarina",
+      "regiao": "Sul",
+      "artigo": null
+    },
+    {
+      "uf": "RS",
+      "cod_ibge": "43",
+      "nome": "Rio Grande do Sul",
+      "regiao": "Sul",
+      "artigo": "o"
+    },
+    {
+      "uf": "MS",
+      "cod_ibge": "50",
+      "nome": "Mato Grosso do Sul",
+      "regiao": "Centro-Oeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "MT",
+      "cod_ibge": "51",
+      "nome": "Mato Grosso",
+      "regiao": "Centro-Oeste",
+      "artigo": "o"
+    },
+    {
+      "uf": "GO",
+      "cod_ibge": "52",
+      "nome": "Goiás",
+      "regiao": "Centro-Oeste",
+      "artigo": null
+    },
+    {
+      "uf": "DF",
+      "cod_ibge": "53",
+      "nome": "Distrito Federal",
+      "regiao": "Centro-Oeste",
+      "artigo": "o"
+    }
+  ],
+  "funcoes": [
+    {
+      "funcao_cod": "01",
+      "funcao_nome": "Legislativa"
+    },
+    {
+      "funcao_cod": "02",
+      "funcao_nome": "Judiciária"
+    },
+    {
+      "funcao_cod": "03",
+      "funcao_nome": "Essencial à Justiça"
+    },
+    {
+      "funcao_cod": "04",
+      "funcao_nome": "Administração"
+    },
+    {
+      "funcao_cod": "06",
+      "funcao_nome": "Segurança Pública"
+    },
+    {
+      "funcao_cod": "07",
+      "funcao_nome": "Relações Exteriores"
+    },
+    {
+      "funcao_cod": "08",
+      "funcao_nome": "Assistência Social"
+    },
+    {
+      "funcao_cod": "09",
+      "funcao_nome": "Previdência Social"
+    },
+    {
+      "funcao_cod": "10",
+      "funcao_nome": "Saúde"
+    },
+    {
+      "funcao_cod": "11",
+      "funcao_nome": "Trabalho"
+    },
+    {
+      "funcao_cod": "12",
+      "funcao_nome": "Educação"
+    },
+    {
+      "funcao_cod": "13",
+      "funcao_nome": "Cultura"
+    },
+    {
+      "funcao_cod": "14",
+      "funcao_nome": "Direitos da Cidadania"
+    },
+    {
+      "funcao_cod": "15",
+      "funcao_nome": "Urbanismo"
+    },
+    {
+      "funcao_cod": "16",
+      "funcao_nome": "Habitação"
+    },
+    {
+      "funcao_cod": "17",
+      "funcao_nome": "Saneamento"
+    },
+    {
+      "funcao_cod": "18",
+      "funcao_nome": "Gestão Ambiental"
+    },
+    {
+      "funcao_cod": "19",
+      "funcao_nome": "Ciência e Tecnologia"
+    },
+    {
+      "funcao_cod": "20",
+      "funcao_nome": "Agricultura"
+    },
+    {
+      "funcao_cod": "21",
+      "funcao_nome": "Organização Agrária"
+    },
+    {
+      "funcao_cod": "22",
+      "funcao_nome": "Indústria"
+    },
+    {
+      "funcao_cod": "23",
+      "funcao_nome": "Comércio e Serviços"
+    },
+    {
+      "funcao_cod": "24",
+      "funcao_nome": "Comunicações"
+    },
+    {
+      "funcao_cod": "25",
+      "funcao_nome": "Energia"
+    },
+    {
+      "funcao_cod": "26",
+      "funcao_nome": "Transporte"
+    },
+    {
+      "funcao_cod": "27",
+      "funcao_nome": "Desporto e Lazer"
+    },
+    {
+      "funcao_cod": "28",
+      "funcao_nome": "Encargos Especiais"
+    }
+  ],
+  "subfuncoes": [
+    {
+      "subfuncao_cod": "031",
+      "subfuncao_nome": "Ação Legislativa"
+    },
+    {
+      "subfuncao_cod": "032",
+      "subfuncao_nome": "Controle Externo"
+    },
+    {
+      "subfuncao_cod": "061",
+      "subfuncao_nome": "Ação Judiciária"
+    },
+    {
+      "subfuncao_cod": "062",
+      "subfuncao_nome": "Defesa do Interesse Público no Processo Judiciário"
+    },
+    {
+      "subfuncao_cod": "091",
+      "subfuncao_nome": "Defesa da Ordem Jurídica"
+    },
+    {
+      "subfuncao_cod": "092",
+      "subfuncao_nome": "Representação Judicial e Extrajudicial"
+    },
+    {
+      "subfuncao_cod": "121",
+      "subfuncao_nome": "Planejamento e Orçamento"
+    },
+    {
+      "subfuncao_cod": "122",
+      "subfuncao_nome": "Administração Geral"
+    },
+    {
+      "subfuncao_cod": "123",
+      "subfuncao_nome": "Administração Financeira"
+    },
+    {
+      "subfuncao_cod": "124",
+      "subfuncao_nome": "Controle Interno"
+    },
+    {
+      "subfuncao_cod": "125",
+      "subfuncao_nome": "Normatização e Fiscalização"
+    },
+    {
+      "subfuncao_cod": "126",
+      "subfuncao_nome": "Tecnologia da Informação"
+    },
+    {
+      "subfuncao_cod": "127",
+      "subfuncao_nome": "Ordenamento Territorial"
+    },
+    {
+      "subfuncao_cod": "128",
+      "subfuncao_nome": "Formação de Recursos Humanos"
+    },
+    {
+      "subfuncao_cod": "129",
+      "subfuncao_nome": "Administração de Receitas"
+    },
+    {
+      "subfuncao_cod": "130",
+      "subfuncao_nome": "Administração de Concessões"
+    },
+    {
+      "subfuncao_cod": "131",
+      "subfuncao_nome": "Comunicação Social"
+    },
+    {
+      "subfuncao_cod": "181",
+      "subfuncao_nome": "Policiamento"
+    },
+    {
+      "subfuncao_cod": "182",
+      "subfuncao_nome": "Defesa Civil"
+    },
+    {
+      "subfuncao_cod": "183",
+      "subfuncao_nome": "Informação e Inteligência"
+    },
+    {
+      "subfuncao_cod": "212",
+      "subfuncao_nome": "Cooperação Internacional"
+    },
+    {
+      "subfuncao_cod": "241",
+      "subfuncao_nome": "Assistência à Pessoa Idosa"
+    },
+    {
+      "subfuncao_cod": "242",
+      "subfuncao_nome": "Assistência à Pessoa com Deficiência"
+    },
+    {
+      "subfuncao_cod": "243",
+      "subfuncao_nome": "Assistência à Criança e ao Adolescente"
+    },
+    {
+      "subfuncao_cod": "244",
+      "subfuncao_nome": "Assistência Comunitária"
+    },
+    {
+      "subfuncao_cod": "245",
+      "subfuncao_nome": "Serviços Socioassistenciais"
+    },
+    {
+      "subfuncao_cod": "246",
+      "subfuncao_nome": "Segurança e Renda"
+    },
+    {
+      "subfuncao_cod": "271",
+      "subfuncao_nome": "Previdência Básica"
+    },
+    {
+      "subfuncao_cod": "272",
+      "subfuncao_nome": "Previdência do Regime Estatutário"
+    },
+    {
+      "subfuncao_cod": "273",
+      "subfuncao_nome": "Previdência Complementar"
+    },
+    {
+      "subfuncao_cod": "274",
+      "subfuncao_nome": "Previdência Especial"
+    },
+    {
+      "subfuncao_cod": "301",
+      "subfuncao_nome": "Atenção Básica"
+    },
+    {
+      "subfuncao_cod": "302",
+      "subfuncao_nome": "Assistência Hospitalar e Ambulatorial"
+    },
+    {
+      "subfuncao_cod": "303",
+      "subfuncao_nome": "Suporte Profilático e Terapêutico"
+    },
+    {
+      "subfuncao_cod": "304",
+      "subfuncao_nome": "Vigilância Sanitária"
+    },
+    {
+      "subfuncao_cod": "305",
+      "subfuncao_nome": "Vigilância Epidemiológica"
+    },
+    {
+      "subfuncao_cod": "306",
+      "subfuncao_nome": "Alimentação e Nutrição"
+    },
+    {
+      "subfuncao_cod": "331",
+      "subfuncao_nome": "Proteção e Benefícios ao Trabalhador"
+    },
+    {
+      "subfuncao_cod": "332",
+      "subfuncao_nome": "Relações de Trabalho"
+    },
+    {
+      "subfuncao_cod": "333",
+      "subfuncao_nome": "Empregabilidade"
+    },
+    {
+      "subfuncao_cod": "334",
+      "subfuncao_nome": "Fomento ao Trabalho"
+    },
+    {
+      "subfuncao_cod": "361",
+      "subfuncao_nome": "Ensino Fundamental"
+    },
+    {
+      "subfuncao_cod": "362",
+      "subfuncao_nome": "Ensino Médio"
+    },
+    {
+      "subfuncao_cod": "363",
+      "subfuncao_nome": "Ensino Profissional"
+    },
+    {
+      "subfuncao_cod": "364",
+      "subfuncao_nome": "Ensino Superior"
+    },
+    {
+      "subfuncao_cod": "365",
+      "subfuncao_nome": "Educação Infantil"
+    },
+    {
+      "subfuncao_cod": "366",
+      "subfuncao_nome": "Educação de Jovens e Adultos"
+    },
+    {
+      "subfuncao_cod": "367",
+      "subfuncao_nome": "Educação Especial"
+    },
+    {
+      "subfuncao_cod": "368",
+      "subfuncao_nome": "Educação Básica"
+    },
+    {
+      "subfuncao_cod": "391",
+      "subfuncao_nome": "Patrimônio Histórico, Artístico e Arqueológico"
+    },
+    {
+      "subfuncao_cod": "392",
+      "subfuncao_nome": "Difusão Cultural"
+    },
+    {
+      "subfuncao_cod": "421",
+      "subfuncao_nome": "Custódia e Reintegração Social"
+    },
+    {
+      "subfuncao_cod": "422",
+      "subfuncao_nome": "Direitos Individuais, Coletivos e Difusos"
+    },
+    {
+      "subfuncao_cod": "423",
+      "subfuncao_nome": "Assistência aos Povos Indígenas"
+    },
+    {
+      "subfuncao_cod": "451",
+      "subfuncao_nome": "Infraestrutura Urbana"
+    },
+    {
+      "subfuncao_cod": "452",
+      "subfuncao_nome": "Serviços Urbanos"
+    },
+    {
+      "subfuncao_cod": "453",
+      "subfuncao_nome": "Transportes Coletivos Urbanos"
+    },
+    {
+      "subfuncao_cod": "481",
+      "subfuncao_nome": "Habitação Rural"
+    },
+    {
+      "subfuncao_cod": "482",
+      "subfuncao_nome": "Habitação Urbana"
+    },
+    {
+      "subfuncao_cod": "511",
+      "subfuncao_nome": "Saneamento Básico Rural"
+    },
+    {
+      "subfuncao_cod": "512",
+      "subfuncao_nome": "Saneamento Básico Urbano"
+    },
+    {
+      "subfuncao_cod": "541",
+      "subfuncao_nome": "Preservação e Conservação Ambiental"
+    },
+    {
+      "subfuncao_cod": "542",
+      "subfuncao_nome": "Controle Ambiental"
+    },
+    {
+      "subfuncao_cod": "543",
+      "subfuncao_nome": "Recuperação de Áreas Degradadas"
+    },
+    {
+      "subfuncao_cod": "544",
+      "subfuncao_nome": "Recursos Hídricos"
+    },
+    {
+      "subfuncao_cod": "545",
+      "subfuncao_nome": "Meteorologia"
+    },
+    {
+      "subfuncao_cod": "571",
+      "subfuncao_nome": "Desenvolvimento Científico"
+    },
+    {
+      "subfuncao_cod": "572",
+      "subfuncao_nome": "Desenvolvimento Tecnológico e Engenharia"
+    },
+    {
+      "subfuncao_cod": "573",
+      "subfuncao_nome": "Difusão do Conhecimento Científico e Tecnológico"
+    },
+    {
+      "subfuncao_cod": "605",
+      "subfuncao_nome": "Abastecimento"
+    },
+    {
+      "subfuncao_cod": "606",
+      "subfuncao_nome": "Extensão Rural"
+    },
+    {
+      "subfuncao_cod": "607",
+      "subfuncao_nome": "Irrigação"
+    },
+    {
+      "subfuncao_cod": "608",
+      "subfuncao_nome": "Promoção da Produção Agropecuária"
+    },
+    {
+      "subfuncao_cod": "609",
+      "subfuncao_nome": "Defesa Agropecuária"
+    },
+    {
+      "subfuncao_cod": "631",
+      "subfuncao_nome": "Reforma Agrária"
+    },
+    {
+      "subfuncao_cod": "632",
+      "subfuncao_nome": "Colonização"
+    },
+    {
+      "subfuncao_cod": "661",
+      "subfuncao_nome": "Promoção Industrial"
+    },
+    {
+      "subfuncao_cod": "662",
+      "subfuncao_nome": "Produção Industrial"
+    },
+    {
+      "subfuncao_cod": "663",
+      "subfuncao_nome": "Mineração"
+    },
+    {
+      "subfuncao_cod": "665",
+      "subfuncao_nome": "Normalização e Qualidade"
+    },
+    {
+      "subfuncao_cod": "691",
+      "subfuncao_nome": "Promoção Comercial"
+    },
+    {
+      "subfuncao_cod": "692",
+      "subfuncao_nome": "Comercialização"
+    },
+    {
+      "subfuncao_cod": "693",
+      "subfuncao_nome": "Comércio Exterior"
+    },
+    {
+      "subfuncao_cod": "694",
+      "subfuncao_nome": "Serviços Financeiros"
+    },
+    {
+      "subfuncao_cod": "695",
+      "subfuncao_nome": "Turismo"
+    },
+    {
+      "subfuncao_cod": "721",
+      "subfuncao_nome": "Comunicações Postais"
+    },
+    {
+      "subfuncao_cod": "722",
+      "subfuncao_nome": "Telecomunicações"
+    },
+    {
+      "subfuncao_cod": "751",
+      "subfuncao_nome": "Conservação de Energia"
+    },
+    {
+      "subfuncao_cod": "752",
+      "subfuncao_nome": "Energia Elétrica"
+    },
+    {
+      "subfuncao_cod": "753",
+      "subfuncao_nome": "Combustíveis Minerais"
+    },
+    {
+      "subfuncao_cod": "754",
+      "subfuncao_nome": "Biocombustíveis"
+    },
+    {
+      "subfuncao_cod": "781",
+      "subfuncao_nome": "Transporte Aéreo"
+    },
+    {
+      "subfuncao_cod": "782",
+      "subfuncao_nome": "Transporte Rodoviário"
+    },
+    {
+      "subfuncao_cod": "783",
+      "subfuncao_nome": "Transporte Ferroviário"
+    },
+    {
+      "subfuncao_cod": "784",
+      "subfuncao_nome": "Transporte Aquaviário"
+    },
+    {
+      "subfuncao_cod": "785",
+      "subfuncao_nome": "Transportes Especiais"
+    },
+    {
+      "subfuncao_cod": "811",
+      "subfuncao_nome": "Desporto de Rendimento"
+    },
+    {
+      "subfuncao_cod": "812",
+      "subfuncao_nome": "Desporto Comunitário"
+    },
+    {
+      "subfuncao_cod": "813",
+      "subfuncao_nome": "Lazer"
+    },
+    {
+      "subfuncao_cod": "841",
+      "subfuncao_nome": "Refinanciamento da Dívida Interna"
+    },
+    {
+      "subfuncao_cod": "842",
+      "subfuncao_nome": "Refinanciamento da Dívida Externa"
+    },
+    {
+      "subfuncao_cod": "843",
+      "subfuncao_nome": "Serviço da Dívida Interna"
+    },
+    {
+      "subfuncao_cod": "844",
+      "subfuncao_nome": "Serviço da Dívida Externa"
+    },
+    {
+      "subfuncao_cod": "845",
+      "subfuncao_nome": "Outras Transferências"
+    },
+    {
+      "subfuncao_cod": "846",
+      "subfuncao_nome": "Outros Encargos Especiais"
+    }
+  ]
+}

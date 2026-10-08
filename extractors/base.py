@@ -13,6 +13,7 @@ DIR_PROCESSED = RAIZ / "data" / "processed"
 CAMINHO_UFS = RAIZ / "dicionarios" / "nacional" / "ufs.csv"
 CAMINHO_FUNCOES = RAIZ / "dicionarios" / "nacional" / "funcoes.csv"
 
+# extraido_em: data da extração na API (texto ISO, UTC), vinda do cache bruto; nula se desconhecida.
 # Tipos: "str" para códigos e textos, "int" para inteiros que podem ser nulos,
 # "float" para valores em R$, "bool" para marcadores
 ESQUEMAS = {
@@ -22,6 +23,7 @@ ESQUEMAS = {
         "ano": "int",
         "periodo": "int",
         "fonte_dado": "str",
+        "extraido_em": "str",
         "nivel": "str",
         "intra": "bool",
         "orgao_cod": "str",
@@ -42,6 +44,7 @@ ESQUEMAS = {
         "cod_ibge": "str",
         "ano": "int",
         "periodo": "int",
+        "extraido_em": "str",
         "demonstrativo": "str",
         "anexo": "str",
         "rotulo": "str",
@@ -55,6 +58,7 @@ ESQUEMAS = {
         "cod_ibge": "str",
         "ano": "int",
         "fonte_dado": "str",
+        "extraido_em": "str",
         "populacao": "int",
     },
 }

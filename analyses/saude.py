@@ -29,7 +29,7 @@ from matplotlib.ticker import FuncFormatter, MultipleLocator  # noqa: E402
 
 from analyses.carregar import RAIZ, carregar, carregar_dicionario, carregar_ipca  # noqa: E402
 from analytics import (  # noqa: E402
-    agregar, deflacionar, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
+    agregar, completar_com_zero, deflacionar, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
 )
 
 FUNCAO = "10"
@@ -72,7 +72,11 @@ def montar_tabela(ano_inicial, ano_final):
 
     # Soma das funções = total sem intraorçamentárias (validado na extração da DCA)
     df = participacao(funcoes, ESTAGIO, ["ano"])
-    df = df[df["funcao_cod"] == FUNCAO]
+    df = df[df[ESTAGIO].notna()]  # linha sem valor no estágio conta como ausência
+    # UF que entregou a DCA e não tem linha na função entra com 0 (docs/decisoes.md)
+    universo = funcoes[["uf", "cod_ibge", "ano"]].drop_duplicates()
+    df = completar_com_zero(df, universo, ["uf", "ano"], ["nivel", "funcao_cod"], [ESTAGIO, PCT_TOTAL])
+    df = df[df["funcao_cod"] == FUNCAO].drop(columns="sem_gasto_declarado")
 
     df = deflacionar(df, [ESTAGIO], ano_final, carregar_ipca())
     df = per_capita(df, [f"{ESTAGIO}_real"], carregar("populacao", anos=anos))

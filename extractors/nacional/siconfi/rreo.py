@@ -138,6 +138,7 @@ def extrair_anexo_02(uf, ano, periodo=6, *, dir_raw=cliente.DIR_RAW, dir_process
         raise base.ConsultaVazia(f"RREO Anexo 02 vazio para {uf} {ano} período {periodo}")
 
     df = transformar_anexo_02(itens, uf, cod_ibge, ano, periodo)
+    df["extraido_em"] = cliente.data_extracao("rreo", params, dir_raw)
     validar_anexo_02(df, nomes_de_funcoes(caminho_funcoes))
     base.gravar(df, "demonstrativo", f"{FONTE_DADO}_anexo_02_p{periodo}", dir_processed=dir_processed)
     return base.validar_esquema(df, "demonstrativo")
