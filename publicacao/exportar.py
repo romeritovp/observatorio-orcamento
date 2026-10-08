@@ -8,6 +8,8 @@ Arquivos gerados:
     dicionarios.json   UFs, funções e subfunções (código → nome)
     ipca.json          variação anual dez/dez do IPCA
     despesa.json       tabela despesa em R$ NOMINAIS, com população e data da extração
+    receita.json       receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais
+    divida.json        dívida por UF e ano (estoque do RGF Anexo 02 e pagamento da DCA I-D), em R$ nominais
     estatais.json      estatais ativas e não dependentes por edição, UF e função (só informativo: gera avisos,
                        nunca altera valores de despesa)
     gabarito.json      só para TESTE do front: per capita real e % da despesa total da saúde,
@@ -25,12 +27,15 @@ from pathlib import Path
 import pandas as pd
 
 from analyses.carregar import RAIZ, carregar, carregar_dicionario, carregar_ipca
+from publicacao import divida as divida_mod
+from publicacao import receita as receita_mod
 from analytics import (
-    completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao,
-    mediana_entre_ufs, participacao, per_capita, ranking,
+    agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao,
+    mediana_entre_ufs, participacao, per_capita, ranking, variacao,
 )
 
 DIR_SAIDA = RAIZ / "web" / "public" / "data"
+CAMINHO_SITE = RAIZ / "config" / "site.yaml"
 VERSAO_ESQUEMA = 1
 
 COLUNAS_DESPESA = {
@@ -94,8 +99,47 @@ ATRIBUICAO_ESTATAIS = {
     "texto": "Dados de empresas estatais: Tesouro Nacional, painel \"Raio X das Empresas dos Estados "
              "Brasileiros\" (github.com/tesouro/empresas-estados).",
     "fonte_curta": "Tesouro Nacional, Raio X das Empresas dos Estados Brasileiros",
+    # Painel publicado: a pasta vAAAA traz os dados do exercício AAAA-1 (conferido em 2026-10-08)
+    "painel": "https://tesouro.github.io/empresas-estados/v{edicao_painel}/",
     "url": "https://github.com/tesouro/empresas-estados",
     "licenca": "o repositório não declara licença; usados só dados cadastrais, com atribuição",
+}
+
+# Ressalvas da parte "As dívidas do estado"
+RESSALVAS_DIVIDA = [
+    {"id": "pagar_pouco", "titulo": "Pagar pouco não é dever pouco",
+     "texto": "Estados em regime de recuperação fiscal ou com pagamentos à União suspensos aparecem pagando "
+              "menos juros e amortização, mesmo devendo muito."},
+    {"id": "suspensao_2020", "titulo": "2020: pagamentos à União suspensos",
+     "texto": "Em 2020, os pagamentos das dívidas dos estados com a União foram suspensos por lei durante a "
+              "pandemia. O valor pago naquele ano não é comparável com os outros."},
+    {"id": "passivo_atuarial", "titulo": "Previdência fora da conta",
+     "texto": "O passivo atuarial da previdência dos servidores, que em vários estados é maior que a dívida, "
+              "não entra nestes números."},
+]
+NOTA_COMPOSICAO = "O relatório separa a dívida por tipo, não por credor. A maior parte da 'reestruturação' é com a União."
+
+# Ressalvas da parte "De onde vem o dinheiro"
+RESSALVAS_RECEITA = [
+    {"id": "recodificacao_2022", "titulo": "Códigos novos a partir de 2022",
+     "texto": "A classificação das receitas mudou em 2022 (ICMS, IPVA, FPE e FUNDEB, entre outros, ganharam códigos "
+              "novos). Cada item aqui junta os códigos antigos e os novos; os itens principais não mostram salto por "
+              "causa da troca, mas itens pequenos (\"outras\") podem mudar de composição entre 2021 e 2022."},
+    {"id": "icms_2022", "titulo": "ICMS de combustíveis, energia e telecomunicações (2022)",
+     "texto": "Em 2022, a Lei Complementar nº 194 limitou o ICMS sobre combustíveis, energia elétrica e "
+              "telecomunicações. A arrecadação caiu em vários estados a partir daquele ano, e a União passou a "
+              "compensar parte da perda (em \"outras transferências da União\")."},
+    {"id": "fundeb", "titulo": "FUNDEB: sai e volta",
+     "texto": "Parte do ICMS, do IPVA e de outras receitas vai para o FUNDEB (aparece como dedução) e volta ao estado "
+              "conforme o número de alunos (aparece como \"FUNDEB, retorno\"). Não somar a dedução com o retorno."},
+    {"id": "operacoes_credito", "titulo": "Empréstimo não é arrecadação",
+     "texto": "Operações de crédito são dinheiro emprestado: entram na receita do ano, mas são dívida nova."},
+]
+RESSALVAS_RECEITA_POR_UF = {
+    "RJ": [{"id": "royalties_rj", "titulo": "Royalties do petróleo não identificáveis",
+            "texto": "O RJ não separa royalties e participações especiais do petróleo nas contas que entrega ao "
+                     "Tesouro: eles devem estar em \"Demais receitas patrimoniais\" (R$ 25,9 bi em 2024, 26% da "
+                     "receita), dentro de \"receita patrimonial\". Por isso o item royalties do RJ aparece quase zerado."}],
 }
 
 # Parâmetros do gabarito
@@ -187,7 +231,103 @@ def indicadores_por_funcao(despesa, populacao, ipca, ano_base):
     })
 
 
-def montar_gabarito(despesa, populacao, ipca, ano_base):
+def totais_por_uf(despesa, populacao, ipca, ano_base):
+    """Despesa total de cada UF e ano (soma das funções, sem intra), corrigida, por habitante e variação.
+
+    Mesmo cálculo que o front faz em calculos.js (totaisPorUfAno), para o resumo da tela "Por estado".
+    """
+    e = ESTAGIO_GABARITO
+    funcoes = despesa[(despesa["fonte_dado"] == "siconfi_dca") & (despesa["nivel"] == "funcao")
+                      & ~despesa["intra"].astype(bool)][["uf", "ano", "nivel", e]]
+    df = agregar(funcoes, [e], ["ano"])
+    df = deflacionar(df, [e], ano_base, ipca)
+    df = per_capita(df, [e, f"{e}_real"], populacao)
+    df = variacao(df, e, [])
+    df = variacao(df, f"{e}_real", [])
+    return df.rename(columns={
+        e: "total_nominal", f"{e}_real": "total_real",
+        f"{e}_per_capita": "per_capita_nominal", f"{e}_real_per_capita": "per_capita_real",
+        f"{e}_var_pct": "var_nominal_pct", f"{e}_real_var_pct": "var_real_pct",
+    })[["uf", "ano", "total_nominal", "total_real", "per_capita_nominal", "per_capita_real",
+        "var_nominal_pct", "var_real_pct"]].sort_values(["uf", "ano"])
+
+
+def divida_gabarito(registros, ipca, ano_base):
+    """DCL/RCL com posição e mediana, e juros, amortização e total pago corrigidos (gabarito do front)."""
+    df = divida_mod.tabela_divida(registros)
+    df["pago"] = df["juros"] + df["amortizacao"]
+    df = deflacionar(df, ["juros", "amortizacao", "pago"], ano_base, ipca)
+    df = ranking(df, "dcl_rcl_pct", ["ano"])
+    medianas = mediana_entre_ufs(df, "dcl_rcl_pct", ["ano"]).rename(columns={"dcl_rcl_pct_mediana": "dcl_rcl_pct"})
+    valores = df.rename(columns={"dcl_rcl_pct_posicao": "posicao_dcl_rcl", "dcl_rcl_pct_n_ufs": "n_ufs"})[
+        ["uf", "ano", "dcl_rcl_pct", "posicao_dcl_rcl", "n_ufs", "juros_real", "amortizacao_real", "pago_real"]]
+    return valores.sort_values(["uf", "ano"]), medianas.sort_values("ano")
+
+
+def receita_gabarito(totais, populacao, ipca, ano_base):
+    """Receita líquida total (exceto intra), real e por habitante, e peso de impostos próprios e de
+    transferências da União (% da líquida), com posições (1 = maior) e medianas."""
+    df = totais.copy()
+    df = deflacionar(df, ["liquida_exceto_intra"], ano_base, ipca)
+    df = per_capita(df, ["liquida_exceto_intra_real"], populacao)
+    df["pct_impostos_proprios"] = df["impostos_proprios"] / df["liquida_exceto_intra"] * 100
+    df["pct_transferencias_uniao"] = df["transferencias_uniao"] / df["liquida_exceto_intra"] * 100
+    df = df.rename(columns={"liquida_exceto_intra": "receita_liquida", "liquida_exceto_intra_real": "receita_liquida_real",
+                            "liquida_exceto_intra_real_per_capita": "per_capita_real"})
+    for coluna in ["per_capita_real", "pct_impostos_proprios"]:
+        df = ranking(df, coluna, ["ano"])
+    medianas = None
+    for medida in ["per_capita_real", "pct_impostos_proprios"]:
+        m = mediana_entre_ufs(df, medida, ["ano"]).drop(columns="n_ufs").rename(columns={f"{medida}_mediana": medida})
+        medianas = m if medianas is None else medianas.merge(m, on="ano")
+    valores = df.rename(columns={"per_capita_real_posicao": "posicao_per_capita_real",
+                                 "pct_impostos_proprios_posicao": "posicao_pct_impostos", "per_capita_real_n_ufs": "n_ufs"})[
+        ["uf", "ano", "receita_liquida", "receita_liquida_real", "per_capita_real", "pct_impostos_proprios",
+         "pct_transferencias_uniao", "posicao_per_capita_real", "posicao_pct_impostos", "n_ufs"]]
+    return valores.sort_values(["uf", "ano"]), medianas.sort_values("ano")
+
+
+def montar_receita_json(linhas, totais, extraido_em):
+    return {
+        "fonte": "SICONFI/Tesouro Nacional: DCA Anexo I-C (receita orçamentária por natureza)",
+        "extraido_em": extraido_em,
+        "unidade": "R$ nominais",
+        "campos": {
+            "bruta": "receita bruta realizada",
+            "ded_transferencias": "dedução: transferências constitucionais aos municípios",
+            "ded_fundeb": "dedução: parcela destinada ao FUNDEB",
+            "ded_outras": "outras deduções (restituições etc.)",
+            "liquida": "bruta − deduções (padrão de exibição; é o que fecha com o RREO Anexo 01)",
+            "totais.impostos_proprios": "líquida do grupo 1.1 (impostos, taxas e contribuições de melhoria)",
+            "totais.transferencias_uniao": "líquida dos grupos 1.7.1 e 2.4.1 (transferências da União, correntes e de capital)",
+            "totais.liquida_exceto_intra": "receita líquida total, sem as intraorçamentárias",
+        },
+        "itens": [{"item": i, "nome": n, "grupo": g} for i, n, g in receita_mod.ITENS],
+        "ressalvas": RESSALVAS_RECEITA,
+        "ressalvas_por_uf": RESSALVAS_RECEITA_POR_UF,
+        "totais": registros(totais),
+        "linhas": registros(linhas),
+    }
+
+
+def montar_divida_json(registros, extraido_em):
+    return {
+        "fonte": "SICONFI/Tesouro Nacional: RGF Anexo 02 (3º quadrimestre, poder Executivo) e DCA Anexo I-D",
+        "extraido_em": extraido_em,
+        "unidade": "R$ nominais; percentuais em %",
+        # Limites legais para estados (Resolução do Senado nº 40/2001 e LRF, art. 59, § 1º, III): fixos.
+        # Os campos limite/alerta de cada linha são os DECLARADOS no RGF e às vezes divergem (ex.: CE 2019–2022 = 0).
+        "limite_legal_pct": 200,
+        "alerta_legal_pct": 180,
+        "campos": divida_mod.DESCRICAO_CAMPOS,
+        "nota_composicao": NOTA_COMPOSICAO,
+        "ressalvas": RESSALVAS_DIVIDA,
+        "linhas": [{k: _nativo(v) if not isinstance(v, dict) else {kk: _nativo(vv) for kk, vv in v.items()}
+                    for k, v in r.items()} for r in registros],
+    }
+
+
+def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_totais=None):
     """Gabarito de teste do front: todas as funções, liquidado, sem intra, com a regra do zero."""
     df = indicadores_por_funcao(despesa, populacao, ipca, ano_base)
     medidas = ["per_capita_real", "per_capita_nominal", "pct_despesa_total"]
@@ -221,10 +361,23 @@ def montar_gabarito(despesa, populacao, ipca, ano_base):
                                "Usar variacao_pct de ipca.json, não indice_dez (o arredondamento difere).",
             "posicoes": "1 = maior valor; empate fica com a melhor posição",
             "mediana": "entre todas as UFs do ano, incluindo as com 0",
+            "totais": "total = soma do liquidado das linhas nivel=funcao, intra=false, da UF e ano; "
+                       "var_*_pct = variação sobre o ano anterior (nula no primeiro ano)",
+            "receita": "receita_liquida = DCA I-C, bruta − deduções, sem intra; per_capita_real a preços do ano base; "
+                       "pct_impostos_proprios = grupo 1.1 / receita_liquida × 100; pct_transferencias_uniao = "
+                       "grupos 1.7.1 + 2.4.1 / receita_liquida × 100; posições: 1 = maior",
+            "divida": "dcl_rcl_pct = linha oficial do RGF Anexo 02; posicao_dcl_rcl: 1 = maior DCL/RCL; "
+                      "*_real = liquidado da DCA I-D (3.2 juros, 4.6 amortização) a preços do ano base; "
+                      "pago = juros + amortização",
             "tolerancia_sugerida": "diferença relativa < 1e-9 (ou absoluta < 1e-9 quando o valor é 0)",
         },
         "valores": registros(valores),
         "medianas": registros(medianas.sort_values(["funcao_cod", "ano"])),
+        "totais": registros(totais_por_uf(despesa, populacao, ipca, ano_base)),
+        **({} if receita_totais is None else dict(zip(["receita", "medianas_receita"], [
+            registros(t) for t in receita_gabarito(receita_totais, populacao, ipca, ano_base)]))),
+        **({} if divida is None else dict(zip(["divida", "medianas_divida"],
+                                              [registros(t) for t in divida_gabarito(divida, ipca, ano_base)]))),
     }
 
 
@@ -260,6 +413,14 @@ def montar_estatais(estatais, setor_funcao, ajustes, anos, correcoes_nomes=None)
         mudanca = com_exibicao(linha, ["ano", "ano_anterior", "sentido", "sigla", "empresa", "cnpj"])
         mudancas.setdefault(linha["uf"], {}).setdefault(linha["funcao_cod"], []).append(mudanca)
 
+    # Lista completa (dependentes ou não, qualquer situação) para a tela "Por estado"; sem valores financeiros
+    lista = {str(e): {} for e in edicoes}
+    for linha in com_funcao.sort_values(["ano_referencia", "uf", "sigla"]).to_dict(orient="records"):
+        empresa = com_exibicao(linha, ["sigla", "empresa", "cnpj", "setor", "situacao"])
+        empresa["funcao_cod"] = None if pd.isna(linha["funcao_cod"]) else linha["funcao_cod"]
+        empresa["dependente"] = bool(linha["dependente"])
+        lista[str(linha["ano_referencia"])].setdefault(linha["uf"], []).append(empresa)
+
     por_edicao = {str(e): {} for e in edicoes}
     for linha in df.to_dict(orient="records"):
         empresa = com_exibicao(linha, ["sigla", "empresa", "cnpj", "setor", "correspondencia"])
@@ -278,7 +439,9 @@ def montar_estatais(estatais, setor_funcao, ajustes, anos, correcoes_nomes=None)
         "correspondencia": {"direta": "o setor corresponde à função",
                             "parcial": "parte do setor cai em outra função",
                             "ajuste": "função definida para a empresa, não pelo setor"},
+        "paineis": {str(e): ATRIBUICAO_ESTATAIS["painel"].format(edicao_painel=e + 1) for e in edicoes},
         "por_edicao": por_edicao,
+        "lista_por_edicao": lista,
         "mudancas_dependencia": mudancas,
     }
 
@@ -288,16 +451,34 @@ def montar_atribuicoes(estatais):
     return [{**ATRIBUICAO_ESTATAIS, "versoes": sorted(estatais["fonte"].unique().tolist())}]
 
 
-def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=()):
+def ler_site(ufs, caminho=CAMINHO_SITE):
+    """config/site.yaml → {"uf_padrao": sigla}. UF fora de ufs.csv é erro (nunca publicar um padrão inválido)."""
+    import yaml
+
+    with open(caminho, encoding="utf-8") as f:
+        site = yaml.safe_load(f) or {}
+    uf = site.get("uf_padrao")
+    if uf is not None:
+        uf = str(uf).upper()
+        if uf not in set(ufs["uf"]):
+            raise ValueError(f"uf_padrao {uf!r} de {caminho} não está em dicionarios/nacional/ufs.csv")
+    return {"uf_padrao": uf}
+
+
+def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None):
     datas = despesa.groupby("fonte_dado")["extraido_em"].agg(["min", "max"])
     return {
         "gerado_em": gerado_em,
         "versao_esquema": VERSAO_ESQUEMA,
+        # Estado aberto quando a URL não diz qual (config/site.yaml)
+        "uf_padrao": (site or {}).get("uf_padrao"),
         "arquivos": {
             "meta.json": "este arquivo",
             "dicionarios.json": "UFs, funções e subfunções (código → nome)",
             "ipca.json": "variação anual dez/dez do IPCA, para deflacionar no front",
             "despesa.json": "despesa por UF, ano, função e subfunção, em R$ nominais",
+            "receita.json": "receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais",
+            "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
             "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
             "gabarito.json": "só para teste do front; não exibir",
         },
@@ -359,10 +540,17 @@ def main(dir_saida=DIR_SAIDA):
     gerado_em = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     tabela = montar_despesa(despesa, populacao)
+    demonstrativo = carregar("demonstrativo")
+    rgf_linhas = demonstrativo[(demonstrativo["demonstrativo"] == "RGF") & (demonstrativo["anexo"] == "RGF-Anexo 02")]
+    i_d = demonstrativo[(demonstrativo["demonstrativo"] == "DCA") & (demonstrativo["anexo"] == "DCA-Anexo I-D")]
+    divida = divida_mod.montar_divida(rgf_linhas, i_d)
+    i_c = demonstrativo[(demonstrativo["demonstrativo"] == "DCA") & (demonstrativo["anexo"] == "DCA-Anexo I-C")]
+    receita_linhas, receita_totais = receita_mod.montar_receita(i_c, carregar_dicionario("nacional/receita_itens.csv"))
     dir_saida = Path(dir_saida)
     arquivos = [
         gravar_json(montar_meta(tabela, ipca, ano_base, gerado_em,
-                                montar_atribuicoes(carregar_dicionario("nacional/estatais.csv"))),
+                                montar_atribuicoes(carregar_dicionario("nacional/estatais.csv")),
+                                ler_site(carregar_dicionario("nacional/ufs.csv"))),
                     dir_saida / "meta.json"),
         gravar_json(montar_dicionarios(
             carregar_dicionario("nacional/ufs.csv"),
@@ -378,7 +566,10 @@ def main(dir_saida=DIR_SAIDA):
             carregar_dicionario("nacional/estatais_nomes_exibicao.csv"),
         ), dir_saida / "estatais.json"),
         gravar_json(registros(tabela), dir_saida / "despesa.json", compacto=True),
-        gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base), dir_saida / "gabarito.json"),
+        gravar_json(montar_receita_json(receita_linhas, receita_totais, i_c["extraido_em"].max()),
+                    dir_saida / "receita.json", compacto=True),
+        gravar_json(montar_divida_json(divida, rgf_linhas["extraido_em"].max()), dir_saida / "divida.json"),
+        gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base, divida, receita_totais), dir_saida / "gabarito.json"),
     ]
     for arquivo in arquivos:
         print(f"{arquivo.relative_to(RAIZ)}  {arquivo.stat().st_size / 1024:,.0f} KB")

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { VIEW_PADRAO, VIEWS } from '../estado.js'
 import { aplicarTema, lerTema } from '../tema.js'
 
 const Sol = () => (
@@ -15,8 +16,10 @@ const Lua = () => (
   </svg>
 )
 
-// Barra do topo: nome do site e o botão que alterna entre tema claro e escuro.
-export default function Navegacao() {
+// Barra do topo: nome do site, menu das telas e o botão que alterna entre tema claro e escuro.
+// O menu são links comuns (?view=...), que também funcionam abertos em outra aba; com onIr, a troca
+// acontece sem recarregar. links: {view: string de busca}; view: a tela ativa.
+export default function Navegacao({ view = VIEW_PADRAO, links = {}, onIr }) {
   const [tema, setTema] = useState(lerTema)
   const outro = tema === 'escuro' ? 'claro' : 'escuro'
 
@@ -28,10 +31,27 @@ export default function Navegacao() {
   return (
     <nav className="nav" aria-label="Principal">
       <div className="nav-interno">
-        <a className="nav-marca" href="./">Orçamento dos Estados</a>
+        <a className="nav-marca" href="./">Observatório dos Orçamentos</a>
+        <ul className="nav-menu">
+          {Object.entries(VIEWS).map(([id, nome]) => (
+            <li key={id}>
+              <a
+                href={links[id] ?? (id === VIEW_PADRAO ? './' : `?view=${id}`)}
+                aria-current={view === id ? 'page' : undefined}
+                onClick={(e) => {
+                  if (!onIr || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+                  e.preventDefault()
+                  onIr(id)
+                }}
+              >
+                {nome}
+              </a>
+            </li>
+          ))}
+        </ul>
         <button type="button" className="nav-tema" onClick={alternar} aria-label={`Mudar para o tema ${outro}`}>
           {tema === 'escuro' ? <Sol /> : <Lua />}
-          <span>Tema {outro}</span>
+          <span className="nav-tema-texto">Tema {outro}</span>
         </button>
       </div>
     </nav>

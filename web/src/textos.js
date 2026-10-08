@@ -1,6 +1,6 @@
 // Textos gerados a partir dos dados: factuais, sem adjetivos.
 
-import { valorDaMetrica } from './formatacao.js'
+import { reaisCompacto, valorDaMetrica } from './formatacao.js'
 
 /** "o RJ", "a BA", "SP" (artigo vem de dicionarios.json). */
 export function sujeito(uf, artigo) {
@@ -12,6 +12,20 @@ export function porUf(uf, artigo) {
   if (artigo === 'o') return `pelo ${uf}`
   if (artigo === 'a') return `pela ${uf}`
   return `por ${uf}`
+}
+
+/** "do RJ", "da BA", "de SP". */
+export function deUf(uf, artigo) {
+  if (artigo === 'o') return `do ${uf}`
+  if (artigo === 'a') return `da ${uf}`
+  return `de ${uf}`
+}
+
+/** "do Rio de Janeiro", "da Bahia", "de São Paulo" (nome do estado com a preposição certa). */
+export function doEstado(nome, artigo) {
+  if (artigo === 'o') return `do ${nome}`
+  if (artigo === 'a') return `da ${nome}`
+  return `de ${nome}`
 }
 
 /** "No RJ", "Na BA", "Em SP" (início de frase). */
@@ -101,4 +115,30 @@ export function notaSemGasto(ufs, ano) {
   return ufs.length === 1
     ? `1 estado não declarou gasto nesta área em ${ano}: ${lista}.`
     : `${ufs.length} estados não declararam gasto nesta área em ${ano}: ${lista}.`
+}
+
+/**
+ * "Em 2024, o RJ pagou R$ 5,4 bi em juros e amortização da dívida, contra R$ 10,3 bi em saúde
+ * e R$ 12,1 bi em educação." (valores já na unidade escolhida; null se faltar o pago)
+ */
+export function fraseDivida({ ano, uf, artigo, pago, saude, educacao }) {
+  if (pago === null || pago === undefined) return null
+  return `Em ${ano}, ${sujeito(uf, artigo)} pagou ${reaisCompacto(pago)} em juros e amortização da dívida, `
+    + `contra ${reaisCompacto(saude)} em saúde e ${reaisCompacto(educacao)} em educação.`
+}
+
+/**
+ * "Em 2024, a receita do RJ (R$ 98,3 bi) superou a despesa (R$ 99,3 bi)..." — sobra ou falta no ano.
+ * receita e despesa já na unidade escolhida; null se faltar algum dos dois.
+ */
+export function fraseResultado({ ano, uf, artigo, receita, despesa }) {
+  if (receita === null || receita === undefined || despesa === null || despesa === undefined) return null
+  const diferenca = receita - despesa
+  const de = deUf(uf, artigo)
+  if (Math.abs(diferenca) < 0.0005 * Math.max(receita, despesa)) {
+    return `Em ${ano}, a receita ${de} (${reaisCompacto(receita)}) e a despesa (${reaisCompacto(despesa)}) praticamente empataram.`
+  }
+  return diferenca > 0
+    ? `Em ${ano}, a receita ${de} (${reaisCompacto(receita)}) superou a despesa (${reaisCompacto(despesa)}) em ${reaisCompacto(diferenca)}: sobrou dinheiro.`
+    : `Em ${ano}, a despesa ${de} (${reaisCompacto(despesa)}) superou a receita (${reaisCompacto(receita)}) em ${reaisCompacto(-diferenca)}: faltou dinheiro.`
 }

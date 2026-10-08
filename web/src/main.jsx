@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
-import Navegacao from './componentes/Navegacao.jsx'
 import { aplicarTema, lerTema } from './tema.js'
 import './estilo.css'
 
@@ -10,7 +9,6 @@ aplicarTema(lerTema())
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Navegacao />
     <App />
   </StrictMode>,
 )

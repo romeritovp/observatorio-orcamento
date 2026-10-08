@@ -29,6 +29,12 @@ export const pct = (valor, casas = 1) =>
     return `${v.toLocaleString('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c })}%`
   })
 
+/** Variação com sinal: "+3,2%", "−1,5%" (sinal de menos tipográfico). */
+export const pctComSinal = (valor, casas = 1) =>
+  semNulo(valor, (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toLocaleString('pt-BR', {
+    minimumFractionDigits: casas, maximumFractionDigits: casas,
+  })}%`)
+
 export const numero = (valor, casas = 0) =>
   semNulo(valor, (v) => (casas === 0 ? inteiro.format(v) : v.toLocaleString('pt-BR', {
     minimumFractionDigits: casas, maximumFractionDigits: casas,
@@ -62,11 +68,20 @@ export function nomeEmpresa(empresa, sigla = '', siglasUfs = []) {
   }
   if (/[a-zà-ú]/.test(nome)) return nome
 
-  const manter = new Set([...siglasUfs, ...(sigla.includes(' ') ? [] : [sigla])].map((s) => s.toUpperCase()))
-  return nome.split(' ').map((palavra, i) => {
+  return iniciaisMaiusculas(nome, [...siglasUfs, ...(sigla.includes(' ') ? [] : [sigla])])
+}
+
+/**
+ * Texto em maiúsculas → iniciais maiúsculas, com de/da/do/das/dos/e em minúsculas e mantendo
+ * as palavras de `manter`, palavras sem vogal (CTC) e formas societárias (SA, S/A).
+ * Ex.: "INFORMÁTICA E TECNOLOGIA DA INFORMAÇÃO" → "Informática e Tecnologia da Informação".
+ */
+export function iniciaisMaiusculas(texto, manter = []) {
+  const manterSet = new Set(manter.map((s) => s.toUpperCase()))
+  return texto.split(' ').map((palavra, i) => {
     const minuscula = palavra.toLocaleLowerCase('pt-BR')
     if (i > 0 && MINUSCULAS.has(minuscula)) return minuscula
-    if (manter.has(palavra) || FORMAS_SOCIETARIAS.has(palavra) || !/[AEIOUÁÉÍÓÚÂÊÔÃÕ]/.test(palavra)) return palavra
+    if (manterSet.has(palavra) || FORMAS_SOCIETARIAS.has(palavra) || !/[AEIOUÁÉÍÓÚÂÊÔÃÕ]/.test(palavra)) return palavra
     return minuscula.replace(/(^|-)(\p{L})/gu, (_, antes, letra) => antes + letra.toLocaleUpperCase('pt-BR'))
   }).join(' ')
 }

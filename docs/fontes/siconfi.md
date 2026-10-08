@@ -23,6 +23,8 @@ Fonte nacional. Serve a qualquer UF com o mesmo formato.
 
 `id_ente` = código IBGE. Para estados, `co_esfera = E`.
 
+> **`/rgf` exige `co_poder`.** A dívida (Anexo 02) só sai no RGF do **Executivo** (`co_poder=E`). Sem `co_poder`, ou com outro poder (L, J, M, D), a API devolve **zero itens, sem erro** (conferido em RJ e PE, 2024). O mesmo vazio silencioso acontece com `in_periodicidade=S` ou `co_tipo_demonstrativo="RGF Simplificado"` para estados. Parâmetros usados: `an_exercicio, in_periodicidade=Q, nr_periodo=3, co_tipo_demonstrativo=RGF, no_anexo=RGF-Anexo 02, co_esfera=E, co_poder=E, id_ente`.
+
 > **A confirmar:** parâmetros obrigatórios exatos de cada endpoint e nomes exatos dos anexos por ano. Paginação e formato da resposta do `/rreo` já confirmados (abaixo).
 
 ## Formato da resposta (confirmado em `/rreo`, 2026-10-08)
@@ -98,6 +100,41 @@ Mudanças de nome de subfunção observadas no período (o dicionário usa o nom
 
 Subfunções que só aparecem a partir de 2025: 245 (Serviços Socioassistenciais) e 246 (Segurança e Renda). Séries de assistência social (função 08) que cruzem 2024 e 2025 por subfunção precisam de cuidado.
 
+## Formato do RGF Anexo 02, Dívida Consolidada Líquida (confirmado, 2026-10-08)
+
+Campos de cada item: os do RREO mais `co_poder`. Um único `rotulo` ("Padrão"). **O `cod_conta` identifica a linha** (ao contrário do RREO Anexo 02). Colunas: `SALDO DO EXERCÍCIO ANTERIOR`, `Até o 1º Quadrimestre`, `Até o 2º Quadrimestre`, `Até o 3º Quadrimestre`; quem está acima do limite tem também as colunas da trajetória de retorno (`Limite Máximo (a)`, `% DCL (b)`, ...), na linha `PercentualTrajetoriaRetornoAoLimiteDaDividaConsolidadaLiquida`. O estoque de fim de ano é `Até o 3º Quadrimestre`.
+
+Hierarquia da dívida consolidada (`extractors/nacional/siconfi/rgf.py`, `HIERARQUIA`; filho ausente = zero):
+
+| pai | filhos |
+|---|---|
+| `DividaConsolidada` (I) | `DividaMobiliaria`, `DividaContratual`, `PrecatoriosPosterioresA05052000VencidosENaoPagos`, `OutrasDividas` |
+| `DividaContratual` | `RGF2Emprestimos`, `RGF2Financiamentos`, `RGF2ReestruturacaoDaDividaDeEstadosEMunicipios`, `RGF2ParcelamentoERenegociacaoDeDividas`, `RGF2DemaisDividasContratuais` |
+| `RGF2Emprestimos` / `RGF2Financiamentos` | `...Internos`, `...Externos` (alguns estados usam "Empréstimos", outros "Financiamentos", ex.: AM) |
+| `RGF2ParcelamentoERenegociacaoDeDividas` | de tributos, de contribuições previdenciárias, de demais contribuições sociais, do FGTS, com instituição não financeira |
+
+Outras linhas: `DeducoesDaDividaConsolidada` (II, com disponibilidade de caixa e haveres), `DividaConsolidadaLiquida` (III = I − II), `RGF2ReceitaCorrenteLiquida`, `ReceitaCorrenteLiquidaAjustadaParaCalculoDosLimitesDeEndividamento` (desde 2020), `PercentualDaDCSobreARCL`, `PercentualDaDCLSobreARCL` (em %, não fração), `LimiteDefinidoPorResolucaoDoSenadoFederal` e `LimiteDeAlerta` (em R$: 200% e 180% da RCL ajustada).
+
+**Linhas que não integram a dívida consolidada**, no fim do anexo: passivo atuarial, precatórios anteriores a 05/05/2000, precatórios posteriores não incluídos na DC, RP não processados, apropriação de depósitos judiciais, depósitos sem contrapartida e, no RO (2023 e 2024), a dívida contratual de PPP. Gravadas como vieram; não entram em validação nem em total (`rgf.FORA_DA_DC`).
+
+**Não há separação por credor**, só por tipo. A "reestruturação" é, em sua maior parte, dívida com a União; empréstimos internos misturam bancos públicos, BNDES e outros.
+
+## Formato da DCA Anexo I-D, despesa por natureza (confirmado, 2026-10-08)
+
+Mesmos campos da I-E, `rotulo` "Padrão", as cinco colunas de despesa (empenhada, liquidada, paga, inscrição em RP). `cod_conta`: `TotalDespesas`; `DO` + código (exceto intra) e `DI` + código (intra), em quatro níveis: categoria (`DO3.0.00.00.00.00`), grupo (`DO3.2.00.00.00.00` Juros e Encargos da Dívida; `DO4.6.00.00.00.00` Amortização da Dívida), modalidade (`DO3.2.90.00.00.00` Aplicações Diretas; `DO3.2.20...` Transferências à União) e elemento (`DO3.2.90.21.00.00` Juros sobre a Dívida por Contrato). Conferido: grupo = soma das modalidades `DO`. Grupo ausente = nada liquidado nele.
+
+**Juros e amortização: usar a natureza (I-D ou RREO Anexo 01), não as subfunções 841–844.** As subfunções não separam juros de amortização e cada estado as usa de um jeito (o RJ põe R$ 4,9 bi, juros incluídos, em "Refinanciamento da Dívida Interna"; PE põe quase tudo em "Serviço da Dívida"). Comparação nas 27 UFs: ver "Registro de verificações".
+
+## Formato da DCA Anexo I-C, receita por natureza (confirmado, 2026-10-08)
+
+Mesmos campos da I-D. Colunas: `Receitas Brutas Realizadas`, `Deduções - Transferências Constitucionais` (parte dos municípios: 25% do ICMS, 50% do IPVA), `Deduções - FUNDEB`, `Outras Deduções da Receita`. **Não há coluna de receita líquida** (bruta − deduções). `cod_conta`: `RO`/`RI` + natureza (seis níveis: categoria, origem, espécie, desdobramentos) e três totais (`ReceitasExcetoIntraOrcamentarias`, `ReceitasIntraOrcamentarias`, `TotalReceitas`). **Intra é pela categoria (7 e 8), não pelo prefixo**: em 2019 vários estados entregam as categorias 7 e 8 com `RO`.
+
+**Recodificação em 2022** (ementário novo): ICMS `1.1.1.8.02.1` → `1.1.1.4.50.1`; adicional do ICMS (combate à pobreza) `1.1.1.8.02.2` → `1.1.1.4.50.2`; IPVA `1.1.1.8.01.2` → `1.1.1.2.51`; ITCMD `1.1.1.8.01.3` → `1.1.1.2.52`; FPE `1.7.1.8.01.1` → `1.7.1.1.50`; SUS `1.7.1.8.03` → `1.7.1.3` (capital `2.4.1.8.03` → `2.4.1.1`); FUNDEB retorno `1.7.5.8.01` → `1.7.5.1`; complementação da União `1.7.1.8.09` → `1.7.1.5`; compensações financeiras (royalties) `1.7.1.8.02` → `1.7.1.2`; convênios `…8.10` → ramos próprios (`1.7.1.7`, `2.4.1.4`...). IR retido (`1.1.1.3.03`), operações de crédito (`2.1`) e alienação (`2.2`) não mudam. Mapa completo: `dicionarios/nacional/receita_itens.csv`. A partir de 2022 aparece `1.7.1.9.62`, compensação da União pelas perdas de ICMS (LC 194/2022).
+
+A I-C líquida exceto intra é exatamente o que o RREO Anexo 01 mostra em "RECEITAS (EXCETO INTRA-ORÇAMENTÁRIAS)" (até o bimestre), salvo declarações divergentes (ver "Registro de verificações"). A RCL não sai da I-C (tem exclusões que o anexo não detalha): usar o RGF Anexo 02 (= RREO Anexo 03).
+
+Royalties: PE e outros declaram como transferência (`1.7.1.2.52`, petróleo); o RJ não tem linha de petróleo, e "Demais Receitas Patrimoniais" (`1.3.9`) vale 26%–40% da receita dele, sem detalhe.
+
 ## Conferência manual: Saúde do RJ em 2024 (2026-10-08)
 
 Número conferido: liquidado da função 10 (Saúde) do RJ em 2024, sem intraorçamentárias, no parquet `data/processed/despesa/uf=RJ/ano=2024/siconfi_dca_anexo_i_e.parquet`.
@@ -137,6 +174,10 @@ Tratado em `rreo.py` (identificação pelo `cod_conta` e pela `conta`): no Anexo
 
 | data | o que foi verificado | resultado |
 |---|---|---|
+| 2026-10-08 | `/rgf` Anexo 02, 3º quadrimestre, Executivo, 27 UFs, 2019–2025 (`lote_divida.py`) | 189 ok, 0 vazias, 0 erros. Validado só o 3º quadrimestre: DC − deduções = DCL e subcontas = pai, em todos. Colunas intermediárias têm subcontas que não somam em vários estados (não usadas). Limite declarado diverge do legal em CE 2019–2022 (0), RR (90%), SP 2025 (170%), MS 2024 (200,8%) |
+| 2026-10-08 | `/dca` Anexo I-D, 27 UFs, 2019–2025 (`lote_divida.py`) | 189 ok. Grupo = modalidades DO + DI (a linha do grupo inclui intra) em 1.303 de 1.303 combinações. Juros + amortização (modalidades DO, liquidado) = RREO Anexo 01 em 178 de 189; = subfunções 841–844 em só 43 de 189 |
+| 2026-10-08 | `/rreo` Anexo 01, 6º bim., 27 UFs, 2019–2025 | 189 ok, para conferência da dívida e da receita |
+| 2026-10-08 | `/dca` Anexo I-C, 27 UFs, 2019–2025 (`lote_receita.py`) | 189 ok; totais conferidos (exceto intra = categorias 1+2; intra = 7+8; total = soma). Líquida exceto intra = RREO Anexo 01 em 175 de 189 (diferem AC 2022, RR 2019–2022, AP 2019/2020/2022, PI 2025, CE 2019/2025, AL 2024/2025, PR 2021). Mapeamento por item: 189 de 189 sem código órfão e somando o total |
 | 2026-10-08 | `/rreo` Anexo 02, 6º bim., 27 UFs, 2019–2025 (`lote_rreo.py`) | 189 ok, 0 vazias, 0 erros. Blocos sempre com `cod_conta` `RREO2TotalDespesas` / `RREO2TotalDespesasIntra`; rótulo do bloco intra em 2019 = "Total de Despesas". Função 10 sem intra = DCA ao centavo em 185 de 189 (divergem RR 2019, MA 2019, MA 2020, SP 2022; ver decisoes.md). DF usa `co_esfera = E` |
 | 2026-10-08 | conferência manual Saúde RJ 2024: DCA I-E × RREO Anexo 02 × RREO Anexo 12 | DCA = Anexo 02 ao centavo; Anexo 12 indisponível na API (zero itens em RJ e SP, 2023–2025) |
 | 2026-10-08 | `/anexos-relatorios` | sem resposta (3 × timeout de 60 s) |

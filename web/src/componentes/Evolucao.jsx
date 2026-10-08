@@ -10,15 +10,19 @@ const MARGEM = { topo: 12, direita: 92, base: 28, esquerda: 58 }
 // Linhas no tempo: destaque (cor), pares (cinza) e mediana (cinza escuro). Toque/passe o
 // mouse para ver os valores do ano. series: [{id, rotulo, tipo, pontos: [{ano, valor}]}]
 // quebras: anos com mudança de classificação (linha tracejada entre o ano anterior e o ano).
-export default function Evolucao({ series, anos, metrica, anoSelecionado, destaque, quebras = [] }) {
+// compacto: versão menor para gráficos lado a lado (sem a tabela de números embaixo).
+// referencias: linhas horizontais tracejadas fixas, ex.: [{valor: 200, rotulo: 'limite 200%'}].
+// legenda: itens próprios [{classe, rotulo}] no lugar da legenda padrão (destaque, pares, mediana).
+export default function Evolucao({ series, anos, metrica, anoSelecionado, destaque, quebras = [], compacto = false, referencias = [], legenda }) {
   const ref = useRef(null)
   const largura = useLargura(ref)
   const [anoDica, setAnoDica] = useState(null)
 
-  const altura = largura < 520 ? 250 : 300
-  const area = { x0: MARGEM.esquerda, x1: largura - MARGEM.direita, y0: altura - MARGEM.base, y1: MARGEM.topo }
+  const margem = compacto ? { ...MARGEM, direita: 60, esquerda: 54 } : MARGEM
+  const altura = compacto ? 210 : largura < 520 ? 250 : 300
+  const area = { x0: margem.esquerda, x1: largura - margem.direita, y0: altura - margem.base, y1: margem.topo }
   const valores = series.flatMap((s) => s.pontos.map((p) => p.valor)).filter((v) => v !== null)
-  const marcas = marcasEixo(Math.max(...valores, 0))
+  const marcas = marcasEixo(Math.max(...valores, ...referencias.map((r) => r.valor), 0))
   const topo = marcas[marcas.length - 1]
   const x = (ano) => area.x0 + ((ano - anos[0]) / Math.max(anos.length - 1, 1)) * (area.x1 - area.x0)
   const y = (v) => area.y0 - (v / topo) * (area.y0 - area.y1)
@@ -51,7 +55,9 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
 
   return (
     <div>
-      <Legenda uf={destaque} temPares={series.some((s) => s.tipo === 'par')} linha />
+      {legenda
+        ? <ul className="legenda">{legenda.map((l) => <li key={l.rotulo}><span className={`amostra ${l.classe}`} />{l.rotulo}</li>)}</ul>
+        : <Legenda uf={destaque} temPares={series.some((s) => s.tipo === 'par')} linha />}
       <div className="grafico" ref={ref} onPointerMove={escolherAno} onPointerDown={escolherAno} onPointerLeave={() => setAnoDica(null)}>
         <svg width={largura} height={altura} role="img" aria-label="Evolução no tempo">
           <g className="eixo">
@@ -61,11 +67,17 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
                 <text x={area.x0 - 8} y={y(m)} dy="0.32em" textAnchor="end">{metrica === 'pct_total' ? `${m.toLocaleString('pt-BR')}%` : valorDaMetrica(m, metrica)}</text>
               </g>
             ))}
-            {anos.map((a, i) => (largura >= 420 || i % 2 === 0 || a === anos[anos.length - 1]) && (
+            {anos.map((a, i) => ((compacto ? largura >= 360 : largura >= 420) || i % 2 === 0 || a === anos[anos.length - 1]) && (
               <text key={a} x={x(a)} y={area.y0 + 18} textAnchor="middle"
                 fontWeight={a === anoSelecionado ? 700 : 400}>{a}</text>
             ))}
           </g>
+          {referencias.map((r) => (
+            <g key={`ref-${r.valor}`} className="referencia">
+              <line x1={area.x0} x2={area.x1} y1={y(r.valor)} y2={y(r.valor)} />
+              <text x={area.x0 + 4} y={y(r.valor)} dy="-0.35em">{r.rotulo}</text>
+            </g>
+          ))}
           {[...new Set(quebras)].filter((a) => anos.includes(a) && a > anos[0]).map((a) => {
             const xq = (x(a - 1) + x(a)) / 2
             return (
@@ -101,7 +113,7 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
           </div>
         )}
       </div>
-      <details className="dados-tabela">
+      {!compacto && <details className="dados-tabela">
         <summary>Ver os números em tabela</summary>
         <div className="rolagem">
           <table className="tabela numeros">
@@ -116,7 +128,7 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
             </tbody>
           </table>
         </div>
-      </details>
+      </details>}
     </div>
   )
 }

@@ -308,3 +308,281 @@ export function mudancasDeDependencia(estatais, uf, funcao, anos) {
     .filter((m) => anos.includes(m.ano))
     .sort((a, b) => a.ano - b.ano)
 }
+
+// --- tela "Por estado" ------------------------------------------------------------------
+
+/**
+ * Despesa total de cada UF e ano (soma das linhas de função, sem intra), corrigida, por habitante
+ * e variação sobre o ano anterior (nula no primeiro ano ou sem o ano anterior).
+ * Espelha publicacao.exportar.totais_por_uf; o teste compara com gabarito.json → totais.
+ */
+export function totaisPorUfAno(despesa, serieIpca, { estagio = 'liquidado', anoBase, fonte = 'siconfi_dca' }) {
+  const funcoes = filtrar(despesa, { fonte_dado: fonte, nivel: 'funcao', intra: false })
+  const indice = indiceEncadeado(serieIpca)
+  const linhas = [...agrupar(funcoes, ['uf', 'ano']).values()].map((membros) => {
+    const validos = membros.filter((l) => !ehNulo(l[estagio]))
+    const nominal = validos.length ? validos.reduce((soma, l) => soma + l[estagio], 0) : null
+    const { uf, ano, populacao } = membros[0]
+    const real = nominal === null ? null : nominal * fatorDeflacao(indice, ano, anoBase)
+    if (ehNulo(populacao) || populacao <= 0) throw new Error(`sem população para ${uf} ${ano}`)
+    return {
+      uf, ano, populacao, total_nominal: nominal, total_real: real,
+      per_capita_nominal: nominal === null ? null : nominal / populacao,
+      per_capita_real: real === null ? null : real / populacao,
+    }
+  })
+  const porChave = new Map(linhas.map((l) => [chaveDe(l, ['uf', 'ano']), l]))
+  const variacaoPct = (atual, anterior) => (ehNulo(atual) || ehNulo(anterior) || anterior === 0
+    ? null : (atual / anterior - 1) * 100)
+  return linhas.map((l) => {
+    const anterior = porChave.get(chaveDe({ uf: l.uf, ano: l.ano - 1 }, ['uf', 'ano']))
+    return {
+      ...l,
+      var_nominal_pct: anterior ? variacaoPct(l.total_nominal, anterior.total_nominal) : null,
+      var_real_pct: anterior ? variacaoPct(l.total_real, anterior.total_real) : null,
+    }
+  }).sort((a, b) => String(a.uf).localeCompare(String(b.uf)) || a.ano - b.ano)
+}
+
+/** indicadoresDaFuncao para todas as funções presentes nos dados: Map funcao_cod → linhas. */
+export function indicadoresDeTodasAsFuncoes(despesa, serieIpca, opcoes) {
+  const fonte = opcoes.fonte ?? 'siconfi_dca'
+  const funcoes = [...new Set(filtrar(despesa, { fonte_dado: fonte, nivel: 'funcao' }).map((l) => l.funcao_cod))].sort()
+  return new Map(funcoes.map((funcao) => [funcao, indicadoresDaFuncao(despesa, serieIpca, { ...opcoes, funcao })]))
+}
+
+/**
+ * Composição do orçamento da UF no ano: uma linha por função, em ordem de % do orçamento
+ * (maior primeiro; as sem gasto declarado no fim, pelo código). porFuncao: indicadoresDeTodasAsFuncoes.
+ */
+export function composicaoDoAno(porFuncao, uf, ano) {
+  const linhas = []
+  for (const [funcao, ind] of porFuncao) {
+    const linha = ind.find((l) => l.uf === uf && l.ano === ano)
+    if (linha) linhas.push({ ...linha, funcao_cod: funcao })
+  }
+  return linhas.sort((a, b) => (b.pct_despesa_total ?? -Infinity) - (a.pct_despesa_total ?? -Infinity)
+    || a.funcao_cod.localeCompare(b.funcao_cod))
+}
+
+/** Série de uma UF numa função, em ordem de ano: [{ano, ...linha}]. */
+export function serieDaUf(linhas, uf) {
+  return linhas.filter((l) => l.uf === uf).sort((a, b) => a.ano - b.ano)
+}
+
+/**
+ * Tabela áreas × anos de uma UF: [{funcao_cod, valores: [valor de cada ano em `anos`]}], na ordem
+ * de `ordemFuncoes`. coluna: campo dos indicadores (per_capita_real, pct_despesa_total, real, ...).
+ */
+export function tabelaAreasPorAno(porFuncao, uf, anos, coluna, ordemFuncoes) {
+  return ordemFuncoes.filter((f) => porFuncao.has(f)).map((funcao) => {
+    const daUf = new Map(porFuncao.get(funcao).filter((l) => l.uf === uf).map((l) => [l.ano, l]))
+    return { funcao_cod: funcao, valores: anos.map((ano) => daUf.get(ano)?.[coluna] ?? null) }
+  })
+}
+
+/**
+ * Estatais da UF na edição que vale para o ano (estatais.json → lista_por_edicao), separadas em
+ * não dependentes e dependentes, cada grupo pela sigla. Só cadastro: nenhum valor financeiro.
+ */
+export function estataisDoEstado(estatais, uf, ano) {
+  if (!estatais?.edicoes?.length) return { edicao: null, painel: null, naoDependentes: [], dependentes: [] }
+  const edicao = edicaoParaAno(estatais.edicoes, ano)
+  const todas = [...(estatais.lista_por_edicao?.[String(edicao)]?.[uf] ?? [])]
+    .sort((a, b) => String(a.sigla_exibicao ?? a.sigla).localeCompare(String(b.sigla_exibicao ?? b.sigla), 'pt-BR'))
+  return {
+    edicao,
+    painel: estatais.paineis?.[String(edicao)] ?? null,
+    naoDependentes: todas.filter((e) => !e.dependente),
+    dependentes: todas.filter((e) => e.dependente),
+  }
+}
+
+// --- subáreas (subfunções) ---------------------------------------------------------------
+
+/**
+ * Subáreas de todas as funções de uma UF, em todos os anos: linhas `subfuncao` e `demais`
+ * (subfunções não listadas), com as mesmas medidas da área: nominal, real, por habitante (real e
+ * da época) e % do orçamento, sempre sobre o orçamento TOTAL da UF no ano (não sobre a área).
+ * Subfunções + demais de uma função = a função. Linha sem valor no estágio fica de fora, como na área.
+ */
+export function subareasDaUf(despesa, serieIpca, { uf, estagio = 'liquidado', anoBase, fonte = 'siconfi_dca' }) {
+  const daUf = filtrar(despesa, { fonte_dado: fonte, uf, intra: false })
+  const totais = new Map(totaisPorUfAno(daUf, serieIpca, { estagio, anoBase, fonte }).map((t) => [t.ano, t]))
+  const indice = indiceEncadeado(serieIpca)
+  return daUf
+    .filter((l) => (l.nivel === 'subfuncao' || l.nivel === 'demais') && !ehNulo(l[estagio]))
+    .map((l) => {
+      const nominal = l[estagio]
+      const real = nominal * fatorDeflacao(indice, l.ano, anoBase)
+      const total = totais.get(l.ano)?.total_nominal
+      return {
+        uf, ano: l.ano, funcao_cod: l.funcao_cod, subfuncao_cod: l.subfuncao_cod ?? null, nivel: l.nivel,
+        nominal, real,
+        per_capita_nominal: nominal / l.populacao,
+        per_capita_real: real / l.populacao,
+        pct_despesa_total: ehNulo(total) || total === 0 ? null : (nominal / total) * 100,
+      }
+    })
+}
+
+/**
+ * Linhas de subárea de uma função para a tabela: [{subfuncao_cod, nivel, valores: [por ano em `anos`]}].
+ * Ordem: maior valor em `anoOrdem` primeiro; "demais" sempre no fim.
+ */
+export function tabelaSubareasPorAno(subareas, funcao, anos, coluna, anoOrdem) {
+  const grupos = agrupar(subareas.filter((l) => l.funcao_cod === funcao), ['nivel', 'subfuncao_cod'])
+  const linhas = [...grupos.values()].map((membros) => {
+    const porAno = new Map(membros.map((l) => [l.ano, l[coluna]]))
+    return { subfuncao_cod: membros[0].subfuncao_cod, nivel: membros[0].nivel, valores: anos.map((a) => porAno.get(a) ?? null) }
+  })
+  const iOrdem = anos.indexOf(anoOrdem)
+  return linhas.sort((a, b) => (a.nivel === 'demais') - (b.nivel === 'demais')
+    || (b.valores[iOrdem] ?? -Infinity) - (a.valores[iOrdem] ?? -Infinity)
+    || String(a.subfuncao_cod).localeCompare(String(b.subfuncao_cod)))
+}
+
+// --- dívida -------------------------------------------------------------------------------
+
+/** Tipos da composição da dívida, na ordem do relatório (divida.json → composicao). */
+export const TIPOS_DIVIDA = ['reestruturacao', 'internos', 'externos', 'parcelamentos', 'precatorios', 'outras']
+
+/**
+ * Indicadores da dívida por UF e ano, a partir de divida.json → linhas (R$ nominais):
+ * pago = juros + amortização; `<campo>_real` a preços de dez/anoBase (estoques são de 31/dez, como o IPCA
+ * dez/dez); posicao_dcl_rcl (1 = maior DCL/RCL) e n_ufs. DCL/RCL é a linha oficial do RGF, sem recálculo.
+ * Espelha publicacao.exportar.divida_gabarito; o teste compara com gabarito.json → divida.
+ */
+export function indicadoresDivida(linhas, serieIpca, { anoBase }) {
+  const indice = indiceEncadeado(serieIpca)
+  const comValores = linhas.map((l) => {
+    const fator = fatorDeflacao(indice, l.ano, anoBase)
+    const real = (v) => (ehNulo(v) ? null : v * fator)
+    const pago = ehNulo(l.juros) || ehNulo(l.amortizacao) ? null : l.juros + l.amortizacao
+    return {
+      ...l, fator_ipca: fator, pago,
+      juros_real: real(l.juros), amortizacao_real: real(l.amortizacao), pago_real: real(pago),
+      dc_real: real(l.dc), dcl_real: real(l.dcl), deducoes_real: real(l.deducoes), rcl_real: real(l.rcl),
+      limite_real: real(l.limite), alerta_real: real(l.alerta),
+      composicao_real: Object.fromEntries(TIPOS_DIVIDA.map((t) => [t, real(l.composicao?.[t])])),
+    }
+  })
+  return ranking(comValores, 'dcl_rcl_pct', ['ano']).map(({ dcl_rcl_pct_posicao: posicao, dcl_rcl_pct_n_ufs: n, ...l }) => ({
+    ...l, posicao_dcl_rcl: posicao, n_ufs: n,
+  }))
+}
+
+/**
+ * Composição da dívida de uma linha por tipo, do maior para o menor: [{tipo, valor, pct_dc}].
+ * campo: 'composicao' (R$ da época) ou 'composicao_real'. pct_dc = participação na dívida consolidada.
+ */
+export function composicaoDivida(linha, campo = 'composicao') {
+  if (!linha) return []
+  const total = TIPOS_DIVIDA.reduce((soma, t) => soma + (linha[campo]?.[t] ?? 0), 0)
+  return TIPOS_DIVIDA.map((tipo) => ({ tipo, valor: linha[campo]?.[tipo] ?? 0 }))
+    .map((c) => ({ ...c, pct_dc: total ? (c.valor / total) * 100 : null }))
+    .sort((a, b) => b.valor - a.valor)
+}
+
+/**
+ * Pago em dívida (juros + amortização) contra o liquidado em saúde (10) e educação (12), na UF e ano:
+ * [{id, valor, per_capita}] em R$ corrigidos (`corrigidos`) ou da época. Habitantes: os da despesa.
+ * divida: linha de indicadoresDivida; porFuncao: indicadoresDeTodasAsFuncoes.
+ */
+export function dividaContraAreas(divida, porFuncao, uf, ano, corrigidos = true) {
+  const area = (funcao) => porFuncao.get(funcao)?.find((l) => l.uf === uf && l.ano === ano)
+  const saude = area('10')
+  const educacao = area('12')
+  const populacao = saude?.populacao ?? educacao?.populacao ?? null
+  const porHab = (v) => (ehNulo(v) || !populacao ? null : v / populacao)
+  const pago = divida ? divida[corrigidos ? 'pago_real' : 'pago'] : null
+  const daArea = (l) => (l ? l[corrigidos ? 'real' : 'nominal'] : null)
+  return [
+    { id: 'divida', valor: pago, per_capita: porHab(pago) },
+    { id: 'saude', valor: daArea(saude), per_capita: porHab(daArea(saude)) },
+    { id: 'educacao', valor: daArea(educacao), per_capita: porHab(daArea(educacao)) },
+  ]
+}
+
+// --- receita ---------------------------------------------------------------------------------
+
+/** População por UF e ano ("uf|ano" → habitantes), a partir das linhas da despesa. */
+export function populacoes(despesa) {
+  const mapa = new Map()
+  for (const l of despesa) if (!ehNulo(l.populacao)) mapa.set(`${l.uf}|${l.ano}`, l.populacao)
+  return mapa
+}
+
+/**
+ * Indicadores da receita por UF e ano, a partir de receita.json → totais (R$ nominais, líquidos das deduções):
+ * receita_liquida (sem intra), receita_liquida_real, per capita (real e da época), % de impostos próprios
+ * e de transferências da União, posições (1 = maior) no per capita real e no % de impostos próprios.
+ * Espelha publicacao.exportar.receita_gabarito; o teste compara com gabarito.json → receita.
+ */
+export function indicadoresReceita(totais, serieIpca, { anoBase, populacao }) {
+  const indice = indiceEncadeado(serieIpca)
+  const linhas = totais.map((t) => {
+    const fator = fatorDeflacao(indice, t.ano, anoBase)
+    const pop = populacao.get(`${t.uf}|${t.ano}`)
+    if (ehNulo(pop) || pop <= 0) throw new Error(`sem população para ${t.uf} ${t.ano}`)
+    const real = t.liquida_exceto_intra * fator
+    return {
+      uf: t.uf, ano: t.ano, populacao: pop, fator_ipca: fator,
+      receita_liquida: t.liquida_exceto_intra, receita_liquida_real: real,
+      per_capita_nominal: t.liquida_exceto_intra / pop, per_capita_real: real / pop,
+      impostos_proprios: t.impostos_proprios, transferencias_uniao: t.transferencias_uniao,
+      pct_impostos_proprios: t.liquida_exceto_intra ? (t.impostos_proprios / t.liquida_exceto_intra) * 100 : null,
+      pct_transferencias_uniao: t.liquida_exceto_intra ? (t.transferencias_uniao / t.liquida_exceto_intra) * 100 : null,
+    }
+  })
+  return ranking(ranking(linhas, 'per_capita_real', ['ano']), 'pct_impostos_proprios', ['ano']).map((l) => {
+    const { per_capita_real_posicao: pPc, per_capita_real_n_ufs: n, pct_impostos_proprios_posicao: pImp,
+      pct_impostos_proprios_n_ufs: _nImp, ...resto } = l
+    return { ...resto, posicao_per_capita_real: pPc, posicao_pct_impostos: pImp, n_ufs: n }
+  })
+}
+
+/**
+ * Composição da receita líquida de uma UF no ano, por item, sem as intraorçamentárias, do maior para o menor:
+ * [{item, valor, pct}] (pct = % da receita líquida). fator: 1 para R$ da época, ou o fator do IPCA.
+ */
+export function composicaoReceita(linhas, uf, ano, fator = 1) {
+  const doAno = linhas.filter((l) => l.uf === uf && l.ano === ano && l.item !== 'intraorcamentarias')
+  const total = doAno.reduce((s, l) => s + l.liquida, 0)
+  return doAno.map((l) => ({ item: l.item, valor: l.liquida * fator, pct: total ? (l.liquida / total) * 100 : null }))
+    .sort((a, b) => b.valor - a.valor)
+}
+
+/**
+ * Para onde vai um imposto (ex.: 'icms', 'ipva') na UF e ano: arrecadado (bruta), municípios
+ * (dedução de transferências constitucionais), FUNDEB, outras deduções e o que fica com o estado (líquida).
+ * Valores × fator. null se o item não existe.
+ */
+export function destinoDoImposto(linhas, uf, ano, item, fator = 1) {
+  const l = linhas.find((x) => x.uf === uf && x.ano === ano && x.item === item)
+  if (!l) return null
+  const v = (campo) => (l[campo] ?? 0) * fator
+  return { arrecadado: v('bruta'), municipios: v('ded_transferencias'), fundeb: v('ded_fundeb'), outras: v('ded_outras'), estado: v('liquida') }
+}
+
+/**
+ * Tabela itens × anos de uma UF (receita líquida): [{item, valores: [por ano]}], na ordem de `ordemItens`.
+ * metrica: 'liquida' (R$), 'per_capita' (R$ por habitante) ou 'pct' (% da receita líquida sem intra).
+ * corrigidos: valores em R$ de dez/anoBase. Itens sem linha no ano ficam 0 (o item não teve receita).
+ */
+export function tabelaReceita(linhas, uf, anos, ordemItens, { metrica, corrigidos, serieIpca, anoBase, populacao }) {
+  const indice = indiceEncadeado(serieIpca)
+  const daUf = linhas.filter((l) => l.uf === uf)
+  const totalAno = new Map(anos.map((a) => [a, daUf.filter((l) => l.ano === a && l.item !== 'intraorcamentarias')
+    .reduce((s, l) => s + l.liquida, 0)]))
+  return ordemItens.map((item) => ({
+    item,
+    valores: anos.map((ano) => {
+      if (!daUf.some((l) => l.ano === ano)) return null
+      const v = daUf.find((l) => l.ano === ano && l.item === item)?.liquida ?? 0
+      if (metrica === 'pct') return item === 'intraorcamentarias' || !totalAno.get(ano) ? null : (v / totalAno.get(ano)) * 100
+      const valor = corrigidos ? v * fatorDeflacao(indice, ano, anoBase) : v
+      return metrica === 'per_capita' ? valor / populacao.get(`${uf}|${ano}`) : valor
+    }),
+  }))
+}

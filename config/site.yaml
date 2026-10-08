@@ -1,0 +1,5 @@
+# Configuração do site (web/). Lida por publicacao/exportar.py e levada ao meta.json; o front lê dali.
+# A UF fica aqui, na configuração, e não no código (regra de agnosticismo do CLAUDE.md).
+
+# Estado aberto quando a URL não diz qual (sigla de dicionarios/nacional/ufs.csv)
+uf_padrao: SP

@@ -4,6 +4,7 @@ import pandas as pd
 import pytest
 
 from analytics import (
+    mapear_por_prefixo, segmentos, valores_proprios,
     agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
 )
 
@@ -360,3 +361,47 @@ def test_nomes_de_exibicao_recusa_correcao_repetida():
     df = pd.DataFrame({"uf": ["AA"], "cnpj": ["1"], "sigla": ["X"], "empresa": ["X"], "ano_referencia": [2024]})
     with pytest.raises(ValueError, match="repetido"):
         nomes_de_exibicao(df, pd.DataFrame({"cnpj": ["1", "1"], "sigla_exibicao": ["a", "b"], "nome_exibicao": ["a", "b"]}))
+
+
+# códigos hierárquicos (natureza da receita)
+
+def arvore():
+    """AA e BB: categoria 1 com filhos 1.1 (que tem 1.1.1 e 1.1.2) e 1.7; em BB o 1.1 não detalha tudo."""
+    linhas = []
+    for uf, valores in [("AA", {"1.0.0": 100, "1.1.0": 60, "1.1.1": 40, "1.1.2": 20, "1.7.0": 40}),
+                        ("BB", {"1.0.0": 50, "1.1.0": 30, "1.1.1": 25, "1.7.0": 20})]:
+        linhas += [{"uf": uf, "ano": 2023, "codigo": c, "bruta": float(v)} for c, v in valores.items()]
+    return pd.DataFrame(linhas)
+
+
+def test_segmentos_sem_zeros_finais():
+    assert segmentos("1.1.1.4.50.1.0") == ("1", "1", "1", "4", "50", "1")
+    assert segmentos("1.3.1.0.01.0.0") == ("1", "3", "1", "0", "01")
+    assert segmentos("7.0.0.0.00.0.0") == ("7",)
+
+
+def test_valores_proprios_somam_o_topo_sem_dupla_contagem():
+    df = valores_proprios(arvore(), "codigo", ["bruta"], ["uf", "ano"])
+    for uf, topo in [("AA", 100), ("BB", 50)]:
+        assert df[df["uf"] == uf]["bruta_proprio"].sum() == topo
+    bb = df[df["uf"] == "BB"].set_index("codigo")["bruta_proprio"]
+    assert bb["1.1.0"] == 5  # parte do pai que os filhos não detalham não some
+    assert df[df["uf"] == "AA"].set_index("codigo")["bruta_proprio"]["1.0.0"] == 0
+
+
+def test_valores_proprios_recusa_codigo_repetido():
+    df = pd.concat([arvore(), arvore().iloc[[0]]])
+    with pytest.raises(ValueError, match="repetido"):
+        valores_proprios(df, "codigo", ["bruta"], ["uf", "ano"])
+
+
+def test_mapear_por_prefixo_mais_longo_e_vigencia():
+    dic = pd.DataFrame({"item": ["impostos", "imposto_x", "imposto_x_novo", "outras"],
+                        "codigo": ["1.1", "1.1.1", "1.1.2", "1"],
+                        "ano_inicio": [None, None, 2024, None], "ano_fim": [None, None, None, None]})
+    df = mapear_por_prefixo(arvore().assign(ano=[2023] * 5 + [2024] * 4), "codigo", "ano", dic)
+    itens = dict(zip(zip(df["uf"], df["codigo"]), df["item"]))
+    assert itens[("AA", "1.1.1")] == "imposto_x" and itens[("AA", "1.1.2")] == "impostos"  # 2023: regra nova não vale
+    assert itens[("AA", "1.7.0")] == "outras" and itens[("AA", "1.0.0")] == "outras"
+    sem = mapear_por_prefixo(pd.DataFrame({"codigo": ["2.1.0"], "ano": [2023]}), "codigo", "ano", dic)
+    assert sem["item"].isna().all()

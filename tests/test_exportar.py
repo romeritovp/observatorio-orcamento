@@ -153,6 +153,12 @@ def test_estatais_json_por_edicao_uf_e_funcao_so_ativas_nao_dependentes():
     assert saida["por_edicao"]["2023"]["BB"]["17"][0]["sigla"] == "PRIV"
     assert saida["por_edicao"]["2023"]["AA"] == {"17": [san]}
     assert saida["mudancas_dependencia"] == {}  # ninguém mudou de dependência entre as edições
+    # Lista completa: inclui dependentes e sem função; painel da edição (pasta vAAAA = exercício AAAA-1)
+    assert [e["sigla"] for e in saida["lista_por_edicao"]["2024"]["BB"]] == ["BANCO", "SANB"]
+    banco = saida["lista_por_edicao"]["2024"]["BB"][0]
+    assert banco["funcao_cod"] is None and banco["dependente"] is False and banco["situacao"] == "ATIVA"
+    assert saida["paineis"] == {"2023": "https://tesouro.github.io/empresas-estados/v2024/",
+                                "2024": "https://tesouro.github.io/empresas-estados/v2025/"}
 
     # SAN passa a dependente em 2024: vira mudança, e sai das estatais fora das contas de 2024
     mudou = estatais.assign(dependente=["true", "false", "true", "false", "false", "false"])
@@ -172,3 +178,92 @@ def test_estatais_json_por_edicao_uf_e_funcao_so_ativas_nao_dependentes():
     linha = saida["por_edicao"]["2024"]["AA"]["17"][0]
     assert linha["empresa"] == "Saneamento AA"
     assert (linha["sigla_exibicao"], linha["nome_exibicao"], linha["nome_manual"]) == ("San", "Saneamento de AA", True)
+
+
+def test_gabarito_totais_por_uf_e_variacao():
+    gab = exportar.montar_gabarito(despesa(), POPULACAO, IPCA, 2024)
+    totais = {(t["uf"], t["ano"]): t for t in gab["totais"]}
+    assert len(totais) == 4
+    for (uf, ano), t in totais.items():
+        soma = sum(l["liquidado"] for l in despesa().to_dict(orient="records")
+                   if l["uf"] == uf and l["ano"] == ano and l["nivel"] == "funcao" and not l["intra"])
+        assert t["total_nominal"] == pytest.approx(soma)
+        assert t["per_capita_nominal"] == pytest.approx(soma / POPULACAO.set_index(["uf", "ano"]).loc[(uf, ano), "populacao"])
+    primeiro, segundo = totais[("AA", 2023)], totais[("AA", 2024)]
+    assert primeiro["var_real_pct"] is None
+    assert segundo["var_nominal_pct"] == pytest.approx((segundo["total_nominal"] / primeiro["total_nominal"] - 1) * 100)
+    assert segundo["var_real_pct"] == pytest.approx((segundo["total_real"] / primeiro["total_real"] - 1) * 100)
+
+
+def registros_divida():
+    """Dívida de duas UFs em dois anos (formato de publicacao.divida.montar_divida)."""
+    def linha(uf, ano, pct, juros, amort):
+        return {"uf": uf, "ano": ano, "dc": 100.0, "deducoes": 20.0, "dcl": 80.0, "rcl": 50.0, "rcl_ajustada": 50.0,
+                "dcl_rcl_pct": pct, "limite": 100.0, "alerta": 90.0, "limite_pct": 200.0, "alerta_pct": 180.0,
+                "composicao": {"reestruturacao": 100.0}, "juros": juros, "amortizacao": amort}
+    return [linha("AA", 2023, 150.0, 10.0, 5.0), linha("BB", 2023, 30.0, 1.0, 1.0),
+            linha("AA", 2024, 140.0, 20.0, 10.0), linha("BB", 2024, 160.0, None, None)]
+
+
+def test_gabarito_divida_posicao_mediana_e_valores_reais():
+    gab = exportar.montar_gabarito(despesa(), POPULACAO, IPCA, 2024, registros_divida())
+    valores = {(v["uf"], v["ano"]): v for v in gab["divida"]}
+    aa23 = valores[("AA", 2023)]
+    assert aa23["posicao_dcl_rcl"] == 1 and aa23["n_ufs"] == 2
+    assert aa23["pago_real"] == pytest.approx(15 * 1.05)  # IPCA 2024 = 5%
+    assert aa23["juros_real"] == pytest.approx(10.5)
+    assert valores[("BB", 2024)]["pago_real"] is None  # sem DCA I-D: nulo, não zero
+    assert valores[("BB", 2024)]["posicao_dcl_rcl"] == 1
+    medianas = {m["ano"]: m["dcl_rcl_pct"] for m in gab["medianas_divida"]}
+    assert medianas == {2023: 90.0, 2024: 150.0}
+
+
+def test_divida_json_tem_campos_ressalvas_e_nota():
+    saida = exportar.montar_divida_json(registros_divida(), "2026-10-08T00:00:00+00:00")
+    assert len(saida["linhas"]) == 4 and saida["linhas"][3]["juros"] is None
+    assert {r["id"] for r in saida["ressalvas"]} == {"pagar_pouco", "suspensao_2020", "passivo_atuarial"}
+    assert "não por credor" in saida["nota_composicao"]
+    assert "dcl_rcl_pct" in saida["campos"]
+    json.dumps(saida, allow_nan=False)
+
+
+def test_gabarito_receita_pesos_posicoes_e_medianas():
+    totais = pd.DataFrame({"uf": ["AA", "BB", "AA", "BB"], "ano": [2023, 2023, 2024, 2024],
+                           "liquida_exceto_intra": [100.0, 50.0, 110.0, 40.0],
+                           "impostos_proprios": [60.0, 10.0, 66.0, 10.0], "transferencias_uniao": [30.0, 35.0, 33.0, 25.0]})
+    gab = exportar.montar_gabarito(despesa(), POPULACAO, IPCA, 2024, receita_totais=totais)
+    v = {(r["uf"], r["ano"]): r for r in gab["receita"]}
+    assert v[("AA", 2023)]["pct_impostos_proprios"] == pytest.approx(60.0)
+    assert v[("BB", 2023)]["pct_transferencias_uniao"] == pytest.approx(70.0)
+    assert v[("AA", 2023)]["receita_liquida_real"] == pytest.approx(105.0)
+    assert v[("AA", 2023)]["per_capita_real"] == pytest.approx(1.05)
+    assert v[("AA", 2023)]["posicao_pct_impostos"] == 1 and v[("BB", 2024)]["posicao_per_capita_real"] == 2
+    med = {m["ano"]: m for m in gab["medianas_receita"]}
+    assert med[2023]["pct_impostos_proprios"] == pytest.approx((60 + 20) / 2)
+
+
+def test_receita_json_itens_ressalvas_e_ressalva_do_rj():
+    linhas = pd.DataFrame({"uf": ["AA"], "ano": [2024], "item": ["icms"], "bruta": [10.0], "ded_transferencias": [2.5],
+                           "ded_fundeb": [1.5], "ded_outras": [0.0], "liquida": [6.0]})
+    totais = pd.DataFrame({"uf": ["AA"], "ano": [2024], "liquida_exceto_intra": [6.0], "impostos_proprios": [6.0],
+                           "transferencias_uniao": [0.0]})
+    saida = exportar.montar_receita_json(linhas, totais, "agora")
+    assert {r["id"] for r in saida["ressalvas"]} == {"recodificacao_2022", "icms_2022", "fundeb", "operacoes_credito"}
+    assert saida["ressalvas_por_uf"]["RJ"][0]["id"] == "royalties_rj"
+    assert [i["item"] for i in saida["itens"]][:2] == ["icms", "icms_fecp"]
+    json.dumps(saida, allow_nan=False)
+
+
+def test_site_uf_padrao_validada_e_no_meta(tmp_path):
+    ufs = pd.DataFrame({"uf": ["AA", "BB"]})
+    caminho = tmp_path / "site.yaml"
+    caminho.write_text("uf_padrao: bb\n", encoding="utf-8")
+    site = exportar.ler_site(ufs, caminho)
+    assert site == {"uf_padrao": "BB"}
+    meta = exportar.montar_meta(exportar.montar_despesa(despesa(), POPULACAO), IPCA, 2024, "agora", site=site)
+    assert meta["uf_padrao"] == "BB"
+    caminho.write_text("uf_padrao: ZZ\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="uf_padrao"):
+        exportar.ler_site(ufs, caminho)
+    caminho.write_text("# sem padrão\n", encoding="utf-8")
+    assert exportar.ler_site(ufs, caminho) == {"uf_padrao": None}

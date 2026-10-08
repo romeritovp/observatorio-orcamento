@@ -71,6 +71,7 @@ Arquivo: `data/processed/populacao/uf=<UF>/ano=<ano>/siconfi_dca_anexo_i_e.parqu
 | nacional/setor_funcao.csv | manual | setor (como em estatais.csv), funcao_cod (nulo quando não há correspondência clara), correspondencia (`direta`, `parcial`, `nenhuma`), justificativa |
 | nacional/estatais_ajustes.csv | manual | cnpj (14 dígitos), funcao_cod, justificativa. Exceções por empresa; têm prioridade sobre `setor_funcao.csv` |
 | nacional/estatais_nomes_exibicao.csv | manual | cnpj (14 dígitos), sigla_exibicao, nome_exibicao. Só exibição no front; prioridade sobre a escolha automática. O nome original continua em `estatais.csv` |
+| nacional/receita_itens.csv | manual (a partir da DCA I-C, 27 UFs, 2019–2025) | item, codigo (prefixo da natureza da receita, sem os zeros finais), ano_inicio, ano_fim (vazios = sem limite). Prefixo mais longo vigente no ano decide o item; os itens "outros/outras" cobrem os grupos inteiros |
 | nacional/natureza_despesa.csv | STN (MCASP) | natureza_cod, nivel, descricao |
 | ufs/<uf>/orgaos.csv | fonte estadual | orgao_cod, orgao_nome, ano_inicio, ano_fim |
 | ufs/<uf>/correspondencias.csv | manual | campo, cod_antigo, cod_novo, ano_mudanca, observacao |

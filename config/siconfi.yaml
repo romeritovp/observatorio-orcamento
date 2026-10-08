@@ -12,5 +12,8 @@ anexos:
     - RREO-Anexo 03   # receita corrente líquida
   rgf:
     - RGF-Anexo 01    # despesa com pessoal
+    - RGF-Anexo 02    # dívida consolidada líquida (3º quadrimestre, co_poder=E obrigatório)
   dca:
     - DCA-Anexo I-E   # despesa por função/subfunção
+    - DCA-Anexo I-D   # despesa por natureza (juros 3.2 e amortização 4.6)
+    - DCA-Anexo I-C   # receita por natureza (bruta e deduções)

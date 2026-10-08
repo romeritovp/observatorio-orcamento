@@ -1,11 +1,14 @@
 {
-  "gerado_em": "2026-10-08T15:40:33+00:00",
+  "gerado_em": "2026-10-08T20:06:40+00:00",
   "versao_esquema": 1,
+  "uf_padrao": "SP",
   "arquivos": {
     "meta.json": "este arquivo",
     "dicionarios.json": "UFs, funções e subfunções (código → nome)",
     "ipca.json": "variação anual dez/dez do IPCA, para deflacionar no front",
     "despesa.json": "despesa por UF, ano, função e subfunção, em R$ nominais",
+    "receita.json": "receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais",
+    "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
     "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
     "gabarito.json": "só para teste do front; não exibir"
   },
@@ -62,6 +65,7 @@
       "dicionario": "dicionarios/nacional/estatais.csv",
       "texto": "Dados de empresas estatais: Tesouro Nacional, painel \"Raio X das Empresas dos Estados Brasileiros\" (github.com/tesouro/empresas-estados).",
       "fonte_curta": "Tesouro Nacional, Raio X das Empresas dos Estados Brasileiros",
+      "painel": "https://tesouro.github.io/empresas-estados/v{edicao_painel}/",
       "url": "https://github.com/tesouro/empresas-estados",
       "licenca": "o repositório não declara licença; usados só dados cadastrais, com atribuição",
       "versoes": [

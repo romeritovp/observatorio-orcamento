@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import { escreverEstado, lerEstado, paresPadrao } from './estado.js'
-import { csv, nomeEmpresa, nomeParaExibir, pct, reais, reaisCompacto } from './formatacao.js'
-import { artigoEmpresa, artigoSigla, avisoEstatal, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
+import { csv, iniciaisMaiusculas, nomeEmpresa, nomeParaExibir, pct, pctComSinal, reais, reaisCompacto } from './formatacao.js'
+import { artigoEmpresa, artigoSigla, avisoEstatal, deUf, doEstado, fraseDivida, fraseResultado, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
 
 const UFS = [
   { uf: 'AA', regiao: 'Norte' }, { uf: 'BB', regiao: 'Norte' },
@@ -13,7 +13,8 @@ const CONTEXTO = { ufs: UFS, anos: [2023, 2024], areas: ['10', '12'], areaPadrao
 describe('estado na URL', () => {
   it('padrões quando a URL está vazia', () => {
     expect(lerEstado('', CONTEXTO)).toEqual({
-      area: '10', metrica: 'per_capita', valores: 'corrigidos', ano: 2024, uf: null, pares: [], paresPersonalizados: false,
+      view: 'estado', area: '10', areaExplicita: false, metrica: 'per_capita', valores: 'corrigidos', ano: 2024,
+      uf: null, pares: [], paresPersonalizados: false, tabela: 'per_capita', abertas: [], tabelaReceita: 'liquida',
     })
   })
 
@@ -39,6 +40,41 @@ describe('estado na URL', () => {
     expect(lerEstado('?valores=xyz', CONTEXTO).valores).toBe('corrigidos')
     expect(escreverEstado(lerEstado('?valores=epoca&uf=AA', CONTEXTO))).toContain('valores=epoca')
     expect(escreverEstado(lerEstado('?uf=AA', CONTEXTO))).not.toContain('valores')
+  })
+
+  it('view, área escolhida e tabela na URL', () => {
+    const estado = lerEstado('?view=comparar&uf=aa&tabela=total', CONTEXTO)
+    expect(estado).toMatchObject({ view: 'comparar', uf: 'AA', tabela: 'total', areaExplicita: false })
+    expect(escreverEstado(estado)).toBe('?view=comparar&metrica=per_capita&ano=2024&uf=AA&tabela=total')
+    expect(escreverEstado({ ...estado, view: 'estado' })).not.toContain('view=') // a padrão não vai na URL
+    expect(lerEstado('?view=xyz&tabela=xyz', CONTEXTO)).toMatchObject({ view: 'estado', tabela: 'per_capita' })
+    expect(escreverEstado(lerEstado('?area=12', CONTEXTO))).toContain('area=12')
+    expect(escreverEstado(lerEstado('?area=99', CONTEXTO))).not.toContain('area')
+  })
+
+  it('áreas abertas na URL: válidas, sem repetição, na ordem', () => {
+    const estado = lerEstado('?view=estado&uf=AA&abrir=12,99,10,12', CONTEXTO)
+    expect(estado.abertas).toEqual(['12', '10'])
+    expect(escreverEstado(estado)).toContain('abrir=12,10')
+    expect(lerEstado(escreverEstado(estado), CONTEXTO)).toEqual(estado)
+    expect(escreverEstado(lerEstado('?uf=AA', CONTEXTO))).not.toContain('abrir')
+  })
+
+  it('UF padrão vem do contexto (meta.json); uf= vazio é "nenhum estado"', () => {
+    const comPadrao = { ...CONTEXTO, ufPadrao: 'DD' }
+    expect(lerEstado('', comPadrao).uf).toBe('DD')
+    expect(lerEstado('?uf=aa', comPadrao).uf).toBe('AA')
+    expect(lerEstado('?uf=', comPadrao).uf).toBeNull()
+    expect(lerEstado(escreverEstado(lerEstado('?uf=', comPadrao)), comPadrao).uf).toBeNull() // ida e volta
+    expect(lerEstado('', { ...CONTEXTO, ufPadrao: 'ZZ' }).uf).toBeNull() // padrão inválido é ignorado
+    expect(lerEstado('', CONTEXTO).uf).toBeNull()
+  })
+
+  it('métrica da tabela de receitas na URL', () => {
+    expect(lerEstado('?treceita=pct', CONTEXTO).tabelaReceita).toBe('pct')
+    expect(lerEstado('?treceita=xyz', CONTEXTO).tabelaReceita).toBe('liquida')
+    expect(escreverEstado(lerEstado('?treceita=per_capita&uf=AA', CONTEXTO))).toContain('treceita=per_capita')
+    expect(escreverEstado(lerEstado('?uf=AA', CONTEXTO))).not.toContain('treceita')
   })
 
   it('não grava pares padrão na URL', () => {
@@ -188,5 +224,41 @@ describe('nome para exibir (estatais.json)', () => {
   it('sem campos de exibição: usa o original', () => {
     expect(nomeParaExibir({ sigla: 'CEDAE', empresa: 'Companhia Estadual de Águas e Esgotos - CEDAE' }))
       .toEqual({ sigla: 'CEDAE', nome: 'Companhia Estadual de Águas e Esgotos' })
+  })
+})
+
+describe('tela Por estado: textos', () => {
+  it('preposição com o nome do estado', () => {
+    expect(doEstado('Rio de Janeiro', 'o')).toBe('do Rio de Janeiro')
+    expect(doEstado('Bahia', 'a')).toBe('da Bahia')
+    expect(doEstado('Pernambuco', null)).toBe('de Pernambuco')
+  })
+
+  it('variação com sinal e setor com iniciais maiúsculas', () => {
+    expect(pctComSinal(3.21)).toBe('+3,2%')
+    expect(pctComSinal(-1.5)).toBe('−1,5%')
+    expect(pctComSinal(null)).toBe('–')
+    expect(iniciaisMaiusculas('INFORMÁTICA E TECNOLOGIA DA INFORMAÇÃO')).toBe('Informática e Tecnologia da Informação')
+    expect(iniciaisMaiusculas('GÁS E DERIVADOS')).toBe('Gás e Derivados')
+  })
+})
+
+describe('dívida: textos', () => {
+  it('frase da dívida contra saúde e educação', () => {
+    expect(fraseDivida({ ano: 2024, uf: 'RJ', artigo: 'o', pago: 5.4e9, saude: 10.29e9, educacao: 12.1e9 }))
+      .toBe('Em 2024, o RJ pagou R$ 5,4 bi em juros e amortização da dívida, contra R$ 10,3 bi em saúde e R$ 12,1 bi em educação.')
+    expect(fraseDivida({ ano: 2024, uf: 'RJ', pago: null })).toBeNull()
+    expect(deUf('RJ', 'o')).toBe('do RJ')
+    expect(deUf('SP', null)).toBe('de SP')
+  })
+})
+
+describe('receita: textos', () => {
+  it('sobra, falta e empate', () => {
+    expect(fraseResultado({ ano: 2024, uf: 'RJ', artigo: 'o', receita: 98.3e9, despesa: 99.3e9 }))
+      .toBe('Em 2024, a despesa do RJ (R$ 99,3 bi) superou a receita (R$ 98,3 bi) em R$ 1,0 bi: faltou dinheiro.')
+    expect(fraseResultado({ ano: 2024, uf: 'SP', artigo: null, receita: 10e9, despesa: 8e9 })).toContain('sobrou dinheiro')
+    expect(fraseResultado({ ano: 2024, uf: 'SP', receita: 10e9, despesa: 10.001e9 })).toContain('praticamente empataram')
+    expect(fraseResultado({ ano: 2024, uf: 'SP', receita: null, despesa: 1 })).toBeNull()
   })
 })

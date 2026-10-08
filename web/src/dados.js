@@ -1,6 +1,6 @@
 // Carrega os JSON de public/data/ (gerados por `uv run python -m publicacao.exportar`).
 
-const ARQUIVOS = ['meta', 'dicionarios', 'ipca', 'despesa', 'estatais']
+const ARQUIVOS = ['meta', 'dicionarios', 'ipca', 'despesa', 'estatais', 'divida', 'receita']
 
 export async function carregarDados() {
   const base = `${import.meta.env.BASE_URL}data/`
