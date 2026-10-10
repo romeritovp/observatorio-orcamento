@@ -3,6 +3,7 @@
 import pandas as pd
 import pytest
 
+from analytics.estatais import limpar_anotacoes
 from analytics import (
     mapear_por_prefixo, segmentos, valores_proprios,
     agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao, mediana_entre_ufs, nomear, participacao, per_capita, ranking, variacao,
@@ -300,7 +301,7 @@ def test_estatais_fora_das_contas_so_ativas_nao_dependentes_com_funcao_em_cada_e
 
 
 def test_edicao_para_ano_mais_recente_que_nao_passa_do_ano():
-    assert [edicao_para_ano([2024, 2023], a) for a in [2019, 2022, 2023, 2024, 2025]] == [2023, 2023, 2023, 2024, 2024]
+    assert [edicao_para_ano([2024, 2023], a) for a in [2019, 2022, 2023, 2024, 2025]] == [None, None, 2023, 2024, 2024]
     assert edicao_para_ano(["2023"], 2030) == 2023
     with pytest.raises(ValueError):
         edicao_para_ano([], 2024)
@@ -355,6 +356,24 @@ def test_nomes_de_exibicao_manual_depois_acento_depois_mais_recente():
     assert n.loc[("BB", "3"), "nome_exibicao"] == "NOVO NOME"  # nenhuma com acento: a mais recente
     assert len(n) == 4  # o dicionário não muda de tamanho nem de conteúdo
     assert df["empresa"].iloc[1] == "COMPANHIA DE GAS"
+
+
+def test_nomes_de_exibicao_sem_anotacoes_da_edicao():
+    df = pd.DataFrame({
+        "uf": ["AA", "AA", "BB", "BB"],
+        "cnpj": ["1", "1", "2", "2"],
+        "sigla": ["GÁS", "GÁS", "COD - Extinta", "COD"],
+        "empresa": ["▪Companhia de Gás - GÁS", "COMPANHIA DE GAS - GAS", 'DISTRITOS S/A "EM LIQUIDAÇÃO"',
+                    "Distritos S/A (Baixada em 16/11/2021)"],
+        "ano_referencia": [2022, 2024, 2021, 2022],
+    })
+    vazio = pd.DataFrame(columns=["cnpj", "sigla_exibicao", "nome_exibicao"])
+    n = nomes_de_exibicao(df, vazio).set_index(["uf", "cnpj"])
+    assert n.loc[("AA", "1"), "nome_exibicao"] == "Companhia de Gás - GÁS"  # sem o marcador "▪"
+    assert n.loc[("BB", "2"), "nome_exibicao"] == "Distritos S/A" and n.loc[("BB", "2"), "sigla_exibicao"] == "COD"
+    assert df["empresa"].iloc[0].startswith("▪")  # o dicionário não muda
+    assert limpar_anotacoes("BANACRE S/A EM LIQUIDAÇÃO ORDINARIA") == "BANACRE S/A"
+    assert limpar_anotacoes("Companhia (CAEMA)") == "Companhia (CAEMA)"  # parêntese comum fica
 
 
 def test_nomes_de_exibicao_recusa_correcao_repetida():

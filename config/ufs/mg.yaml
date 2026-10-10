@@ -1,0 +1,12 @@
+# Configuração de Minas Gerais. Sigla e código IBGE vêm de dicionarios/nacional/ufs.csv.
+uf: MG
+
+publicacao:
+  receita:
+    ressalvas:
+      - id: petroleo_mg_2022
+        anos: [2022]
+        titulo: Petróleo não localizado em 2022
+        texto: >-
+          Em 2022, MG não declara linha de petróleo (tem nos demais anos). O valor deve estar em outro código, que
+          não localizamos.

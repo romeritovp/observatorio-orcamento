@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { carregarDados } from './dados.js'
+import { carregarDados, carregarDadosDaUf } from './dados.js'
 import { escreverEstado, lerEstado, paresPadrao, VIEW_PADRAO, VIEWS } from './estado.js'
 import Navegacao from './componentes/Navegacao.jsx'
 import Comparar from './telas/Comparar.jsx'
+import Metodo from './telas/Metodo.jsx'
 import PorEstado from './telas/PorEstado.jsx'
 
 const AREA_PADRAO = '10'
@@ -19,6 +20,9 @@ export default function App() {
   const [erro, setErro] = useState(null)
 
   useEffect(() => {
+    // Na tela "Por estado", a UF da URL começa a baixar junto com os dados gerais (sem esperar por eles)
+    const ufDaUrl = new URLSearchParams(window.location.search).get('uf')?.toUpperCase()
+    if (viewDaUrl() === 'estado' && ufDaUrl && /^[A-Z]{2}$/.test(ufDaUrl)) carregarDadosDaUf(ufDaUrl).catch(() => {})
     carregarDados().then(setDados).catch((e) => setErro(e.message))
   }, [])
 
@@ -71,15 +75,46 @@ function Site({ dados }) {
     })
   }, [ufs, contexto])
 
-  useEffect(() => { window.scrollTo(0, 0) }, [estado.view])
+  // Links internos para outra tela (?view=..., como o "entenda" das ressalvas): troca de tela sem recarregar
+  // os dados, guardando a âncora (#...) na URL para a tela de destino rolar até ela
+  useEffect(() => {
+    const clicar = (e) => {
+      const link = e.target.closest?.('a[href^="?view="]')
+      if (!link || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+      e.preventDefault()
+      const [busca, ancora = ''] = link.getAttribute('href').split('#')
+      const destino = lerEstado(busca, contexto)
+      setEstado((atual) => {
+        const novo = { ...atual, view: destino.view, ...(destino.view === 'metodo' ? {} : destino) }
+        window.history.pushState(null, '', `${window.location.pathname}${escreverEstado(novo)}${ancora ? `#${ancora}` : ''}`)
+        return lerEstado(escreverEstado(novo), contexto)
+      })
+    }
+    document.addEventListener('click', clicar)
+    return () => document.removeEventListener('click', clicar)
+  }, [contexto])
+
+  // Dados da UF em destaque (subfunções, linhas da receita, lista de estatais), só para a tela "Por estado"
+  const [porUf, setPorUf] = useState({})
+  const [erroUf, setErroUf] = useState(null)
+  useEffect(() => {
+    if (estado.view !== 'estado' || !estado.uf || porUf[estado.uf]) return
+    carregarDadosDaUf(estado.uf)
+      .then((d) => setPorUf((atual) => ({ ...atual, [estado.uf]: d })))
+      .catch((e) => setErroUf(e.message))
+  }, [estado.view, estado.uf, porUf])
+
+  // Nova tela começa do topo, salvo quando a URL aponta uma âncora (a tela rola até ela)
+  useEffect(() => { if (!window.location.hash) window.scrollTo(0, 0) }, [estado.view])
 
   const links = Object.fromEntries(Object.keys(VIEWS).map((view) => [view, escreverEstado({ ...estado, view })]))
-  const Tela = estado.view === 'estado' ? PorEstado : Comparar
+  const TELAS = { estado: PorEstado, comparar: Comparar, metodo: Metodo }
+  const Tela = TELAS[estado.view]
 
   return (
     <>
       <Navegacao view={estado.view} links={links} onIr={(view) => mudar({ view })} />
-      <Tela dados={dados} estado={estado} mudar={mudar} funcoes={funcoes} />
+      <Tela dados={dados} estado={estado} mudar={mudar} funcoes={funcoes} dadosUf={porUf[estado.uf]} erroUf={erroUf} />
     </>
   )
 }

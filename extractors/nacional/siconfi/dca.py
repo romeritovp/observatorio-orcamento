@@ -10,6 +10,9 @@ Formato das linhas de `conta` no Anexo I-E (ver docs/fontes/siconfi.md):
     "10 - Saúde"                           → nivel funcao
     "10.302 - Assistência Hospitalar ..."  → nivel subfuncao
     "FU10 - Demais Subfunções"             → nivel demais (subfunções não listadas da função 10)
+Até 2016 os totais vêm como "Despesas (Exceto Intraorçamentárias)" ou "(Exceto Intra-Orçamentárias)" e não há
+linhas "FUnn". Onde a função não tem "demais" e as subfunções não somam a função, a diferença vira uma linha
+nivel `demais_calculado` (calculada aqui, não declarada pelo ente).
 
 Linhas de níveis diferentes nunca devem ser somadas juntas.
 """
@@ -43,9 +46,12 @@ RE_DEMAIS = re.compile(r"^FU(\d{2}) - (.+)$")
 
 
 def _normalizar(texto):
-    """Minúsculas, sem acentos e sem espaços nas pontas (para comparar rótulos)."""
+    """Minúsculas, sem acentos, sem parênteses e hífens, espaços simples (para comparar rótulos).
+
+    "Despesas (Exceto Intra-Orçamentárias)" → "despesas exceto intraorcamentarias".
+    """
     sem_acento = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode()
-    return sem_acento.lower().strip()
+    return " ".join(re.sub(r"[()\-]", "", sem_acento.lower()).split())
 
 
 def classificar_conta(conta):
@@ -126,6 +132,25 @@ def transformar_populacao(itens, uf, cod_ibge, ano):
     }])
 
 
+def completar_demais_calculado(df, tolerancia=0.005):
+    """Para cada função (fora intra) sem linha "demais": se as subfunções não somam a função, acrescenta
+    a diferença como nivel `demais_calculado`, coluna a coluna (nulo continua nulo). Até 2016 a DCA não
+    traz as linhas "FUnn - Demais Subfunções"; assim subfunções + demais continua = função."""
+    fora = df[~df["intra"].astype(bool)]
+    com_demais = set(fora.loc[fora["nivel"] == "demais", "funcao_cod"])
+    colunas = list(COLUNAS_VALOR.values())
+    novas = []
+    for _, funcao in fora[fora["nivel"] == "funcao"].iterrows():
+        if funcao["funcao_cod"] in com_demais:
+            continue
+        subs = fora[(fora["nivel"] == "subfuncao") & (fora["funcao_cod"] == funcao["funcao_cod"])]
+        diferenca = {c: (None if pd.isna(funcao[c]) else float(funcao[c]) - float(subs[c].fillna(0).sum())) for c in colunas}
+        if any(v is not None and abs(v) > tolerancia for v in diferenca.values()):
+            novas.append({**{k: funcao[k] for k in ["uf", "cod_ibge", "ano", "fonte_dado", "intra", "funcao_cod"]},
+                          "nivel": "demais_calculado", "subfuncao_cod": None, **diferenca})
+    return pd.concat([df, pd.DataFrame(novas)], ignore_index=True) if novas else df
+
+
 def validar_despesa_funcao(df):
     """Soma das linhas de nível funcao = linha de nível total (fora as intraorçamentárias)."""
     fora_intra = df[~df["intra"].astype(bool)]
@@ -149,7 +174,8 @@ def extrair_despesa_funcao(uf, ano, *, dir_raw=cliente.DIR_RAW, dir_processed=ba
         raise ConsultaVazia(f"DCA I-E vazia para {uf} {ano}")
 
     extraido_em = cliente.data_extracao("dca", params, dir_raw)
-    df = transformar_despesa_funcao(itens, uf, cod_ibge, ano).assign(extraido_em=extraido_em)
+    df = transformar_despesa_funcao(itens, uf, cod_ibge, ano)
+    df = completar_demais_calculado(df).assign(extraido_em=extraido_em)
     validar_despesa_funcao(df)
     populacao = transformar_populacao(itens, uf, cod_ibge, ano).assign(extraido_em=extraido_em)
     base.gravar(df, "despesa", NOME_ARQUIVO, dir_processed=dir_processed)
@@ -263,22 +289,35 @@ def _e_categoria(cod_conta):
     return all(int(s) == 0 for s in cod_conta[2:].split(".")[1:])
 
 
-def validar_receita(df, tolerancia=1.0):
-    """Em cada coluna: exceto intra = soma das categorias 1 e 2; intra = soma das categorias 7 e 8;
-    total = exceto intra + intra. Linha de total ausente vale zero (coluna sem valor no anexo)."""
+def categorias_receita(df):
+    """{coluna: {"exceto": soma das categorias 1 e 2, "intra": soma das categorias 7 e 8}} da I-C."""
     natureza = df[df["cod_conta"].str.match(r"^R[OI]\d")]
+    saida = {}
+    for coluna, parte in natureza.groupby("coluna"):
+        soma = {"exceto": 0.0, "intra": 0.0}
+        for cod, valor in zip(parte["cod_conta"], parte["valor"]):
+            if _e_categoria(cod):
+                soma["intra" if e_intra(cod) else "exceto"] += float(valor)
+        saida[coluna] = soma
+    return saida
+
+
+def validar_receita(df, tolerancia=1.0):
+    """Em cada coluna: categorias 1 + 2 + 7 + 8 = total geral. Quando o anexo traz os totais exceto intra e
+    intra (2019 em diante), também: exceto intra = categorias 1 e 2; intra = 7 e 8; total = exceto + intra.
+    Até 2018 o anexo só traz o total geral (`TotalReceitas`)."""
+    categorias = categorias_receita(df)
     for coluna, parte in df.groupby("coluna"):
         total = lambda cod: float(parte.loc[parte["cod_conta"] == cod, "valor"].sum())
-        nat = natureza[natureza["coluna"] == coluna]
-        categorias = {False: 0.0, True: 0.0}
-        for cod, valor in zip(nat["cod_conta"], nat["valor"]):
-            if _e_categoria(cod):
-                categorias[e_intra(cod)] += float(valor)
-        for descricao, calculado, informado in [
-            ("categorias exceto intra", categorias[False], total(TOTAL_EXCETO_INTRA)),
-            ("categorias intra (7 e 8)", categorias[True], total(TOTAL_INTRA)),
-            ("exceto intra + intra", total(TOTAL_EXCETO_INTRA) + total(TOTAL_INTRA), total(TOTAL_RECEITAS)),
-        ]:
+        cat = categorias.get(coluna, {"exceto": 0.0, "intra": 0.0})
+        checagens = [("categorias 1 + 2 + 7 + 8", cat["exceto"] + cat["intra"], total(TOTAL_RECEITAS))]
+        if (parte["cod_conta"] == TOTAL_EXCETO_INTRA).any():
+            checagens += [
+                ("categorias exceto intra", cat["exceto"], total(TOTAL_EXCETO_INTRA)),
+                ("categorias intra (7 e 8)", cat["intra"], total(TOTAL_INTRA)),
+                ("exceto intra + intra", total(TOTAL_EXCETO_INTRA) + total(TOTAL_INTRA), total(TOTAL_RECEITAS)),
+            ]
+        for descricao, calculado, informado in checagens:
             if abs(calculado - informado) > tolerancia:
                 raise base.ErroValidacao(f"{coluna}: {descricao} = {calculado:,.2f} difere do total {informado:,.2f}")
 

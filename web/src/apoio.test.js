@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import { escreverEstado, lerEstado, paresPadrao } from './estado.js'
-import { csv, iniciaisMaiusculas, nomeEmpresa, nomeParaExibir, pct, pctComSinal, reais, reaisCompacto } from './formatacao.js'
-import { artigoEmpresa, artigoSigla, avisoEstatal, deUf, doEstado, fraseDivida, fraseResultado, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
+import { csv, iniciaisMaiusculas, listaDeAnos, nomeEmpresa, nomeParaExibir, pct, pctComSinal, reais, reaisCompacto } from './formatacao.js'
+import { artigoEmpresa, artigoSigla, avisoEstatal, deUf, doEstado, fraseDivida, fraseReconciliacaoPetroleo, fraseResultado, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
 
 const UFS = [
   { uf: 'AA', regiao: 'Norte' }, { uf: 'BB', regiao: 'Norte' },
@@ -14,7 +14,7 @@ describe('estado na URL', () => {
   it('padrões quando a URL está vazia', () => {
     expect(lerEstado('', CONTEXTO)).toEqual({
       view: 'estado', area: '10', areaExplicita: false, metrica: 'per_capita', valores: 'corrigidos', ano: 2024,
-      uf: null, pares: [], paresPersonalizados: false, tabela: 'per_capita', abertas: [], tabelaReceita: 'liquida',
+      uf: null, pares: [], paresPersonalizados: false, tabela: 'per_capita', abertas: [], tabelaReceita: 'liquida', nivel: 'simples',
     })
   })
 
@@ -130,6 +130,12 @@ describe('textos e formatação', () => {
     expect(pct(0)).toBe('0,0%')
     expect(pct(0.0012)).toBe('0,0012%')
     expect(reais(null)).toBe('–')
+  })
+
+  it('lista de anos em ordem, com "e" antes do último', () => {
+    expect(listaDeAnos([2024, 2021, 2023, 2022])).toBe('2021, 2022, 2023 e 2024')
+    expect(listaDeAnos([2023, 2024])).toBe('2023 e 2024')
+    expect(listaDeAnos([2024])).toBe('2024')
   })
 
   it('CSV com ponto e vírgula, vírgula decimal e BOM', () => {
@@ -260,5 +266,15 @@ describe('receita: textos', () => {
     expect(fraseResultado({ ano: 2024, uf: 'SP', artigo: null, receita: 10e9, despesa: 8e9 })).toContain('sobrou dinheiro')
     expect(fraseResultado({ ano: 2024, uf: 'SP', receita: 10e9, despesa: 10.001e9 })).toContain('praticamente empataram')
     expect(fraseResultado({ ano: 2024, uf: 'SP', receita: null, despesa: 1 })).toBeNull()
+  })
+})
+
+describe('petróleo: frases', () => {
+  it('explica e não reconcilia', () => {
+    expect(fraseReconciliacaoPetroleo({ situacao: 'explica', demais: 25.9e9, anp: 25.6e9 }))
+      .toBe('Demais receitas patrimoniais: R$ 25,9 bi, dos quais R$ 25,6 bi são royalties e participação especial repassados ao estado, segundo a ANP.')
+    expect(fraseReconciliacaoPetroleo({ situacao: 'nao_reconcilia', demais: 19.4e9, anp: 21.7e9 }))
+      .toContain('não se reconciliam neste ano')
+    expect(fraseReconciliacaoPetroleo({ situacao: 'parcial', demais: 1, anp: 1 })).toBeNull()
   })
 })

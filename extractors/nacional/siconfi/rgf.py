@@ -47,6 +47,21 @@ HIERARQUIA = {
                     "RGF2ParcelamentoDeDividasComInstituicaoNaoFinanceira"),
 }
 
+# Layout antigo (2015–2016): a dívida contratual se divide só em interna e externa; a composição por tipo
+# (parcelamentos, dívida com instituição financeira, demais dívidas contratuais) fica num bloco à parte,
+# sem "reestruturação", e não é comparável com a de 2017 em diante.
+CONTRATUAL_INTERNA = "DividaContratualInterna"
+HIERARQUIA_ANTIGA = {
+    DC: HIERARQUIA[DC],
+    CONTRATUAL: (CONTRATUAL_INTERNA, "DividaContratualExterna"),
+}
+
+
+def layout_antigo(cod_contas):
+    """O anexo usa o layout de 2015–2016 (dívida contratual interna/externa)?"""
+    return CONTRATUAL_INTERNA in set(cod_contas)
+
+
 # Linhas do anexo que NÃO integram a dívida consolidada: gravadas como vieram, fora de qualquer total.
 # A "Dívida Contratual de PPP" aparece nessa seção (RO 2023 e 2024), não dentro da dívida contratual.
 FORA_DA_DC = ("RGF2DividaConsolidadaPrevidenciariaPassivoAtuarial", "PrecatoriosAnterioresA05052000",
@@ -88,7 +103,8 @@ def validar_anexo_02(df, tolerancia=1.0):
 
     - DC − deduções = DCL
     - em cada nível da HIERARQUIA, soma dos filhos = pai (DC, contratual, empréstimos, financiamentos,
-      parcelamentos). Linhas fora da dívida consolidada não entram em nenhuma conferência.
+      parcelamentos); no layout de 2015–2016, a HIERARQUIA_ANTIGA (DC e contratual = interna + externa).
+      Deduções ausentes valem zero (ex.: RJ 2016, DCL = DC). Linhas fora da DC não entram em conferência.
     """
     valores = df[df["coluna"] == COLUNA_ESTOQUE].groupby("cod_conta")["valor"].sum()
     if DC not in valores:
@@ -98,8 +114,11 @@ def validar_anexo_02(df, tolerancia=1.0):
         if abs(calculado - informado) > tolerancia:
             raise base.ErroValidacao(f"{descricao} = {calculado:,.2f} difere do informado {informado:,.2f}")
 
-    conferir("DC − deduções", valores[DC] - valores.get(DEDUCOES, 0.0), valores.get(DCL, 0.0))
-    for pai, filhos in HIERARQUIA.items():
+    liquida = valores[DC] - valores.get(DEDUCOES, 0.0)
+    if not (liquida < 0 and abs(valores.get(DCL, 0.0)) <= tolerancia):  # DCL negativa declarada como zero (AP 2017)
+        conferir("DC − deduções", liquida, valores.get(DCL, 0.0))
+    hierarquia = HIERARQUIA_ANTIGA if layout_antigo(valores.index) else HIERARQUIA
+    for pai, filhos in hierarquia.items():
         if pai in valores:
             conferir(f"soma das subcontas de {pai}", sum(valores.get(f, 0.0) for f in filhos), valores[pai])
 

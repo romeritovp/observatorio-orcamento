@@ -1,0 +1,12 @@
+# Configuração do Distrito Federal. Sigla e código IBGE vêm de dicionarios/nacional/ufs.csv.
+uf: DF
+
+publicacao:
+  receita:
+    petroleo_nao_separado: true
+    ressalvas:
+      - id: petroleo_df
+        titulo: Petróleo não separado na fonte
+        texto: >-
+          O DF declara as compensações de mineração e de recursos hídricos, mas não tem linha de petróleo em nenhum
+          ano (em 2022 lançou R$ 28,6 mi em "outras compensações"). Os valores são pequenos.

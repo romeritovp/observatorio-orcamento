@@ -22,6 +22,10 @@ COLUNAS = {
 }
 VALORES = list(COLUNAS.values())
 
+# Compensações financeiras pela exploração de recursos naturais: comparar entre estados pela receita BRUTA
+# (a dedução da cota dos municípios varia por estado; ver docs/decisoes.md).
+ITENS_COMPARAR_PELA_BRUTA = ["petroleo_gas", "mineracao", "recursos_hidricos", "outras_compensacoes", "petroleo_concessao"]
+
 # Item → nome e grupo, na ordem de exibição. Grupo: impostos, transferencias, outras_correntes, capital, intra.
 ITENS = [
     ("icms", "ICMS", "impostos"),
@@ -34,7 +38,11 @@ ITENS = [
     ("sus", "Transferências do SUS", "transferencias"),
     ("fundeb_retorno", "FUNDEB (retorno ao estado)", "transferencias"),
     ("fundeb_complementacao", "FUNDEB (complementação da União)", "transferencias"),
-    ("royalties", "Royalties e compensações financeiras", "transferencias"),
+    ("petroleo_gas", "Compensações: petróleo e gás", "transferencias"),
+    ("mineracao", "Compensações: mineração (CFEM)", "transferencias"),
+    ("recursos_hidricos", "Compensações: recursos hídricos", "transferencias"),
+    ("outras_compensacoes", "Outras compensações financeiras", "transferencias"),
+    ("petroleo_concessao", "Petróleo – regime de concessão (receita patrimonial)", "outras_correntes"),
     ("convenios", "Transferências de convênios", "transferencias"),
     ("outras_transferencias_uniao", "Outras transferências da União", "transferencias"),
     ("outras_transferencias", "Outras transferências", "transferencias"),
@@ -46,10 +54,13 @@ ITENS = [
     ("intraorcamentarias", "Receitas intraorçamentárias", "intra"),
 ]
 
-# Peso das fontes, pelo código (igual nos dois períodos): impostos próprios = 1.1; transferências da
-# União = 1.7.1 (correntes) + 2.4.1 (de capital). Valores líquidos das deduções.
+# Peso das fontes, pelo código. Impostos próprios = 1.1 em todos os períodos. Transferências da União:
+# 1.7.2.1 + 2.4.2.1 até 2017; 1.7.1 + 2.4.1 a partir de 2018. Valores líquidos das deduções.
 PREFIXOS_IMPOSTOS = [segmentos("1.1")]
-PREFIXOS_UNIAO = [segmentos("1.7.1"), segmentos("2.4.1")]
+
+
+def prefixos_uniao(ano):
+    return [segmentos("1.7.2.1"), segmentos("2.4.2.1")] if ano <= 2017 else [segmentos("1.7.1"), segmentos("2.4.1")]
 
 
 def _natureza(ic):
@@ -96,21 +107,24 @@ def montar_receita(ic, dicionario, tolerancia=1.0):
     # Totais por UF e ano (líquidos): exceto intra, impostos próprios e transferências da União
     nat["liquida_proprio"] = nat["bruta_proprio"] - nat[["ded_transferencias_proprio", "ded_fundeb_proprio",
                                                          "ded_outras_proprio"]].sum(axis=1)
-    def do_prefixo(prefixos):
-        return nat["codigo"].map(lambda c: any(segmentos(c)[:len(p)] == p for p in prefixos))
-    nat["e_imposto"], nat["e_uniao"] = do_prefixo(PREFIXOS_IMPOSTOS), do_prefixo(PREFIXOS_UNIAO)
+    def do_prefixo(codigo, prefixos):
+        return any(segmentos(codigo)[:len(p)] == p for p in prefixos)
+    nat["e_imposto"] = nat["codigo"].map(lambda c: do_prefixo(c, PREFIXOS_IMPOSTOS))
+    nat["e_uniao"] = [do_prefixo(c, prefixos_uniao(int(a))) for c, a in zip(nat["codigo"], nat["ano"])]
     totais = nat.groupby(["uf", "ano"]).apply(lambda g: pd.Series({
         "liquida_exceto_intra": g.loc[g["item"] != "intraorcamentarias", "liquida_proprio"].sum(),
         "impostos_proprios": g.loc[g["e_imposto"], "liquida_proprio"].sum(),
         "transferencias_uniao": g.loc[g["e_uniao"], "liquida_proprio"].sum(),
     }), include_groups=False).reset_index()
 
-    exceto = _totais(ic, TOTAL_EXCETO_INTRA)
-    exceto_liquida = (exceto["bruta"] - exceto[["ded_transferencias", "ded_fundeb", "ded_outras"]].sum(axis=1))
-    confere = totais.set_index(["uf", "ano"])["liquida_exceto_intra"] - exceto_liquida.reindex(
+    # Líquida exceto intra = categorias 1 e 2 (valores próprios das linhas de categoria somam o topo)
+    categorias = nat[nat["codigo"].map(lambda c: len(segmentos(c)) == 1 and segmentos(c)[0] in ("1", "2"))]
+    esperado = categorias.groupby(["uf", "ano"]).apply(lambda g: (g["bruta"] - g[["ded_transferencias", "ded_fundeb",
+                                                                   "ded_outras"]].fillna(0).sum(axis=1)).sum(), include_groups=False)
+    confere = totais.set_index(["uf", "ano"])["liquida_exceto_intra"] - esperado.reindex(
         totais.set_index(["uf", "ano"]).index).fillna(0.0)
     if (confere.abs() > tolerancia).any():
-        raise ValueError(f"líquida exceto intra difere do total da I-C em {confere[confere.abs() > tolerancia].head().to_dict()}")
+        raise ValueError(f"líquida exceto intra difere das categorias 1 e 2 em {confere[confere.abs() > tolerancia].head().to_dict()}")
     return linhas.sort_values(["uf", "ano", "item"]).reset_index(drop=True), totais
 
 

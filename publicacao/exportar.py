@@ -7,8 +7,10 @@ Arquivos gerados:
     meta.json          descrição dos arquivos, colunas, níveis, regras de uso e método de deflação
     dicionarios.json   UFs, funções e subfunções (código → nome)
     ipca.json          variação anual dez/dez do IPCA
-    despesa.json       tabela despesa em R$ NOMINAIS, com população e data da extração
-    receita.json       receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais
+    despesa_funcoes.json  tabela despesa, níveis total e função, das 27 UFs, em R$ NOMINAIS, com população
+    despesa/<UF>.json     subfunções (e demais) de uma UF, carregadas sob demanda pela tela "Por estado"
+    receita.json          receita: totais, itens, ressalvas e petróleo das 27 UFs (sem as linhas por item)
+    receita/<UF>.json     linhas por item de uma UF (DCA I-C): bruta, deduções e líquida, em R$ nominais
     divida.json        dívida por UF e ano (estoque do RGF Anexo 02 e pagamento da DCA I-D), em R$ nominais
     estatais.json      estatais ativas e não dependentes por edição, UF e função (só informativo: gera avisos,
                        nunca altera valores de despesa)
@@ -28,6 +30,8 @@ import pandas as pd
 
 from analyses.carregar import RAIZ, carregar, carregar_dicionario, carregar_ipca
 from publicacao import divida as divida_mod
+from publicacao import compensacoes as compensacoes_mod
+from publicacao import og as og_mod
 from publicacao import receita as receita_mod
 from analytics import (
     agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao,
@@ -36,12 +40,15 @@ from analytics import (
 
 DIR_SAIDA = RAIZ / "web" / "public" / "data"
 CAMINHO_SITE = RAIZ / "config" / "site.yaml"
+CAMINHO_SICONFI = RAIZ / "config" / "siconfi.yaml"
+CAMINHO_IPCA_FONTE = RAIZ / "data" / "reference" / "ipca_fonte.yaml"
 VERSAO_ESQUEMA = 1
 
 COLUNAS_DESPESA = {
     "uf": "sigla da UF",
     "ano": "exercício",
-    "nivel": "nível da linha: total, funcao, subfuncao ou demais (subfunções não listadas da função)",
+    "nivel": "nível da linha: total, funcao, subfuncao, demais (subfunções não listadas da função) ou "
+             "demais_calculado (função − soma das subfunções, onde a DCA não traz 'demais')",
     "funcao_cod": "código da função (2 dígitos); nulo no nível total",
     "subfuncao_cod": "código da subfunção (3 dígitos); só no nível subfuncao",
     "empenhado": "R$ nominais; nulo se a fonte não informa",
@@ -60,7 +67,7 @@ FONTES = {
     },
 }
 
-ORDEM_NIVEIS = ["total", "funcao", "subfuncao", "demais"]
+ORDEM_NIVEIS = ["total", "funcao", "subfuncao", "demais", "demais_calculado"]
 
 # Ressalvas para o leitor, exibidas abaixo dos gráficos do front
 RESSALVAS = [
@@ -118,9 +125,17 @@ RESSALVAS_DIVIDA = [
               "não entra nestes números."},
 ]
 NOTA_COMPOSICAO = "O relatório separa a dívida por tipo, não por credor. A maior parte da 'reestruturação' é com a União."
+NOTA_COMPOSICAO_ANTIGA = ("Até 2016 o relatório separava a dívida só em interna e externa, sem os tipos usados a partir "
+                          "de 2017. A composição desses anos não é comparável e não é mostrada.")
 
 # Ressalvas da parte "De onde vem o dinheiro"
 RESSALVAS_RECEITA = [
+    {"id": "recodificacao_2018", "titulo": "Até 2017, outra codificação das receitas",
+     "texto": "Até 2017 a prestação de contas usava outra classificação das receitas; a partir de 2018 vale a atual. "
+              "Cada item junta os códigos das duas. Até 2017, multas, juros e dívida ativa de cada imposto foram somados "
+              "ao imposto de origem (o código permite identificá-lo), como na classificação atual. O adicional do ICMS "
+              "para fundos de combate à pobreza só aparece separado a partir de 2018; antes não está na linha do ICMS "
+              "(o ICMS sem o adicional não salta entre 2017 e 2018). Itens pequenos (\"outras\") podem mudar de composição entre 2017 e 2018."},
     {"id": "recodificacao_2022", "titulo": "Códigos novos a partir de 2022",
      "texto": "A classificação das receitas mudou em 2022 (ICMS, IPVA, FPE e FUNDEB, entre outros, ganharam códigos "
               "novos). Cada item aqui junta os códigos antigos e os novos; os itens principais não mostram salto por "
@@ -132,15 +147,64 @@ RESSALVAS_RECEITA = [
     {"id": "fundeb", "titulo": "FUNDEB: sai e volta",
      "texto": "Parte do ICMS, do IPVA e de outras receitas vai para o FUNDEB (aparece como dedução) e volta ao estado "
               "conforme o número de alunos (aparece como \"FUNDEB, retorno\"). Não somar a dedução com o retorno."},
+    {"id": "compensacoes", "titulo": "Compensações financeiras: comparar pela receita bruta",
+     "texto": "Parte dos royalties e compensações vai para os municípios, e cada estado registra esse repasse de um "
+              "jeito (uns deduzem, outros não). Para comparar estados, use a receita bruta dessas linhas. A linha "
+              "\"petróleo – regime de concessão\" aparece em poucos estados e anos isolados (MG 2019, PR 2022) e pode ser "
+              "a parte do bônus de leilões do pré-sal repassada aos estados, não royalties (hipótese não verificada)."},
     {"id": "operacoes_credito", "titulo": "Empréstimo não é arrecadação",
      "texto": "Operações de crédito são dinheiro emprestado: entram na receita do ano, mas são dívida nova."},
 ]
-RESSALVAS_RECEITA_POR_UF = {
-    "RJ": [{"id": "royalties_rj", "titulo": "Royalties do petróleo não identificáveis",
-            "texto": "O RJ não separa royalties e participações especiais do petróleo nas contas que entrega ao "
-                     "Tesouro: eles devem estar em \"Demais receitas patrimoniais\" (R$ 25,9 bi em 2024, 26% da "
-                     "receita), dentro de \"receita patrimonial\". Por isso o item royalties do RJ aparece quase zerado."}],
+# Links das fontes para a página "Como fazemos". O texto das fichas fica em web/src/conteudo/metodo/;
+# aqui só links e nomes. A data da última extração é calculada no export (montar_documentacao).
+FONTES_DOCUMENTACAO = {
+    "siconfi": {
+        "nome": "SICONFI (Tesouro Nacional)",
+        "pagina_oficial": "https://siconfi.tesouro.gov.br/siconfi/index.jsf",
+        "documentacao_api": "https://apidatalake.tesouro.gov.br/docs/siconfi/",
+    },
+    "anp": {
+        "nome": "ANP (Agência Nacional do Petróleo, Gás Natural e Biocombustíveis)",
+        "pagina_oficial": "https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/participacoes-governamentais",
+        "documentacao_api": None,  # arquivos CSV, sem API
+    },
+    "tesouro_estatais": {
+        "nome": "Raio X das Empresas dos Estados Brasileiros (Tesouro Nacional)",
+        "pagina_oficial": "https://tesouro.github.io/empresas-estados/",
+        "documentacao_api": "https://github.com/tesouro/empresas-estados",
+    },
+    "ibge_ipca": {
+        "nome": "IBGE: IPCA (SIDRA, tabela 1737)",
+    },
 }
+
+DIR_CONFIG_UFS = RAIZ / "config" / "ufs"
+
+
+def ler_config_ufs(ufs, dir_config=DIR_CONFIG_UFS):
+    """config/ufs/<uf>.yaml → (ressalvas da receita por UF, {UF que não separa o petróleo na DCA: desde que ano}).
+
+    O que é específico de uma UF fica na configuração dela, nunca no código (regra de agnosticismo).
+    Ressalva com "anos" vale só nesses exercícios. Arquivo de UF fora de ufs.csv é erro.
+    "petroleo_nao_separado_desde" (opcional): antes desse ano a UF separava; sem ele, não separa em nenhum ano (None).
+    """
+    import yaml
+
+    ressalvas, nao_separa = {}, {}
+    for caminho in sorted(Path(dir_config).glob("*.yaml")):
+        with open(caminho, encoding="utf-8") as f:
+            config = yaml.safe_load(f) or {}
+        uf = str(config.get("uf", caminho.stem)).upper()
+        if uf not in set(ufs["uf"]):
+            raise ValueError(f"{caminho}: UF {uf!r} fora de dicionarios/nacional/ufs.csv")
+        receita = (config.get("publicacao") or {}).get("receita") or {}
+        if receita.get("ressalvas"):
+            ressalvas[uf] = [{k: v for k, v in r.items()} for r in receita["ressalvas"]]
+        if receita.get("petroleo_nao_separado"):
+            desde = receita.get("petroleo_nao_separado_desde")
+            nao_separa[uf] = int(desde) if desde is not None else None
+    return ressalvas, dict(sorted(nao_separa.items()))
+
 
 # Parâmetros do gabarito
 ESTAGIO_GABARITO = "liquidado"
@@ -287,7 +351,10 @@ def receita_gabarito(totais, populacao, ipca, ano_base):
     return valores.sort_values(["uf", "ano"]), medianas.sort_values("ano")
 
 
-def montar_receita_json(linhas, totais, extraido_em):
+def montar_receita_json(linhas, totais, extraido_em, ressalvas_por_uf=None, petroleo=None, ufs_nao_separa=None,
+                        ultimo_ano_pe=None, anp_extraido_em=None):
+    """ufs_nao_separa: {UF: primeiro ano sem separar o petróleo, ou None = nenhum ano} (de ler_config_ufs)."""
+    ufs_nao_separa = ufs_nao_separa or {}
     return {
         "fonte": "SICONFI/Tesouro Nacional: DCA Anexo I-C (receita orçamentária por natureza)",
         "extraido_em": extraido_em,
@@ -303,8 +370,25 @@ def montar_receita_json(linhas, totais, extraido_em):
             "totais.liquida_exceto_intra": "receita líquida total, sem as intraorçamentárias",
         },
         "itens": [{"item": i, "nome": n, "grupo": g} for i, n, g in receita_mod.ITENS],
+        "comparar_pela_bruta": receita_mod.ITENS_COMPARAR_PELA_BRUTA,
         "ressalvas": RESSALVAS_RECEITA,
-        "ressalvas_por_uf": RESSALVAS_RECEITA_POR_UF,
+        "ressalvas_por_uf": ressalvas_por_uf or {},
+        # Petróleo e gás: DCA (com o FEP) × ANP (royalties e participação especial repassados ao estado, sem o FEP)
+        "petroleo": {
+            "fonte_dca": "SICONFI/Tesouro Nacional, DCA Anexo I-C, item petróleo e gás (receita bruta, inclui o FEP)",
+            "fonte_anp": "ANP, dados abertos de participações governamentais: royalties e participação especial "
+                         "destinados ao estado (sem os municípios e sem o FEP), por ano de caixa",
+            "anp_extraido_em": anp_extraido_em,
+            "ultimo_ano_participacao_especial": ultimo_ano_pe,
+            "ufs_nao_separa_na_dca": sorted(ufs_nao_separa),
+            # UF → primeiro ano em que não separa (antes disso, separava); UF fora daqui: nenhum ano separado
+            "nao_separa_desde": {uf: d for uf, d in ufs_nao_separa.items() if d is not None},
+            "regra_reconciliacao": "onde a DCA não separa o petróleo, a ANP é comparada com 'Demais receitas "
+                                   "patrimoniais' (1.3.9): se o total da ANP for de 95% a 100% da linha, a linha é "
+                                   "descrita como contendo os repasses; senão, os dois valores lado a lado, sem "
+                                   "reconciliação. Nenhum total da DCA muda.",
+            "linhas": [] if petroleo is None else registros(petroleo),
+        },
         "totais": registros(totais),
         "linhas": registros(linhas),
     }
@@ -321,6 +405,7 @@ def montar_divida_json(registros, extraido_em):
         "alerta_legal_pct": 180,
         "campos": divida_mod.DESCRICAO_CAMPOS,
         "nota_composicao": NOTA_COMPOSICAO,
+        "nota_composicao_antiga": NOTA_COMPOSICAO_ANTIGA,
         "ressalvas": RESSALVAS_DIVIDA,
         "linhas": [{k: _nativo(v) if not isinstance(v, dict) else {kk: _nativo(vv) for kk, vv in v.items()}
                     for k, v in r.items()} for r in registros],
@@ -397,13 +482,17 @@ def montar_estatais(estatais, setor_funcao, ajustes, anos, correcoes_nomes=None)
         raise ValueError(f"dependente fora de true/false: {sorted(valores - {'true', 'false'})}")
     df = estatais.assign(dependente=estatais["dependente"] == "true",
                          ano_referencia=estatais["ano_referencia"].astype(int))
+    for coluna in ["campos_herdados", "herdado_de"]:  # dicionários anteriores à herança não têm as colunas
+        if coluna not in df.columns:
+            df[coluna] = None
     edicoes = sorted(int(e) for e in df["ano_referencia"].unique())
+    df_todas = df
     com_funcao = funcao_das_estatais(df, setor_funcao, ajustes)
     exibicao = nomes_de_exibicao(df, correcoes_nomes).set_index(["uf", "cnpj"])
 
     def com_exibicao(linha, campos):
         nome = exibicao.loc[(linha["uf"], linha["cnpj"])]
-        return {**{campo: linha[campo] for campo in campos}, "sigla_exibicao": nome["sigla_exibicao"],
+        return {**{campo: _nativo(linha[campo]) for campo in campos}, "sigla_exibicao": _nativo(nome["sigla_exibicao"]),
                 "nome_exibicao": nome["nome_exibicao"], "nome_manual": bool(nome["nome_manual"])}
     df = estatais_fora_das_contas(com_funcao)
 
@@ -416,7 +505,8 @@ def montar_estatais(estatais, setor_funcao, ajustes, anos, correcoes_nomes=None)
     # Lista completa (dependentes ou não, qualquer situação) para a tela "Por estado"; sem valores financeiros
     lista = {str(e): {} for e in edicoes}
     for linha in com_funcao.sort_values(["ano_referencia", "uf", "sigla"]).to_dict(orient="records"):
-        empresa = com_exibicao(linha, ["sigla", "empresa", "cnpj", "setor", "situacao"])
+        # campos_herdados/herdado_de: setor e situação vindos de outra edição (estatais.csv, HERANCA do extractor)
+        empresa = com_exibicao(linha, ["sigla", "empresa", "cnpj", "setor", "situacao", "campos_herdados", "herdado_de"])
         empresa["funcao_cod"] = None if pd.isna(linha["funcao_cod"]) else linha["funcao_cod"]
         empresa["dependente"] = bool(linha["dependente"])
         lista[str(linha["ano_referencia"])].setdefault(linha["uf"], []).append(empresa)
@@ -432,8 +522,11 @@ def montar_estatais(estatais, setor_funcao, ajustes, anos, correcoes_nomes=None)
                     "(setor_funcao.csv) ou por ajuste da empresa (estatais_ajustes.csv)",
         "edicoes": edicoes,
         "regra_edicao": "para cada ano, a edição mais recente que não passa do ano; anos anteriores "
-                        "à primeira edição usam a primeira",
+                        "à primeira edição, ou UF ausente da edição (ufs_por_edicao), ficam sem informação de estatais",
         "edicao_por_ano": {str(ano): edicao_para_ano(edicoes, ano) for ano in sorted(int(a) for a in anos)},
+        # UFs presentes em cada edição: UF ausente (ex.: AP nos exercícios 2019 e 2020) = sem informação no ano
+        "ufs_por_edicao": {str(e): sorted(df_todas.loc[df_todas["ano_referencia"] == e, "uf"].unique().tolist())
+                           for e in edicoes},
         "atribuicao": ATRIBUICAO_ESTATAIS["texto"],
         "fonte_curta": ATRIBUICAO_ESTATAIS["fonte_curta"],
         "correspondencia": {"direta": "o setor corresponde à função",
@@ -452,20 +545,67 @@ def montar_atribuicoes(estatais):
 
 
 def ler_site(ufs, caminho=CAMINHO_SITE):
-    """config/site.yaml → {"uf_padrao": sigla}. UF fora de ufs.csv é erro (nunca publicar um padrão inválido)."""
+    """config/site.yaml → {"uf_padrao": sigla, "exemplo_metodo": {uf, funcao} ou None}.
+
+    UF fora de ufs.csv é erro (nunca publicar um padrão inválido).
+    """
     import yaml
 
     with open(caminho, encoding="utf-8") as f:
         site = yaml.safe_load(f) or {}
-    uf = site.get("uf_padrao")
-    if uf is not None:
+
+    def validar(uf, campo):
         uf = str(uf).upper()
         if uf not in set(ufs["uf"]):
-            raise ValueError(f"uf_padrao {uf!r} de {caminho} não está em dicionarios/nacional/ufs.csv")
-    return {"uf_padrao": uf}
+            raise ValueError(f"{campo} {uf!r} de {caminho} não está em dicionarios/nacional/ufs.csv")
+        return uf
+
+    uf = site.get("uf_padrao")
+    exemplo = site.get("exemplo_metodo")
+    if exemplo is not None:
+        exemplo = {"uf": validar(exemplo["uf"], "exemplo_metodo.uf"), "funcao_cod": str(exemplo["funcao"])}
+    return {"uf_padrao": None if uf is None else validar(uf, "uf_padrao"), "exemplo_metodo": exemplo}
 
 
-def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None):
+def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_fonte, exemplo=None):
+    """Bloco "documentacao" do meta.json: fichas das fontes com a data da última extração de cada uma
+    (lida das tabelas processadas) e o exemplo da seção "Refaça a conta".
+
+    despesa e demonstrativo: tabelas processadas (coluna extraido_em); anp: compensacoes_anp;
+    ipca_fonte: data/reference/ipca_fonte.yaml; exemplo: {uf, funcao_cod} de config/site.yaml.
+    """
+    from extractors.nacional import tesouro_estatais
+
+    por_demonstrativo = demonstrativo.groupby("demonstrativo")["extraido_em"].max().to_dict()
+    siconfi = {
+        **FONTES_DOCUMENTACAO["siconfi"],
+        "api": url_base_siconfi,
+        "extraido_em": max([despesa["extraido_em"].max(), *por_demonstrativo.values()]),
+        "partes": [
+            {"sigla": "DCA", "extraido_em": max(despesa["extraido_em"].max(), por_demonstrativo.get("DCA", ""))},
+            {"sigla": "RGF", "extraido_em": por_demonstrativo.get("RGF")},
+            {"sigla": "RREO", "extraido_em": por_demonstrativo.get("RREO")},
+        ],
+    }
+    estatais = {**FONTES_DOCUMENTACAO["tesouro_estatais"], "commit": tesouro_estatais.COMMIT[:7],
+                "versao_de": tesouro_estatais.COMMIT_DATA}
+    ipca = {**FONTES_DOCUMENTACAO["ibge_ipca"], "pagina_oficial": ipca_fonte["pagina"],
+            "documentacao_api": ipca_fonte["documentacao_api"], "consulta": ipca_fonte["consulta"],
+            "extraido_em": str(ipca_fonte["consultado_em"])}
+    if exemplo is not None:
+        # Onde o valor do exemplo aparece na resposta da API (o front monta o link com o código IBGE da UF)
+        from extractors.nacional.siconfi import dca
+
+        coluna = {estagio: coluna for coluna, estagio in dca.COLUNAS_VALOR.items()}["liquidado"]
+        exemplo = {**exemplo, "endpoint": "dca", "anexo": dca.ANEXO_I_E, "coluna": coluna}
+    return {
+        "fontes": {"siconfi": siconfi, "anp": {**FONTES_DOCUMENTACAO["anp"], "extraido_em": anp["extraido_em"].max()},
+                   "tesouro_estatais": estatais, "ibge_ipca": ipca},
+        "exemplo": exemplo,
+    }
+
+
+def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None, documentacao=None):
     datas = despesa.groupby("fonte_dado")["extraido_em"].agg(["min", "max"])
     return {
         "gerado_em": gerado_em,
@@ -476,10 +616,13 @@ def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None):
             "meta.json": "este arquivo",
             "dicionarios.json": "UFs, funções e subfunções (código → nome)",
             "ipca.json": "variação anual dez/dez do IPCA, para deflacionar no front",
-            "despesa.json": "despesa por UF, ano, função e subfunção, em R$ nominais",
-            "receita.json": "receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais",
+            "despesa_funcoes.json": "despesa das 27 UFs nos níveis total e função, em R$ nominais",
+            "despesa/<UF>.json": "subfunções e demais de uma UF (carregado sob demanda), em R$ nominais",
+            "receita.json": "receita das 27 UFs: totais, itens, ressalvas e petróleo (sem as linhas por item)",
+            "receita/<UF>.json": "linhas por item de uma UF (DCA I-C), em R$ nominais (carregado sob demanda)",
             "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
             "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
+            "estatais/<UF>.json": "lista completa das estatais de uma UF por edição (carregado sob demanda)",
             "gabarito.json": "só para teste do front; não exibir",
         },
         "ufs": sorted(despesa["uf"].unique().tolist()),
@@ -498,11 +641,13 @@ def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None):
             "funcao": "uma linha por função",
             "subfuncao": "uma linha por subfunção listada",
             "demais": "soma das subfunções não listadas daquela função",
+            "demais_calculado": "calculado, não declarado: função − soma das subfunções, onde a DCA não traz "
+                                "'Demais subfunções' (só quando a diferença não é zero)",
         },
         "regras": [
             "Nunca somar linhas de níveis diferentes: filtrar um nivel antes de agregar.",
             "Soma das linhas nivel=funcao com intra=false = linha nivel=total com intra=false.",
-            "Subfunções + demais de uma função = a função.",
+            "Subfunções + demais (ou demais_calculado) de uma função = a função.",
             "As intraorçamentárias (intra=true) vêm só como total, sem detalhe por função; "
             "somá-las às demais conta o mesmo gasto duas vezes.",
             "Despesa executada padrão: liquidado.",
@@ -519,7 +664,45 @@ def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None):
             "anos_ipca": sorted(int(a) for a in ipca["ano"]),
         },
         "linhas": {"despesa": int(len(despesa))},
+        # Página "Como fazemos": fichas das fontes (com a data da última extração) e o exemplo da conta
+        "documentacao": documentacao,
     }
+
+
+# Níveis da despesa que vão no arquivo geral (as 27 UFs, para comparar); os demais vão no arquivo de cada UF
+NIVEIS_GERAIS = ["total", "funcao"]
+
+
+def dividir_por_uf(tabela, receita_json):
+    """Despesa e receita em arquivos para o front: {caminho relativo: objeto}.
+
+    Geral (todas as UFs): despesa nos níveis total e função; receita sem `linhas`. Por UF: as subfunções
+    (subfuncao, demais, demais_calculado) e as linhas por item da receita. A tela "Por estado" junta
+    os dois; "Comparar" só precisa do geral.
+    """
+    geral = tabela["nivel"].isin(NIVEIS_GERAIS)
+    linhas = pd.DataFrame(receita_json["linhas"])
+    arquivos = {
+        "despesa_funcoes.json": registros(tabela[geral]),
+        "receita.json": {**{k: v for k, v in receita_json.items() if k != "linhas"},
+                         "linhas_por_uf": "receita/<UF>.json"},
+    }
+    for uf in sorted(tabela["uf"].unique()):
+        arquivos[f"despesa/{uf}.json"] = registros(tabela[~geral & (tabela["uf"] == uf)])
+        arquivos[f"receita/{uf}.json"] = linhas[linhas["uf"] == uf].to_dict(orient="records") if len(linhas) else []
+    return arquivos
+
+
+def dividir_estatais(estatais_json):
+    """estatais.json sem a lista completa (só a tela "Por estado" usa, uma UF por vez) + estatais/<UF>.json
+    com {edição: [empresas]}. Avisos (por_edicao) e mudanças de dependência ficam no geral: "Comparar" usa."""
+    lista = estatais_json["lista_por_edicao"]
+    ufs = sorted({uf for por_uf in lista.values() for uf in por_uf})
+    arquivos = {"estatais.json": {**{k: v for k, v in estatais_json.items() if k != "lista_por_edicao"},
+                                  "lista_por_uf": "estatais/<UF>.json"}}
+    for uf in ufs:
+        arquivos[f"estatais/{uf}.json"] = {edicao: por_uf.get(uf, []) for edicao, por_uf in lista.items()}
+    return arquivos
 
 
 def gravar_json(objeto, caminho, compacto=False):
@@ -546,11 +729,22 @@ def main(dir_saida=DIR_SAIDA):
     divida = divida_mod.montar_divida(rgf_linhas, i_d)
     i_c = demonstrativo[(demonstrativo["demonstrativo"] == "DCA") & (demonstrativo["anexo"] == "DCA-Anexo I-C")]
     receita_linhas, receita_totais = receita_mod.montar_receita(i_c, carregar_dicionario("nacional/receita_itens.csv"))
+    anp = carregar("compensacoes_anp")
+    petroleo, ultimo_ano_pe = compensacoes_mod.montar_petroleo(receita_linhas, i_c, anp, sorted(tabela["ano"].unique()))
+    ressalvas_uf, ufs_nao_separa = ler_config_ufs(carregar_dicionario("nacional/ufs.csv"))
+    site = ler_site(carregar_dicionario("nacional/ufs.csv"))
+    import yaml
+
+    with open(CAMINHO_SICONFI, encoding="utf-8") as f:
+        url_base = yaml.safe_load(f)["url_base"]
+    with open(CAMINHO_IPCA_FONTE, encoding="utf-8") as f:
+        ipca_fonte = yaml.safe_load(f)
+    documentacao = montar_documentacao(despesa, demonstrativo, anp, url_base, ipca_fonte, site["exemplo_metodo"])
     dir_saida = Path(dir_saida)
     arquivos = [
         gravar_json(montar_meta(tabela, ipca, ano_base, gerado_em,
                                 montar_atribuicoes(carregar_dicionario("nacional/estatais.csv")),
-                                ler_site(carregar_dicionario("nacional/ufs.csv"))),
+                                site, documentacao),
                     dir_saida / "meta.json"),
         gravar_json(montar_dicionarios(
             carregar_dicionario("nacional/ufs.csv"),
@@ -558,21 +752,32 @@ def main(dir_saida=DIR_SAIDA):
             carregar_dicionario("nacional/subfuncoes.csv"),
         ), dir_saida / "dicionarios.json"),
         gravar_json(montar_ipca(ipca), dir_saida / "ipca.json"),
-        gravar_json(montar_estatais(
-            carregar_dicionario("nacional/estatais.csv"),
-            carregar_dicionario("nacional/setor_funcao.csv"),
-            carregar_dicionario("nacional/estatais_ajustes.csv"),
-            tabela["ano"].unique(),
-            carregar_dicionario("nacional/estatais_nomes_exibicao.csv"),
-        ), dir_saida / "estatais.json"),
-        gravar_json(registros(tabela), dir_saida / "despesa.json", compacto=True),
-        gravar_json(montar_receita_json(receita_linhas, receita_totais, i_c["extraido_em"].max()),
-                    dir_saida / "receita.json", compacto=True),
+        *[gravar_json(objeto, dir_saida / caminho, compacto=caminho != "estatais.json")
+          for caminho, objeto in dividir_estatais(montar_estatais(
+              carregar_dicionario("nacional/estatais.csv"),
+              carregar_dicionario("nacional/setor_funcao.csv"),
+              carregar_dicionario("nacional/estatais_ajustes.csv"),
+              tabela["ano"].unique(),
+              carregar_dicionario("nacional/estatais_nomes_exibicao.csv"),
+          )).items()],
+        *[gravar_json(objeto, dir_saida / caminho, compacto=True) for caminho, objeto in dividir_por_uf(
+            tabela, montar_receita_json(receita_linhas, receita_totais, i_c["extraido_em"].max(), ressalvas_uf,
+                                        petroleo, ufs_nao_separa, ultimo_ano_pe, anp["extraido_em"].max())).items()],
         gravar_json(montar_divida_json(divida, rgf_linhas["extraido_em"].max()), dir_saida / "divida.json"),
         gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base, divida, receita_totais), dir_saida / "gabarito.json"),
     ]
+    antigo = dir_saida / "despesa.json"  # antes da divisão por UF (2026-10-10): não é mais lido
+    if antigo.exists():
+        antigo.unlink()
     for arquivo in arquivos:
+        if any(f"/{pasta}/" in str(arquivo) for pasta in ["despesa", "receita", "estatais"]):
+            continue
         print(f"{arquivo.relative_to(RAIZ)}  {arquivo.stat().st_size / 1024:,.0f} KB")
+    por_uf = [a for a in arquivos if any(f"/{pasta}/" in str(a) for pasta in ["despesa", "receita", "estatais"])]
+    print(f"{len(por_uf)} arquivos por UF (despesa/, receita/, estatais/), "
+          f"{sum(a.stat().st_size for a in por_uf) / 1024:,.0f} KB no total")
+    if Path(dir_saida) == DIR_SAIDA:  # prévias de compartilhamento (imagens e textos do index.php)
+        og_mod.main()
 
 
 if __name__ == "__main__":

@@ -1,13 +1,12 @@
-import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 import {
-  completarComZero, composicaoDivida, composicaoReceita, destinoDoImposto, indicadoresReceita, populacoes, tabelaReceita, composicaoDoAno, dividaContraAreas, indicadoresDivida, deflacionar, edicaoParaAno, estataisDoEstado, estataisNaArea,
+  completarComZero, composicaoDivida, composicaoReceita, ressalvasDoAno, petroleoDaUf, reconciliacaoPetroleo, seriePetroleo, destinoDoImposto, indicadoresReceita, populacoes, tabelaReceita, composicaoDoAno, dividaContraAreas, indicadoresDivida, deflacionar, edicaoParaAno, estataisDoEstado, estataisNaArea,
   indicadoresDeTodasAsFuncoes, serieDaUf, subareasDaUf, tabelaAreasPorAno, tabelaSubareasPorAno, totaisPorUfAno, filtrar, indiceEncadeado, indicadoresDaFuncao, mediana, medianaPorAno,
   mudancasDeDependencia, ordenarPorPosicao, participacao, perCapita, ranking, ufsComEstatalNaArea,
 } from './calculos.js'
+import { lerJson } from './testes/publicados.js'
 
-const lerJson = (nome) => JSON.parse(readFileSync(new URL(`../public/data/${nome}`, import.meta.url), 'utf-8'))
 
 // --- exemplos pequenos, duas UFs fictícias -------------------------------------
 
@@ -217,15 +216,15 @@ describe('estatais não dependentes por área', () => {
     },
   }
 
-  it('edição: a mais recente que não passa do ano; antes de todas, a primeira', () => {
-    expect([2019, 2022, 2023, 2024, 2025].map((a) => edicaoParaAno([2024, 2023], a))).toEqual([2023, 2023, 2023, 2024, 2024])
+  it('edição: a mais recente que não passa do ano; antes de todas, nenhuma (null)', () => {
+    expect([2019, 2022, 2023, 2024, 2025].map((a) => edicaoParaAno([2024, 2023], a))).toEqual([null, null, 2023, 2024, 2024])
     expect(() => edicaoParaAno([], 2024)).toThrow()
   })
 
   it('lista as estatais da UF na função, na edição do ano', () => {
     expect(estataisNaArea(ESTATAIS, 'AA', '17', 2025).map((e) => e.sigla)).toEqual(['SAN'])
     expect(estataisNaArea(ESTATAIS, 'BB', '17', 2023).map((e) => e.sigla)).toEqual(['PRIV'])
-    expect(estataisNaArea(ESTATAIS, 'BB', '17', 2020).map((e) => e.sigla)).toEqual(['PRIV'])
+    expect(estataisNaArea(ESTATAIS, 'BB', '17', 2020)).toEqual([]) // antes da primeira edição: sem informação
     expect(estataisNaArea(ESTATAIS, 'BB', '17', 2024)).toEqual([]) // privatizada: some em 2024
     expect(estataisNaArea(ESTATAIS, 'CC', '17', 2024)).toEqual([])
     expect(estataisNaArea(undefined, 'AA', '17', 2024)).toEqual([])
@@ -241,7 +240,7 @@ describe('estatais não dependentes por área', () => {
   it('estatais.json publicado: edição de cada ano bate com o Python, atribuição e UFs conhecidas', () => {
     const estatais = lerJson('estatais.json')
     const meta = lerJson('meta.json')
-    for (const ano of meta.anos) expect(edicaoParaAno(estatais.edicoes, ano)).toBe(estatais.edicao_por_ano[String(ano)])
+    for (const ano of meta.anos) expect(edicaoParaAno(estatais.edicoes, ano)).toBe(estatais.edicao_por_ano[String(ano)] ?? null)
     expect(estatais.atribuicao).toContain('Tesouro Nacional')
     expect(estatais.fonte_curta).toBeTruthy()
     for (const porUf of Object.values(estatais.por_edicao)) {
@@ -324,7 +323,8 @@ describe('tela Por estado', () => {
         2024: { AA: [{ sigla: 'B', dependente: false }, { sigla: 'A', dependente: false }] },
       },
     }
-    const e23 = estataisDoEstado(estatais, 'AA', 2020)
+    expect(estataisDoEstado(estatais, 'AA', 2020)).toMatchObject({ edicao: null, naoDependentes: [], dependentes: [] })
+    const e23 = estataisDoEstado(estatais, 'AA', 2023)
     expect(e23).toMatchObject({ edicao: 2023, painel: 'p2023' })
     expect(e23.naoDependentes.map((e) => e.sigla)).toEqual(['Z'])
     expect(e23.dependentes.map((e) => e.sigla)).toEqual(['A'])
@@ -558,5 +558,44 @@ describe('receita', () => {
         .reduce((s, l) => s + l.liquida, 0)
       expect(Math.abs(soma - t.liquida_exceto_intra)).toBeLessThan(1)
     }
+  })
+})
+
+describe('ressalvas por ano', () => {
+  it('as com anos só valem nesses anos', () => {
+    const r = [{ id: 'a' }, { id: 'b', anos: [2022] }]
+    expect(ressalvasDoAno(r, 2022).map((x) => x.id)).toEqual(['a', 'b'])
+    expect(ressalvasDoAno(r, 2024).map((x) => x.id)).toEqual(['a'])
+    expect(ressalvasDoAno(undefined, 2024)).toEqual([])
+  })
+})
+
+describe('petróleo: DCA × ANP', () => {
+  const linha = (ano, anp, demais, parcial = false) => ({ uf: 'AA', ano, anp_total: parcial ? null : anp, anp_parcial: parcial,
+    demais_patrimoniais: demais, dca_petroleo: 0, anp_royalties: anp })
+
+  it('regra dos 95%: explica, não reconcilia (inclusive ANP acima da linha), parcial e sem dado', () => {
+    expect(reconciliacaoPetroleo(linha(2024, 96, 100)).situacao).toBe('explica')
+    expect(reconciliacaoPetroleo(linha(2024, 100, 100)).situacao).toBe('explica')
+    expect(reconciliacaoPetroleo(linha(2024, 94, 100)).situacao).toBe('nao_reconcilia')
+    expect(reconciliacaoPetroleo(linha(2021, 112, 100)).situacao).toBe('nao_reconcilia') // a ANP não pode passar da linha
+    expect(reconciliacaoPetroleo(linha(2025, 50, 100, true)).situacao).toBe('parcial')
+    expect(reconciliacaoPetroleo(linha(2024, 0, 100)).situacao).toBe('sem_dado')
+    expect(reconciliacaoPetroleo(undefined).situacao).toBe('sem_dado')
+  })
+
+  it('série por ano com fator; nulo continua nulo', () => {
+    const porAno = petroleoDaUf([linha(2023, 10, 20), linha(2025, 5, 20, true)], 'AA')
+    expect(seriePetroleo(porAno, [2023, 2024, 2025], 'anp_total', (a) => (a === 2023 ? 1.5 : 1))).toEqual([15, null, null])
+    expect(seriePetroleo(porAno, [2025], 'anp_royalties')).toEqual([5])
+  })
+
+  it('dados publicados: RJ 2022–2024 explicado pela ANP; 2021 não reconcilia; 2025 parcial', () => {
+    const receita = lerJson('receita.json')
+    const rj = petroleoDaUf(receita.petroleo.linhas, 'RJ')
+    for (const ano of [2022, 2023, 2024]) expect(reconciliacaoPetroleo(rj.get(ano)).situacao).toBe('explica')
+    expect(reconciliacaoPetroleo(rj.get(2021)).situacao).toBe('nao_reconcilia')
+    expect(reconciliacaoPetroleo(rj.get(2025)).situacao).toBe('parcial')
+    expect(receita.petroleo.ufs_nao_separa_na_dca).toEqual(expect.arrayContaining(['RJ', 'DF']))
   })
 })

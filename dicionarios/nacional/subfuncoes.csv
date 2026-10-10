@@ -16,9 +16,13 @@ subfuncao_cod,subfuncao_nome
 129,Administração de Receitas
 130,Administração de Concessões
 131,Comunicação Social
+151,Defesa Área
+152,Defesa Naval
+153,Defesa Terrestre
 181,Policiamento
 182,Defesa Civil
 183,Informação e Inteligência
+211,Relações Diplomáticas
 212,Cooperação Internacional
 241,Assistência à Pessoa Idosa
 242,Assistência à Pessoa com Deficiência
@@ -78,6 +82,7 @@ subfuncao_cod,subfuncao_nome
 661,Promoção Industrial
 662,Produção Industrial
 663,Mineração
+664,Propriedade Industrial
 665,Normalização e Qualidade
 691,Promoção Comercial
 692,Comercialização
@@ -104,3 +109,5 @@ subfuncao_cod,subfuncao_nome
 844,Serviço da Dívida Externa
 845,Outras Transferências
 846,Outros Encargos Especiais
+847,Transferências para a Educação Básica
+999,Demais Subfunções Transporte

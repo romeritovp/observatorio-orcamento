@@ -1,7 +1,7 @@
 """Baixa e extrai a dívida para todas as UFs, sem parar no primeiro erro.
 
 Uso:
-    uv run python -m extractors.nacional.siconfi.lote_divida                # 2019 a 2025
+    uv run python -m extractors.nacional.siconfi.lote_divida                # 2015 a 2025
     uv run python -m extractors.nacional.siconfi.lote_divida 2023 2024      # outro intervalo
 
 Três etapas, cada uma com o resumo de sempre (certos, vazios, falhas):
@@ -17,9 +17,8 @@ import pandas as pd
 
 from extractors import base
 from extractors.nacional.siconfi import conferencia_divida, dca, rgf
-from extractors.nacional.siconfi.lote import anos_dos_argumentos, executar, resumo, ufs_do_dicionario
+from extractors.nacional.siconfi.lote import ANOS_PADRAO, anos_dos_argumentos, executar, resumo, ufs_do_dicionario
 
-ANOS_PADRAO = (2019, 2025)
 
 
 def resumo_conferencia(linhas):

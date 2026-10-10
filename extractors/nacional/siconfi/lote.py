@@ -7,6 +7,9 @@ import pandas as pd
 
 from extractors import base
 
+# Período da série (ano inicial único do projeto; docs/decisoes.md). Os lotes usam isto como padrão.
+ANOS_PADRAO = (2015, 2025)
+
 
 def ufs_do_dicionario(caminho_ufs=base.CAMINHO_UFS):
     return pd.read_csv(caminho_ufs, dtype=str)["uf"].tolist()

@@ -38,6 +38,10 @@ def test_classificar_conta():
     assert dca.classificar_conta("10.302 - Assistência Hospitalar e Ambulatorial")["subfuncao_cod"] == "302"
     assert dca.classificar_conta("FU10 - Demais Subfunções")["nivel"] == "demais"
     assert dca.classificar_conta("Despesas Exceto Intraorçamentárias")["intra"] is False
+    # variantes de 2015–2016
+    assert dca.classificar_conta("Despesas (Exceto Intraorçamentárias)")["nivel"] == "total"
+    assert dca.classificar_conta("Despesas (Exceto Intra-Orçamentárias)")["intra"] is False
+    assert dca.classificar_conta("Despesas (Intra-Orçamentárias)")["intra"] is True
     assert dca.classificar_conta("Despesas Intraorçamentárias") == {
         "nivel": "total", "funcao_cod": None, "subfuncao_cod": None,
         "nome": "Despesas Intraorçamentárias", "intra": True}
@@ -72,6 +76,37 @@ def test_subfuncoes_mais_demais_batem_com_funcao(df):
     for coluna in ["empenhado", "liquidado", "pago"]:
         diferenca = (abaixo[coluna].sum() - funcoes[coluna]).abs()
         assert (diferenca.fillna(0) < 1).all()
+
+
+def test_demais_calculado_so_onde_falta_demais_e_ha_diferenca(df):
+    # com "demais" declarado, nada muda
+    assert dca.completar_demais_calculado(df) is df
+    # sem as linhas "demais" (como em 2015–2016), a diferença função − Σ subfunções vira demais_calculado
+    sem_demais = df[df["nivel"] != "demais"].reset_index(drop=True)
+    completo = dca.completar_demais_calculado(sem_demais)
+    calculadas = completo[completo["nivel"] == "demais_calculado"]
+    originais = df[df["nivel"] == "demais"].set_index("funcao_cod")
+    assert len(calculadas) >= 1
+    assert set(calculadas["funcao_cod"]) <= set(originais.index)
+    for linha in calculadas.itertuples():
+        assert linha.subfuncao_cod is None and linha.intra is False
+        esperado = originais.loc[linha.funcao_cod, "empenhado"]
+        assert linha.empenhado == pytest.approx(esperado, abs=0.01)
+    # subfunções + demais calculado = função (a validação de sempre continua valendo)
+    funcoes = completo[completo["nivel"] == "funcao"].set_index("funcao_cod")["empenhado"]
+    abaixo = completo[completo["nivel"].isin(["subfuncao", "demais_calculado"])].groupby("funcao_cod")["empenhado"].sum()
+    assert ((abaixo - funcoes).abs().fillna(0) < 1).all()
+    dca.validar_despesa_funcao(completo)
+
+
+def test_demais_calculado_nao_aparece_quando_subfuncoes_somam_a_funcao(df):
+    sem_demais = df[df["nivel"] != "demais"].copy()
+    funcoes = sem_demais["nivel"] == "funcao"
+    somas = sem_demais[sem_demais["nivel"] == "subfuncao"].groupby("funcao_cod")[["empenhado", "liquidado", "pago"]].sum()
+    for coluna in somas.columns:
+        sem_demais.loc[funcoes, coluna] = sem_demais.loc[funcoes, "funcao_cod"].map(somas[coluna]).fillna(0.0) \
+            .where(sem_demais.loc[funcoes, coluna].notna())
+    assert "demais_calculado" not in set(dca.completar_demais_calculado(sem_demais)["nivel"])
 
 
 def test_valor_ausente_fica_nulo(resposta, df):

@@ -1,5 +1,23 @@
-# Configuração do site (web/). Lida por publicacao/exportar.py e levada ao meta.json; o front lê dali.
+# Configuração do site (web/). Lida por publicacao/ (meta.json, imagens de prévia, compartilhar.json) e pelo
+# build do Vite (web/vite.config.js, metatags do index.html). Um lugar só para cada valor.
 # A UF fica aqui, na configuração, e não no código (regra de agnosticismo do CLAUDE.md).
 
 # Estado aberto quando a URL não diz qual (sigla de dicionarios/nacional/ufs.csv)
 uf_padrao: SP
+
+# Domínio do site publicado, sem "https://" e sem barra final (pode ter subpasta: exemplo.com.br/orcamentos).
+# Trocar o valor e rodar de novo o export (imagens e textos de prévia) e o build.
+dominio: "apps.romeritopontes.com.br/orcamento"
+
+# Nome do site (título, og:site_name, imagens de prévia)
+nome_site: "Observatório dos Orçamentos"
+
+# Indexação por buscadores. false = <meta name="robots" content="noindex"> no site.
+# Só passar a true quando a publicação aberta for autorizada.
+indexar: false
+
+# Exemplo "Refaça a conta você mesmo" da página "Como fazemos": estado e área (código da função) cujo gasto
+# por habitante no ano mais recente é refeito passo a passo, a partir dos dados publicados.
+exemplo_metodo:
+  uf: RJ
+  funcao: "10"

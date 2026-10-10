@@ -6,13 +6,13 @@ Contexto para a IA. Leia antes de qualquer tarefa.
 Repositório Python para análises rápidas de orçamentos estaduais brasileiros com dados públicos. Começa pelo Rio de Janeiro, mas **é agnóstico de UF**: qualquer estado entra sem alterar o núcleo.
 
 Duas famílias de fontes:
-- **Nacionais** (servem a todas as UFs com o mesmo código): API do SICONFI (Tesouro Nacional). Fonte principal para comparar estados.
+- **Nacionais** (servem a todas as UFs com o mesmo código): API do SICONFI (Tesouro Nacional), fonte principal para comparar estados; ANP (royalties e participação especial por estado, `docs/fontes/anp.md`); Tesouro, Raio X das estatais (`docs/fontes/tesouro_estatais.md`).
 - **Estaduais** (formato próprio de cada UF): TCE e portal da transparência do estado. Usadas para o detalhe que o SICONFI não tem (programa, ação, órgão).
 
 ## Regra de ouro do agnosticismo
 O que é específico de uma UF vive **apenas** em:
 - `extractors/ufs/<uf>/`
-- `config/ufs/<uf>.yaml`
+- `config/ufs/<uf>.yaml` (inclusive ressalvas e marcações do site, em `publicacao:`)
 - `dicionarios/ufs/<uf>/`
 - `docs/fontes/<uf>.md`
 
@@ -41,6 +41,7 @@ Em qualquer outro lugar, a UF é parâmetro. Nunca escrever "RJ", "33" ou outra 
 
 ## Caminhos
 - Brutos SICONFI: `data/raw/siconfi/<endpoint>/<cod_ibge>/<ano>_<periodo>_<anexo>.json`
+- Brutos ANP: `data/raw/anp/royalties-estados/<ano>.csv` e `data/raw/anp/participacao-especial/pe_estado.csv`, com `data/raw/anp/manifesto.json` (URL e data da extração)
 - Brutos estaduais: `data/raw/ufs/<uf>/<fonte>/<ano>.csv` (uf minúscula no caminho)
 - Séries de referência: `data/reference/` (IPCA; fonte em `docs/fontes/ibge.md`)
 - Processados: `data/processed/<tabela>/uf=<UF>/ano=<ano>/<fonte>.parquet` (particionamento Hive)
@@ -54,6 +55,9 @@ uf, cod_ibge, ano, periodo, extraido_em, demonstrativo, anexo, rotulo, cod_conta
 
 **`populacao`** — uma linha por UF e ano (campo `populacao` da DCA do SICONFI):
 uf, cod_ibge, ano, fonte_dado, extraido_em, populacao
+
+**`compensacoes_anp`** — royalties e participação especial do petróleo destinados ao estado (nunca aos municípios), por ano de caixa (ANP):
+uf, cod_ibge, ano, tipo, valor, fonte_dado, extraido_em
 
 Detalhes em `docs/dicionario.md`.
 
@@ -73,10 +77,12 @@ Detalhes em `docs/dicionario.md`.
 ## Front (`web/`)
 Vite + React, site estático publicado na Hostgator.
 - **Todas as contas ficam em `web/src/calculos.js`** (deflação, per capita, % da despesa total, ranking): funções puras, espelho de `analytics/`. Componentes só exibem: nada de conta, filtro de nível ou soma dentro de componente.
-- **Dados só de `web/public/data/`**, gerados por `uv run python -m publicacao.exportar`; nunca editar à mão. O front recebe R$ nominais e calcula o resto. Deflação encadeando `variacao_pct` do `ipca.json` (como diz o `meta.json`), não `indice_dez`.
+- **Dados só de `web/public/data/`**, gerados por `uv run python -m publicacao.exportar`; nunca editar à mão. Arquivos gerais (abertura: `despesa_funcoes.json` com total e funções das 27 UFs, `receita.json` sem linhas por item, `estatais.json` sem a lista completa, meta, dicionários, IPCA, dívida) e por UF, carregados sob demanda pela tela "Por estado" (`despesa/<UF>.json`, `receita/<UF>.json`, `estatais/<UF>.json`; `src/dados.js`). Testes juntam as partes (`src/testes/publicados.js`). O front recebe R$ nominais e calcula o resto. Deflação encadeando `variacao_pct` do `ipca.json` (como diz o `meta.json`), não `indice_dez`.
 - **`calculos.js` é testado contra `gabarito.json`** (`npm test`, Vitest): toda mudança em conta tem de continuar batendo com o Python. O gabarito não vai para o site (o build o remove de `dist/`).
 - **Estado da tela na URL** (UF, pares, função, ano, medida...), em parâmetros de busca: qualquer visão pode ser copiada, compartilhada e recarregada. Nada de estado só em memória para o que muda a visão.
 - **Site estático para Hostgator:** `npm run build` gera `web/dist/` para subir por FTP. Sem servidor, sem API, sem rotas no servidor; `base: './'` no Vite para funcionar em qualquer pasta.
+- **Prévias de compartilhamento:** os robôs (WhatsApp, Facebook, X) não executam JavaScript, então as metatags por página vêm do `web/public/index.php` (Hostgator roda PHP), que só escolhe entre textos de `data/compartilhar.json` (gerado por `publicacao/og.py`, junto com as imagens `og/`). Domínio, nome do site e indexação ficam só em `config/site.yaml`. Fonte do site e das imagens: Inter (`web/src/fontes/`, `publicacao/fontes/`).
+- **Página "Como fazemos"** (`?view=metodo`, `&nivel=tecnico`): o texto fica em `web/src/conteudo/metodo/*.md` (um arquivo por seção, com `## simples` e `## tecnico`), nunca nos componentes. Números entram por marcadores `{{...}}` preenchidos a partir dos JSON publicados (`web/src/telas/metodo/valores.js`). Toda ressalva nova precisa de ligação "entenda" em `web/src/conteudo/metodo/ligacoes.js` (o teste falha sem ela).
 - As mesmas regras de dados valem no front: nunca somar níveis diferentes, intraorçamentárias à parte, comparar UFs só normalizado (per capita ou %).
 
 ## Stack

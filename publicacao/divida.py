@@ -11,6 +11,7 @@ não entram em nenhum campo.
 import pandas as pd
 
 from extractors.nacional.siconfi.dca import soma_modalidades
+from extractors.nacional.siconfi.rgf import layout_antigo
 
 COLUNA_ESTOQUE = "Até o 3º Quadrimestre"
 COLUNA_PAGO = "Despesas Liquidadas"
@@ -50,7 +51,8 @@ DESCRICAO_CAMPOS = {
     "limite_pct": "limite em % da RCL ajustada (da RCL quando não há ajustada)",
     "alerta": "limite de alerta (R$), 90% do limite",
     "alerta_pct": "limite de alerta em % da RCL ajustada (da RCL quando não há ajustada)",
-    "composicao": "dívida consolidada por tipo (R$); soma = dc. O relatório separa por tipo, não por credor",
+    "composicao": "dívida consolidada por tipo (R$); soma = dc. O relatório separa por tipo, não por credor. "
+                  "Nula no layout de 2015–2016 do RGF (só interna/externa: não comparável)",
     "juros": "juros e encargos da dívida pagos (liquidado, natureza 3.2, exceto intra, R$); nulo sem DCA I-D",
     "amortizacao": "amortização da dívida (liquidado, natureza 4.6, exceto intra, R$); nulo sem DCA I-D",
 }
@@ -73,7 +75,8 @@ def montar_divida(rgf, dca_i_d, tolerancia=1.0):
     """Linhas do RGF Anexo 02 e da DCA I-D (tabela demonstrativo) → lista de registros por UF e ano.
 
     Grupo da I-D ausente = nada pago naquele grupo (0); UF/ano sem I-D = juros e amortização nulos.
-    Composição que não soma a DC é erro.
+    Composição que não soma a DC é erro. No layout antigo do RGF (2015–2016, rgf.layout_antigo) a dívida
+    contratual só se divide em interna e externa: composição nula (não comparável com 2017 em diante).
     """
     estoques = _por_uf_ano(rgf, COLUNA_ESTOQUE)
     pagos = _pagos(dca_i_d)
@@ -85,10 +88,16 @@ def montar_divida(rgf, dca_i_d, tolerancia=1.0):
         base_limites = linha["rcl_ajustada"] if linha["rcl_ajustada"] is not None else linha["rcl"]
         linha["limite_pct"] = linha["limite"] / base_limites * 100 if base_limites else None
         linha["alerta_pct"] = linha["alerta"] / base_limites * 100 if base_limites else None
-        linha["composicao"] = {campo: sum(v.get(c, 0.0) for c in cods) for campo, cods in COMPOSICAO.items()}
-        soma = sum(linha["composicao"].values())
-        if abs(soma - (linha["dc"] or 0.0)) > tolerancia:
-            raise ValueError(f"{uf} {ano}: composição soma {soma:,.2f}, dívida consolidada {linha['dc']:,.2f}")
+        if layout_antigo(v):
+            # 2015–2016: só DC, deduções, DCL, RCL e DCL/RCL; limites e composição ficam nulos
+            for campo in ["rcl_ajustada", "limite", "alerta", "limite_pct", "alerta_pct"]:
+                linha[campo] = None
+            linha["composicao"] = None
+        else:
+            linha["composicao"] = {campo: sum(v.get(c, 0.0) for c in cods) for campo, cods in COMPOSICAO.items()}
+            soma = sum(linha["composicao"].values())
+            if abs(soma - (linha["dc"] or 0.0)) > tolerancia:
+                raise ValueError(f"{uf} {ano}: composição soma {soma:,.2f}, dívida consolidada {linha['dc']:,.2f}")
         pago = pagos.get((uf, ano))
         linha["juros"] = None if pago is None else pago["juros"]
         linha["amortizacao"] = None if pago is None else pago["amortizacao"]

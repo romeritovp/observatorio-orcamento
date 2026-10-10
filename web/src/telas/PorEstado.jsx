@@ -23,7 +23,8 @@ import ParteReceitas from './ParteReceitas.jsx'
 import IndicePartes from '../componentes/IndicePartes.jsx'
 
 // Tela "Por estado": as contas de um estado, em quatro partes (receitas, despesas, dívidas, estatais). Contas em calculos.js; aqui só se escolhem colunas e textos.
-export default function PorEstado({ dados, estado, mudar, funcoes }) {
+// dadosUf: arquivos da UF em destaque (dados.js → carregarDadosDaUf); enquanto não chegam, a tela avisa.
+export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erroUf }) {
   const { meta, dicionarios, ipca, despesa, estatais, divida, receita } = dados
   const ufs = dicionarios.ufs
   const anoBase = meta.deflacao.ano_base_padrao
@@ -38,8 +39,10 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
   const indReceita = useMemo(
     () => indicadoresReceita(receita.totais, ipca.serie, { anoBase, populacao }), [receita, ipca.serie, anoBase, populacao])
   const indDivida = useMemo(() => indicadoresDivida(divida.linhas, ipca.serie, { anoBase }), [divida, ipca.serie, anoBase])
+  // Subáreas: as funções da UF (arquivo geral) + as subfunções (arquivo da UF)
   const subareas = useMemo(
-    () => (uf ? subareasDaUf(despesa, ipca.serie, { uf, anoBase }) : []), [despesa, ipca.serie, uf, anoBase])
+    () => (uf && dadosUf ? subareasDaUf([...despesa.filter((l) => l.uf === uf), ...dadosUf.despesa], ipca.serie, { uf, anoBase }) : []),
+    [despesa, dadosUf, ipca.serie, uf, anoBase])
 
   const titulo = infoUf ? `As contas ${doEstado(infoUf.nome, infoUf.artigo)}` : 'As contas de cada estado'
   const cabecalho = (
@@ -59,6 +62,19 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
         <Rodape fonte={fonte} estatais={estatais} />
       </main>
     )
+  }
+
+  if (!dadosUf) {
+    return (
+      <main className="pagina">
+        {cabecalho}
+        <p className="aviso">{erroUf ? `Não foi possível carregar os dados do estado: ${erroUf}` : 'Carregando os dados do estado…'}</p>
+      </main>
+    )
+  }
+  const receitaDaUf = { ...receita, linhas: dadosUf.receitaLinhas }
+  const estataisDaUf = {
+    ...estatais, lista_por_edicao: Object.fromEntries(Object.entries(dadosUf.estatais).map(([e, lista]) => [e, { [uf]: lista }])),
   }
 
   // Colunas conforme os valores (corrigidos × da época); o % do orçamento não muda com a inflação
@@ -132,7 +148,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
 
       <div className="parte" id="receitas">
         <ParteReceitas
-          receita={receita} indicadores={indReceita} despesaTotais={totais} uf={uf} infoUf={infoUf} ano={ano} anos={meta.anos}
+          receita={receitaDaUf} indicadores={indReceita} despesaTotais={totais} uf={uf} infoUf={infoUf} ano={ano} anos={meta.anos}
           corrigidos={corrigidos} emReais={emReais} anoBase={anoBase} serieIpca={ipca.serie} populacao={populacao}
           metricaTabela={estado.tabelaReceita} onMudarMetricaTabela={(m) => mudar({ tabelaReceita: m })}
         />
@@ -147,10 +163,14 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
           <p className="parte-intro">Em que áreas o governo estadual gasta: despesa liquidada, sem intraorçamentárias.</p>
         </header>
 
+        <hr class="intra-section"/>
+
         <section className="secao">
           <h3 className="titulo-secao">{ano}, em resumo</h3>
           <Resumo itens={resumo} />
         </section>
+
+        <hr class="intra-section"/>
 
         <section className="secao">
           <h3 className="titulo-secao">Composição do orçamento em {ano}</h3>
@@ -160,6 +180,8 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
           </p>
           <Composicao linhas={composicao} colunaValor={colTotal} nomes={nomesFuncoes} selecionada={area} onEscolher={escolherArea} />
         </section>
+
+        <hr class="intra-section"/>
 
         <section className="secao">
           <h3 className="titulo-secao">{nomeArea}: {meta.anos[0]}–{meta.anos[meta.anos.length - 1]}</h3>
@@ -181,13 +203,15 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
             </div>
           </div>
           <NotasQuebra avisos={avisos.avisosQuebra} fonte={avisos.fonteQuebras} />
-          {(avisos.avisosEstatais.length > 0 || (meta.ressalvas_por_funcao?.[area] ?? []).length > 0) && (
+          {(avisos.avisosEstatais.length > 0 || avisos.semInfoEstatais || (meta.ressalvas_por_funcao?.[area] ?? []).length > 0) && (
             <Ressalvas
               ressalvas={[]} daArea={meta.ressalvas_por_funcao?.[area] ?? []} nomeArea={nomeArea}
-              avisos={avisos.avisosEstatais} fonteAvisos={avisos.fonteEstatais}
+              avisos={avisos.avisosEstatais} fonteAvisos={avisos.fonteEstatais} semInfoEstatais={avisos.semInfoEstatais}
             />
           )}
         </section>
+
+        <hr class="intra-section"/>
 
         <section className="secao">
           <TabelaAreas
@@ -209,7 +233,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
 
       <div className="parte" id="dividas">
         <ParteDividas
-          divida={indDivida} notaComposicao={divida.nota_composicao} ressalvas={divida.ressalvas} porFuncao={porFuncao}
+          divida={indDivida} notaComposicao={divida.nota_composicao} notaComposicaoAntiga={divida.nota_composicao_antiga} ressalvas={divida.ressalvas} porFuncao={porFuncao}
           limites={{ limite: divida.limite_legal_pct, alerta: divida.alerta_legal_pct }}
           uf={uf} infoUf={infoUf} ano={ano} anos={meta.anos} corrigidos={corrigidos} emReais={emReais} anoBase={anoBase}
         />
@@ -227,7 +251,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes }) {
           </p>
         </header>
         <ListaEstatais
-          lista={estataisDoEstado(estatais, uf, ano)} nomesFuncoes={nomesFuncoes} siglasUfs={ufs.map((u) => u.uf)}
+          lista={estataisDoEstado(estataisDaUf, uf, ano)} nomesFuncoes={nomesFuncoes} siglasUfs={ufs.map((u) => u.uf)}
           fonteCurta={estatais.fonte_curta}
         />
       </div>

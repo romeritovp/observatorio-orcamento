@@ -1,0 +1,11 @@
+# Configuração do Paraná. Sigla e código IBGE vêm de dicionarios/nacional/ufs.csv.
+uf: PR
+
+publicacao:
+  receita:
+    ressalvas:
+      - id: itaipu_pr
+        titulo: Outras compensações (hipótese não verificada)
+        texto: >-
+          "Outras compensações" do PR (R$ 299 mi em 2024) é maior que a compensação por recursos hídricos. Pode ser
+          a compensação de Itaipu, que tem regra própria; não verificamos.

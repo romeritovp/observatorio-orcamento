@@ -1,7 +1,10 @@
-import { composicaoReceita, destinoDoImposto, medianaPorAno, tabelaReceita } from '../calculos.js'
+import {
+  composicaoReceita, destinoDoImposto, medianaPorAno, petroleoDaUf, reconciliacaoPetroleo, ressalvasDoAno, seriePetroleo, naoSeparaPetroleo,
+  tabelaReceita,
+} from '../calculos.js'
 import { TABELAS_RECEITA } from '../estado.js'
 import { pct, reais, reaisCompacto } from '../formatacao.js'
-import { deUf, fraseResultado } from '../textos.js'
+import { deUf, fraseReconciliacaoPetroleo, fraseResultado } from '../textos.js'
 import Alerta from '../componentes/Alerta.jsx'
 import BarraDestino from '../componentes/BarraDestino.jsx'
 import BarrasHorizontais from '../componentes/BarrasHorizontais.jsx'
@@ -70,7 +73,31 @@ export default function ParteReceitas({ receita, indicadores, despesaTotais, uf,
     despesa: despesaAno ? despesaAno[corrigidos ? 'total_real' : 'total_nominal'] : null,
   })
 
-  // 5. Tabela
+  // 5. Petróleo e gás: prestação de contas (DCA) × repasses da ANP, lado a lado. Nenhum total da DCA muda.
+  const petroleo = receita.petroleo ?? {}
+  const petroUf = petroleoDaUf(petroleo.linhas, uf)
+  const naoSepara = naoSeparaPetroleo(petroleo, uf, ano)
+  const naoSeparaEmAlgumAno = anos.some((a) => naoSeparaPetroleo(petroleo, uf, a))
+  const fatorDoAno = (a) => (corrigidos ? daUf.get(a)?.fator_ipca ?? null : 1)
+  const serieP = (campo) => seriePetroleo(petroUf, anos, campo, fatorDoAno)
+  const linhasPetroleo = [
+    { id: 'dca', rotulo: 'Petróleo e gás — prestação de contas (DCA, Tesouro Nacional; bruta, inclui o FEP)', valores: serieP('dca_petroleo') },
+    ...(naoSeparaEmAlgumAno ? [{ id: 'demais', rotulo: 'Demais receitas patrimoniais — prestação de contas (DCA, Tesouro Nacional)', valores: serieP('demais_patrimoniais') }] : []),
+    { id: 'royalties', rotulo: 'Royalties repassados ao estado — ANP', valores: serieP('anp_royalties') },
+    { id: 'pe', rotulo: 'Participação especial repassada ao estado — ANP', valores: serieP('anp_participacao_especial') },
+    { id: 'anp', rotulo: 'Total ANP (royalties + participação especial)', valores: serieP('anp_total') },
+  ].map((l) => ({ ...l, formatar: reaisCompacto }))
+  const temPetroleo = linhasPetroleo.some((l) => l.id !== 'demais' && l.valores.some((v) => v))
+  const ultimoPe = petroleo.ultimo_ano_participacao_especial
+  const anosParciais = anos.filter((a) => ultimoPe && a > ultimoPe)
+  const reconciliacao = reconciliacaoPetroleo(petroUf.get(ano))
+  const frasePetroleo = naoSepara ? fraseReconciliacaoPetroleo({
+    situacao: reconciliacao.situacao,
+    demais: (petroUf.get(ano)?.demais_patrimoniais ?? 0) * fator,
+    anp: (petroUf.get(ano)?.anp_total ?? 0) * fator,
+  }) : null
+
+  // 6. Tabela
   const ordem = receita.itens.map((i) => i.item)
   const tabela = tabelaReceita(receita.linhas, uf, anos, ordem, {
     metrica: metricaTabela, corrigidos, serieIpca, anoBase, populacao,
@@ -83,19 +110,26 @@ export default function ParteReceitas({ receita, indicadores, despesaTotais, uf,
     <>
       {cabecalho}
 
+      <hr class="intra-section"/>
+
       <section className="secao">
         <h3 className="titulo-secao">{ano}, em resumo</h3>
         <Resumo itens={resumo} />
       </section>
+
+      <hr class="intra-section"/>
 
       <section className="secao">
         <h3 className="titulo-secao">Composição da receita em {ano}</h3>
         <BarrasHorizontais itens={composicao} rotuloAcessivel="Receita por fonte" />
         <p className="nota">Receita líquida das deduções, {emReais}; o % é sobre a receita do ano.</p>
       </section>
-
+      
+      <hr class="intra-section"/>
+      
       {destinos.length > 0 && (
         <section className="secao">
+       
           <h3 className="titulo-secao">Para onde vão os impostos, {ano}</h3>
           <div className="lado-a-lado">
             {destinos.map(({ item, titulo, d }) => (
@@ -111,6 +145,8 @@ export default function ParteReceitas({ receita, indicadores, despesaTotais, uf,
         </section>
       )}
 
+      <hr class="intra-section"/>
+
       <section className="secao">
         <h3 className="titulo-secao">Receita e despesa por habitante, {anos[0]}–{anos[anos.length - 1]}</h3>
         <Frase texto={frase} />
@@ -120,6 +156,36 @@ export default function ParteReceitas({ receita, indicadores, despesaTotais, uf,
           { classe: 'linha-mediana', rotulo: 'mediana da receita dos estados' },
         ]} />
         <p className="nota">Receita líquida e despesa liquidada, sem intraorçamentárias, por habitante, {emReais}. Receita acima da despesa: o ano fechou com sobra.</p>
+      </section>
+
+      <hr class="intra-section"/>
+
+      <section className="secao">
+        <h3 className="titulo-secao">Petróleo e gás</h3>
+        {naoSepara && (
+          <p className="nota">
+            A prestação de contas {deUf(uf, infoUf?.artigo)} não separa o petróleo
+            {petroleo.nao_separa_desde?.[uf] ? ` a partir de ${petroleo.nao_separa_desde[uf]} (até ${petroleo.nao_separa_desde[uf] - 1}, separava)` : ''}: royalties e participação especial ficam em
+            "Demais receitas patrimoniais". Ao lado, os repasses ao estado segundo a ANP.
+          </p>
+        )}
+        {frasePetroleo && <Frase texto={frasePetroleo} />}
+        {naoSepara && reconciliacao.situacao === 'parcial' && (
+          <p className="nota">Em {ano}, a ANP ainda não publicou a participação especial em dados abertos: não há total para comparar.</p>
+        )}
+        {temPetroleo || naoSeparaEmAlgumAno ? (
+          <TabelaAnos
+            titulo={`Petróleo e gás ${deUf(uf, infoUf?.artigo)}: prestação de contas e ANP, ${anos[0]}–${anos[anos.length - 1]}`}
+            nota={`Duas fontes, lado a lado, ${emReais}. A prestação de contas inclui o FEP (Fundo Especial do Petróleo, `
+              + 'distribuído pelo Tesouro); a ANP mostra só royalties e participação especial repassados ao estado, por ano de caixa, '
+              + `sem os municípios.${anosParciais.length ? ` ${anosParciais.join(', ')}: só royalties (parcial; a participação especial `
+                + `em dados abertos vai até ${ultimoPe}).` : ''}`}
+            linhas={linhasPetroleo} anos={anos} anoSelecionado={ano}
+            nomeArquivo={`petroleo_${uf}_${corrigidos ? 'corrigidos' : 'epoca'}.csv`}
+          />
+        ) : (
+          <p className="nota">Sem receita de petróleo e gás na prestação de contas nem repasses registrados pela ANP no período.</p>
+        )}
       </section>
 
       <section className="secao">
@@ -132,7 +198,7 @@ export default function ParteReceitas({ receita, indicadores, despesaTotais, uf,
       </section>
 
       <Alerta titulo="Antes de comparar as receitas" Nivel="h3">
-        <Ressalvas ressalvas={[...(receita.ressalvas_por_uf?.[uf] ?? []), ...receita.ressalvas]} />
+        <Ressalvas ressalvas={[...ressalvasDoAno(receita.ressalvas_por_uf?.[uf], ano), ...receita.ressalvas]} />
       </Alerta>
     </>
   )

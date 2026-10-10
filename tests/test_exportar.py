@@ -140,7 +140,7 @@ def test_estatais_json_por_edicao_uf_e_funcao_so_ativas_nao_dependentes():
 
     saida = exportar.montar_estatais(estatais, setor_funcao, ajustes, anos=[2022, 2023, 2024, 2025])
     assert saida["edicoes"] == [2023, 2024]
-    assert saida["edicao_por_ano"] == {"2022": 2023, "2023": 2023, "2024": 2024, "2025": 2024}
+    assert saida["edicao_por_ano"] == {"2022": None, "2023": 2023, "2024": 2024, "2025": 2024}
     assert "Tesouro Nacional" in saida["atribuicao"]
     exib = lambda sigla, nome: {"sigla_exibicao": sigla, "nome_exibicao": nome, "nome_manual": False}
     san = {"sigla": "SAN", "empresa": "Saneamento AA", "cnpj": "1", "setor": "SANEAMENTO", "correspondencia": "direta",
@@ -242,14 +242,44 @@ def test_gabarito_receita_pesos_posicoes_e_medianas():
     assert med[2023]["pct_impostos_proprios"] == pytest.approx((60 + 20) / 2)
 
 
+def test_config_ufs_ressalvas_e_marcacao_de_petroleo(tmp_path):
+    ufs = pd.DataFrame({"uf": ["AA", "BB"]})
+    (tmp_path / "aa.yaml").write_text(
+        "uf: AA\npublicacao:\n  receita:\n    petroleo_nao_separado: true\n    ressalvas:\n"
+        "      - id: r1\n        anos: [2022]\n        titulo: T\n        texto: X\n", encoding="utf-8")
+    (tmp_path / "bb.yaml").write_text("uf: BB\nfontes: {}\n", encoding="utf-8")
+    ressalvas, nao_separa = exportar.ler_config_ufs(ufs, tmp_path)
+    assert ressalvas == {"AA": [{"id": "r1", "anos": [2022], "titulo": "T", "texto": "X"}]} and nao_separa == {"AA": None}
+    (tmp_path / "bb.yaml").write_text("uf: BB\npublicacao:\n  receita:\n    petroleo_nao_separado: true\n"
+                                      "    petroleo_nao_separado_desde: 2018\n", encoding="utf-8")
+    assert exportar.ler_config_ufs(ufs, tmp_path)[1] == {"AA": None, "BB": 2018}
+    (tmp_path / "zz.yaml").write_text("uf: ZZ\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="ZZ"):
+        exportar.ler_config_ufs(ufs, tmp_path)
+
+
+def test_config_ufs_real_tem_as_ressalvas_da_receita():
+    ressalvas, nao_separa = exportar.ler_config_ufs(pd.read_csv(exportar.RAIZ / "dicionarios" / "nacional" / "ufs.csv", dtype=str))
+    assert set(nao_separa) >= {"RJ", "DF"} and nao_separa["RJ"] == 2018
+    assert any(r.get("anos") == [2022] for r in ressalvas.get("MG", []))
+    assert any("hipótese não verificada" in r["titulo"] for r in ressalvas.get("PR", []))
+    cedae = next(r for r in ressalvas["RJ"] if r["id"] == "outorga_cedae")
+    assert cedae["anos"] == [2021, 2022, 2023, 2024, 2025] and "IstoÉ Dinheiro, 16/06/2021" in cedae["texto"]
+
+
 def test_receita_json_itens_ressalvas_e_ressalva_do_rj():
     linhas = pd.DataFrame({"uf": ["AA"], "ano": [2024], "item": ["icms"], "bruta": [10.0], "ded_transferencias": [2.5],
                            "ded_fundeb": [1.5], "ded_outras": [0.0], "liquida": [6.0]})
     totais = pd.DataFrame({"uf": ["AA"], "ano": [2024], "liquida_exceto_intra": [6.0], "impostos_proprios": [6.0],
                            "transferencias_uniao": [0.0]})
-    saida = exportar.montar_receita_json(linhas, totais, "agora")
-    assert {r["id"] for r in saida["ressalvas"]} == {"recodificacao_2022", "icms_2022", "fundeb", "operacoes_credito"}
-    assert saida["ressalvas_por_uf"]["RJ"][0]["id"] == "royalties_rj"
+    ressalvas = {"AA": [{"id": "x", "titulo": "t", "texto": "y", "anos": [2022]}]}
+    saida = exportar.montar_receita_json(linhas, totais, "agora", ressalvas, ufs_nao_separa={"AA": 2018, "BB": None}, ultimo_ano_pe=2024)
+    assert {r["id"] for r in saida["ressalvas"]} == {"recodificacao_2018", "recodificacao_2022", "icms_2022", "fundeb", "compensacoes",
+                                                     "operacoes_credito"}
+    assert saida["ressalvas_por_uf"]["AA"][0]["anos"] == [2022]
+    assert saida["petroleo"]["ufs_nao_separa_na_dca"] == ["AA", "BB"]
+    assert saida["petroleo"]["nao_separa_desde"] == {"AA": 2018} and saida["petroleo"]["ultimo_ano_participacao_especial"] == 2024
+    assert "petroleo_gas" in saida["comparar_pela_bruta"] and "petroleo_concessao" in saida["comparar_pela_bruta"]
     assert [i["item"] for i in saida["itens"]][:2] == ["icms", "icms_fecp"]
     json.dumps(saida, allow_nan=False)
 
@@ -259,11 +289,63 @@ def test_site_uf_padrao_validada_e_no_meta(tmp_path):
     caminho = tmp_path / "site.yaml"
     caminho.write_text("uf_padrao: bb\n", encoding="utf-8")
     site = exportar.ler_site(ufs, caminho)
-    assert site == {"uf_padrao": "BB"}
+    assert site == {"uf_padrao": "BB", "exemplo_metodo": None}
     meta = exportar.montar_meta(exportar.montar_despesa(despesa(), POPULACAO), IPCA, 2024, "agora", site=site)
     assert meta["uf_padrao"] == "BB"
     caminho.write_text("uf_padrao: ZZ\n", encoding="utf-8")
     with pytest.raises(ValueError, match="uf_padrao"):
         exportar.ler_site(ufs, caminho)
     caminho.write_text("# sem padrão\n", encoding="utf-8")
-    assert exportar.ler_site(ufs, caminho) == {"uf_padrao": None}
+    assert exportar.ler_site(ufs, caminho) == {"uf_padrao": None, "exemplo_metodo": None}
+    caminho.write_text("exemplo_metodo:\n  uf: aa\n  funcao: 10\n", encoding="utf-8")
+    assert exportar.ler_site(ufs, caminho)["exemplo_metodo"] == {"uf": "AA", "funcao_cod": "10"}
+    caminho.write_text("exemplo_metodo:\n  uf: ZZ\n  funcao: '10'\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="exemplo_metodo"):
+        exportar.ler_site(ufs, caminho)
+
+
+def test_documentacao_fontes_com_data_da_ultima_extracao():
+    despesa_ = pd.DataFrame({"extraido_em": ["2026-01-02T00:00:00+00:00", "2026-01-05T00:00:00+00:00"]})
+    demonstrativo = pd.DataFrame({"demonstrativo": ["DCA", "RGF", "RREO", "RGF"],
+                                  "extraido_em": ["2026-01-03T00:00:00+00:00", "2026-01-04T00:00:00+00:00",
+                                                  "2026-01-01T00:00:00+00:00", "2026-01-09T00:00:00+00:00"]})
+    anp = pd.DataFrame({"extraido_em": ["2026-02-01T00:00:00+00:00"]})
+    ipca_fonte = {"pagina": "https://sidra", "documentacao_api": "d", "consulta": "c", "consultado_em": "2026-03-01"}
+    doc = exportar.montar_documentacao(despesa_, demonstrativo, anp, "https://api", ipca_fonte, {"uf": "AA", "funcao_cod": "10"})
+    f = doc["fontes"]
+    assert f["siconfi"]["extraido_em"] == "2026-01-09T00:00:00+00:00" and f["siconfi"]["api"] == "https://api"
+    partes = {p["sigla"]: p["extraido_em"] for p in f["siconfi"]["partes"]}
+    assert partes == {"DCA": "2026-01-05T00:00:00+00:00", "RGF": "2026-01-09T00:00:00+00:00", "RREO": "2026-01-01T00:00:00+00:00"}
+    assert f["anp"]["extraido_em"] == "2026-02-01T00:00:00+00:00" and f["ibge_ipca"]["extraido_em"] == "2026-03-01"
+    assert f["tesouro_estatais"]["commit"] and f["tesouro_estatais"]["versao_de"]
+    assert all(x["pagina_oficial"].startswith("https://") for x in f.values())
+    assert doc["exemplo"] == {"uf": "AA", "funcao_cod": "10", "endpoint": "dca", "anexo": "DCA-Anexo I-E",
+                              "coluna": "Despesas Liquidadas"}
+
+
+def test_divisao_por_uf_geral_com_funcoes_e_arquivo_por_uf_com_subfuncoes():
+    tabela = pd.DataFrame({
+        "uf": ["AA", "AA", "AA", "BB", "BB"], "ano": [2024] * 5,
+        "nivel": ["total", "funcao", "subfuncao", "funcao", "demais"], "valor": [10.0, 10.0, 6.0, 5.0, 5.0],
+    })
+    receita = {"fonte": "x", "totais": [{"uf": "AA"}], "linhas": [{"uf": "AA", "item": "icms"}, {"uf": "BB", "item": "ipva"}]}
+    arquivos = exportar.dividir_por_uf(tabela, receita)
+    assert set(arquivos) == {"despesa_funcoes.json", "receita.json", "despesa/AA.json", "despesa/BB.json",
+                             "receita/AA.json", "receita/BB.json"}
+    assert {l["nivel"] for l in arquivos["despesa_funcoes.json"]} == {"total", "funcao"}
+    assert [l["nivel"] for l in arquivos["despesa/AA.json"]] == ["subfuncao"]
+    assert [l["nivel"] for l in arquivos["despesa/BB.json"]] == ["demais"]
+    assert "linhas" not in arquivos["receita.json"] and arquivos["receita.json"]["totais"] == [{"uf": "AA"}]
+    assert arquivos["receita/BB.json"] == [{"uf": "BB", "item": "ipva"}]
+    # nada se perde nem se repete na divisão
+    juntas = arquivos["despesa_funcoes.json"] + arquivos["despesa/AA.json"] + arquivos["despesa/BB.json"]
+    assert len(juntas) == len(tabela)
+
+
+def test_divisao_das_estatais_lista_por_uf():
+    estatais = {"edicoes": [2023, 2024], "por_edicao": {"2024": {}},
+                "lista_por_edicao": {"2023": {"AA": [{"sigla": "X"}]}, "2024": {"AA": [], "BB": [{"sigla": "Y"}]}}}
+    arquivos = exportar.dividir_estatais(estatais)
+    assert "lista_por_edicao" not in arquivos["estatais.json"] and arquivos["estatais.json"]["por_edicao"] == {"2024": {}}
+    assert arquivos["estatais/AA.json"] == {"2023": [{"sigla": "X"}], "2024": []}
+    assert arquivos["estatais/BB.json"] == {"2023": [], "2024": [{"sigla": "Y"}]}

@@ -36,8 +36,13 @@ export function emUf(uf, artigo) {
 }
 
 /** Aviso de estatal não dependente na área: a operação dela fica fora das contas do estado. */
+export const SEM_INFO_ESTATAIS = 'Sem informação de estatais para este ano.'
+
+/** "Gaspisa (Companhia de Gás do Piauí)"; sem sigla (edições antigas), só o nome. */
+export const siglaENome = (sigla, nome) => (sigla ? `${sigla} (${nome})` : nome)
+
 export function avisoEstatal({ uf, artigo, sigla, empresa }) {
-  return `${emUf(uf, artigo)}, ${sigla} (${empresa}) atua nesta área como estatal não dependente: `
+  return `${emUf(uf, artigo)}, ${siglaENome(sigla, empresa)} atua nesta área como estatal não dependente: `
     + 'a operação dela não aparece nestas contas.'
 }
 
@@ -56,7 +61,7 @@ export function artigoEmpresa(nome) {
 
 /** Artigo para a sigla: a própria sigla quando é palavra conhecida ("o Metrô"), senão o do nome ("a Gaspisa"). */
 export function artigoSigla(sigla, nome) {
-  return artigoDaPalavra(sigla) ?? artigoEmpresa(nome)
+  return (sigla && artigoDaPalavra(sigla)) ?? artigoEmpresa(nome)
 }
 
 /**
@@ -70,7 +75,8 @@ export function avisoQuebraSerie({ ano, sigla, empresa, uf, sentido }) {
   const passou = sentido === 'passou_a_dependente'
   const verbo = passou ? (plural ? 'passaram a constar' : 'passou a constar') : (plural ? 'deixaram de constar' : 'deixou de constar')
   const efeito = passou ? 'devem entrar nestas contas' : 'devem sair destas contas'
-  return `Segundo o Tesouro Nacional, em ${ano} ${artigo} ${sigla} (${empresa}, ${uf}) ${verbo} como estatal dependente. `
+  const quem = sigla ? `${sigla} (${empresa}, ${uf})` : `${empresa} (${uf})`
+  return `Segundo o Tesouro Nacional, em ${ano} ${artigo} ${quem} ${verbo} como estatal dependente. `
     + `A partir desse ano, seus gastos ${efeito}, o que pode afetar a comparação com anos anteriores.`
 }
 
@@ -141,4 +147,21 @@ export function fraseResultado({ ano, uf, artigo, receita, despesa }) {
   return diferenca > 0
     ? `Em ${ano}, a receita ${de} (${reaisCompacto(receita)}) superou a despesa (${reaisCompacto(despesa)}) em ${reaisCompacto(diferenca)}: sobrou dinheiro.`
     : `Em ${ano}, a despesa ${de} (${reaisCompacto(despesa)}) superou a receita (${reaisCompacto(receita)}) em ${reaisCompacto(-diferenca)}: faltou dinheiro.`
+}
+
+/**
+ * Petróleo de estado que não separa na DCA, conforme reconciliacaoPetroleo:
+ * 'explica' → "Demais receitas patrimoniais: R$ X bi, dos quais R$ Y bi são royalties e participação especial
+ * repassados ao estado, segundo a ANP."; 'nao_reconcilia' → os dois valores e a nota; outros → null.
+ */
+export function fraseReconciliacaoPetroleo({ situacao, demais, anp }) {
+  if (situacao === 'explica') {
+    return `Demais receitas patrimoniais: ${reaisCompacto(demais)}, dos quais ${reaisCompacto(anp)} são royalties e `
+      + 'participação especial repassados ao estado, segundo a ANP.'
+  }
+  if (situacao === 'nao_reconcilia') {
+    return `Demais receitas patrimoniais (prestação de contas): ${reaisCompacto(demais)}. Royalties e participação especial `
+      + `repassados ao estado (ANP): ${reaisCompacto(anp)}. Os valores da ANP e da prestação de contas não se reconciliam neste ano.`
+  }
+  return null
 }

@@ -78,6 +78,28 @@ def test_rgf_recusa_subcontas_que_nao_somam(rgf_resposta):
         rgf.validar_anexo_02(df)
 
 
+def anexo_antigo(**ajustes):
+    """RGF Anexo 02 no layout de 2015–2016 (contratual = interna + externa), só a coluna do estoque."""
+    valores = {"DividaConsolidada": 100.0, "DividaMobiliaria": 0.0, "DividaContratual": 90.0,
+               "DividaContratualInterna": 70.0, "DividaContratualExterna": 20.0, "OutrasDividas": 10.0,
+               "DeducoesDaDividaConsolidada": 30.0, "DividaConsolidadaLiquida": 70.0, **ajustes}
+    return pd.DataFrame([{"cod_conta": c, "coluna": rgf.COLUNA_ESTOQUE, "valor": v} for c, v in valores.items()])
+
+
+def test_rgf_layout_antigo_confere_pela_hierarquia_daquele_layout():
+    assert rgf.layout_antigo(anexo_antigo()["cod_conta"])
+    rgf.validar_anexo_02(anexo_antigo())  # sem empréstimos/financiamentos, que não existem nesse layout
+    with pytest.raises(base.ErroValidacao, match="DividaContratual"):
+        rgf.validar_anexo_02(anexo_antigo(DividaContratualExterna=25.0))
+
+
+def test_rgf_aceita_dcl_zero_quando_deducoes_passam_da_dc():
+    # AP 2017: DC − deduções negativa, DCL declarada como zero
+    rgf.validar_anexo_02(anexo_antigo(DeducoesDaDividaConsolidada=150.0, DividaConsolidadaLiquida=0.0))
+    with pytest.raises(base.ErroValidacao, match="DC − deduções"):
+        rgf.validar_anexo_02(anexo_antigo(DeducoesDaDividaConsolidada=150.0, DividaConsolidadaLiquida=10.0))
+
+
 def test_rgf_linhas_fora_da_dc_nao_entram_na_conferencia(rgf_resposta):
     uf, cod, ano = ente_de(rgf_resposta)
     df = rgf.transformar_anexo_02(rgf_resposta["items"], uf, cod, ano)
@@ -184,6 +206,16 @@ def test_montar_divida_campos_composicao_e_pagamento(rgf_resposta):
 
     [sem_i_d] = divida.montar_divida(rgf_df, i_d.iloc[0:0])
     assert sem_i_d["juros"] is None and sem_i_d["amortizacao"] is None
+
+
+def test_montar_divida_layout_antigo_sem_composicao():
+    from publicacao import divida
+
+    rgf_df = anexo_antigo().assign(uf="AA", ano=2015)
+    [linha] = divida.montar_divida(rgf_df, rgf_df.iloc[0:0])
+    assert linha["composicao"] is None  # não comparável com 2017 em diante
+    assert linha["limite"] is None and linha["alerta"] is None and linha["limite_pct"] is None
+    assert linha["dc"] == 100.0 and linha["deducoes"] == 30.0 and linha["dcl"] == 70.0
 
 
 def test_montar_divida_recusa_composicao_que_nao_soma_a_dc(rgf_resposta):

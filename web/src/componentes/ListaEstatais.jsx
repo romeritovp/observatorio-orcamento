@@ -1,6 +1,10 @@
 import { iniciaisMaiusculas, nomeParaExibir } from '../formatacao.js'
+import { SEM_INFO_ESTATAIS } from '../textos.js'
 
 const SITUACAO = { ATIVA: 'ativa', 'EM LIQUIDAÇÃO': 'em liquidação' }
+
+// Marca de setor e situação herdados de outra edição (pelo CNPJ); a nota abaixo da lista explica
+const HERDADO = <sup className="herdado" title="vindo de outra edição do Raio X, pelo CNPJ">†</sup>
 
 function Grupo({ titulo, explicacao, empresas, nomesFuncoes, siglasUfs, classe }) {
   return (
@@ -19,12 +23,12 @@ function Grupo({ titulo, explicacao, empresas, nomesFuncoes, siglasUfs, classe }
                 const { sigla, nome } = nomeParaExibir(e, siglasUfs)
                 return (
                   <tr key={e.cnpj}>
-                    <th scope="row">{sigla}</th>
+                    <th scope="row">{sigla ?? '–'}</th>
                     <td>{nome}</td>
-                    <td>{iniciaisMaiusculas(e.setor)}</td>
+                    <td>{e.setor ? iniciaisMaiusculas(e.setor) : '–'}{e.campos_herdados ? HERDADO : null}</td>
                     <td>{e.funcao_cod ? nomesFuncoes[e.funcao_cod] : '–'}</td>
                     <td>{e.dependente ? 'dependente' : 'não dependente'}</td>
-                    <td>{SITUACAO[e.situacao] ?? e.situacao}</td>
+                    <td>{e.situacao ? SITUACAO[e.situacao] ?? e.situacao : '–'}{e.campos_herdados ? HERDADO : null}</td>
                   </tr>
                 )
               })}
@@ -39,6 +43,7 @@ function Grupo({ titulo, explicacao, empresas, nomesFuncoes, siglasUfs, classe }
 // Estatais do estado, separadas por dependência. Só cadastro (nenhum valor financeiro).
 // lista: estataisDoEstado; fonteCurta: atribuição; nomesFuncoes: funcao_cod → nome.
 export default function ListaEstatais({ lista, nomesFuncoes, siglasUfs, fonteCurta }) {
+  if (lista.edicao === null) return <p className="nota">{SEM_INFO_ESTATAIS}</p>
   return (
     <div>
       <Grupo
@@ -51,6 +56,13 @@ export default function ListaEstatais({ lista, nomesFuncoes, siglasUfs, fonteCur
         explicacao="Recebem do estado recursos para pessoal ou custeio; pela regra, seus gastos fazem parte do orçamento estadual."
         nomesFuncoes={nomesFuncoes} siglasUfs={siglasUfs}
       />
+      {[...lista.naoDependentes, ...lista.dependentes].some((e) => e.campos_herdados) && (
+        <p className="nota">
+          † Setor e situação vêm da edição do exercício {[...lista.naoDependentes, ...lista.dependentes].find((e) => e.herdado_de)?.herdado_de},
+          pela mesma empresa (CNPJ): a edição deste ano não traz a situação e usa outra classificação de setores.
+          A dependência é a desta edição. Empresa sem setor e sem situação (–) não aparece na outra edição.
+        </p>
+      )}
       <p className="nota">
         Área relacionada: correspondência aproximada entre o setor da empresa e uma área do orçamento. Fonte: {fonteCurta},
         situação em {lista.edicao}

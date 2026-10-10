@@ -1,7 +1,7 @@
 """Baixa e extrai a DCA Anexo I-E para todas as UFs, sem parar no primeiro erro.
 
 Uso:
-    uv run python -m extractors.nacional.siconfi.lote_dca                 # 2019 a 2025
+    uv run python -m extractors.nacional.siconfi.lote_dca                 # 2015 a 2025
     uv run python -m extractors.nacional.siconfi.lote_dca 2022 2024       # outro intervalo
 
 As UFs vêm de dicionarios/nacional/ufs.csv. O cache do cliente evita baixar de novo.
@@ -12,9 +12,8 @@ import logging
 import sys
 
 from extractors.nacional.siconfi import dca, dicionario_funcoes
-from extractors.nacional.siconfi.lote import anos_dos_argumentos, executar, resumo, ufs_do_dicionario
+from extractors.nacional.siconfi.lote import ANOS_PADRAO, anos_dos_argumentos, executar, resumo, ufs_do_dicionario
 
-ANOS_PADRAO = (2019, 2025)
 
 
 def main(argv=None):

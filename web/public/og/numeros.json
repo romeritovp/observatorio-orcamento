@@ -1,0 +1,164 @@
+{
+ "RO": {
+  "ano": 2025,
+  "receita_liquida": 16682618554.650002,
+  "dcl_rcl_pct": -5.02,
+  "saude_per_capita": 1393.8584132805486
+ },
+ "AC": {
+  "ano": 2025,
+  "receita_liquida": 12652750815.060001,
+  "dcl_rcl_pct": 13.23,
+  "saude_per_capita": 2615.648213044421
+ },
+ "AM": {
+  "ano": 2025,
+  "receita_liquida": 35914826708.5,
+  "dcl_rcl_pct": 26.41,
+  "saude_per_capita": 1333.2164874064522
+ },
+ "RR": {
+  "ano": 2025,
+  "receita_liquida": 9955801612.390001,
+  "dcl_rcl_pct": 9.51,
+  "saude_per_capita": 2621.2708437866745
+ },
+ "PA": {
+  "ano": 2025,
+  "receita_liquida": 50368024252.32,
+  "dcl_rcl_pct": 9.01,
+  "saude_per_capita": 772.2737362397226
+ },
+ "AP": {
+  "ano": 2025,
+  "receita_liquida": 12018168331.890003,
+  "dcl_rcl_pct": -7.96,
+  "saude_per_capita": 2920.3065395702783
+ },
+ "TO": {
+  "ano": 2025,
+  "receita_liquida": 17304336401.16,
+  "dcl_rcl_pct": 16.19,
+  "saude_per_capita": 2406.2056258323832
+ },
+ "MA": {
+  "ano": 2025,
+  "receita_liquida": 34389287850.48001,
+  "dcl_rcl_pct": 5.35,
+  "saude_per_capita": 782.128469114145
+ },
+ "PI": {
+  "ano": 2025,
+  "receita_liquida": 27836313626.43,
+  "dcl_rcl_pct": 71.35,
+  "saude_per_capita": 1103.010144882199
+ },
+ "CE": {
+  "ano": 2025,
+  "receita_liquida": 48694644017.329994,
+  "dcl_rcl_pct": 30.25,
+  "saude_per_capita": 792.5779942988426
+ },
+ "RN": {
+  "ano": 2025,
+  "receita_liquida": 21066584265.579994,
+  "dcl_rcl_pct": 48.55,
+  "saude_per_capita": 876.1395996038685
+ },
+ "PB": {
+  "ano": 2025,
+  "receita_liquida": 23058675235.89,
+  "dcl_rcl_pct": 3.2,
+  "saude_per_capita": 990.302025812207
+ },
+ "PE": {
+  "ano": 2025,
+  "receita_liquida": 52540641986.05001,
+  "dcl_rcl_pct": 31.75,
+  "saude_per_capita": 1217.5169987746258
+ },
+ "AL": {
+  "ano": 2025,
+  "receita_liquida": 20976595890.76,
+  "dcl_rcl_pct": 71.45,
+  "saude_per_capita": 937.8423240479013
+ },
+ "SE": {
+  "ano": 2025,
+  "receita_liquida": 18024652735.479992,
+  "dcl_rcl_pct": 7.04,
+  "saude_per_capita": 1504.9784002209897
+ },
+ "BA": {
+  "ano": 2025,
+  "receita_liquida": 78096226070.32,
+  "dcl_rcl_pct": 35.67,
+  "saude_per_capita": 992.706929404504
+ },
+ "MG": {
+  "ano": 2025,
+  "receita_liquida": 118732072790.59,
+  "dcl_rcl_pct": 167.46,
+  "saude_per_capita": 684.028047169056
+ },
+ "ES": {
+  "ano": 2025,
+  "receita_liquida": 31496269081.53,
+  "dcl_rcl_pct": -52.5,
+  "saude_per_capita": 1364.5935891524741
+ },
+ "RJ": {
+  "ano": 2025,
+  "receita_liquida": 108745366047.31001,
+  "dcl_rcl_pct": 217.25,
+  "saude_per_capita": 645.5617301757404
+ },
+ "SP": {
+  "ano": 2025,
+  "receita_liquida": 358946518136.70996,
+  "dcl_rcl_pct": 124.23,
+  "saude_per_capita": 915.8772443064942
+ },
+ "PR": {
+  "ano": 2025,
+  "receita_liquida": 75332107886.81999,
+  "dcl_rcl_pct": -4.92,
+  "saude_per_capita": 778.6028388655742
+ },
+ "SC": {
+  "ano": 2025,
+  "receita_liquida": 54008062513.70999,
+  "dcl_rcl_pct": 23.33,
+  "saude_per_capita": 1072.4222482457833
+ },
+ "RS": {
+  "ano": 2025,
+  "receita_liquida": 72330264579.36998,
+  "dcl_rcl_pct": 174.03,
+  "saude_per_capita": 978.342191589786
+ },
+ "MS": {
+  "ano": 2025,
+  "receita_liquida": 24492670229.45,
+  "dcl_rcl_pct": 24.96,
+  "saude_per_capita": 858.8434814990213
+ },
+ "MT": {
+  "ano": 2025,
+  "receita_liquida": 39563837765.96999,
+  "dcl_rcl_pct": -14.91,
+  "saude_per_capita": 1300.5845358366637
+ },
+ "GO": {
+  "ano": 2025,
+  "receita_liquida": 47761280430.36,
+  "dcl_rcl_pct": 33.47,
+  "saude_per_capita": 875.0433803641388
+ },
+ "DF": {
+  "ano": 2025,
+  "receita_liquida": 39145054314.93,
+  "dcl_rcl_pct": 15.91,
+  "saude_per_capita": 2001.1479811819856
+ }
+}

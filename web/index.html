@@ -3,12 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Comparar estados · Orçamento dos Estados</title>
-    <meta name="description" content="Quanto cada governo estadual gasta em saúde, educação, segurança e outras áreas, por habitante e em % do orçamento. Dados do Tesouro Nacional (SICONFI)." />
-    <meta property="og:title" content="Comparar estados: quanto cada governo estadual gasta" />
-    <meta property="og:description" content="Gasto por habitante e % do orçamento em saúde, educação, segurança e outras áreas, com a conta aberta. Dados do Tesouro Nacional." />
+    <!-- Metatags base. Em produção, index.php troca title, description, og:title, og:description, og:url,
+         og:image e canonical conforme a página (os robôs de prévia não executam JavaScript).
+         Domínio e nome do site vêm de config/site.yaml no build (marcadores DOMINIO e NOME_SITE). -->
+    <title>%NOME_SITE%: as contas dos estados</title>
+    <meta name="description" content="Quanto cada governo estadual arrecada, gasta e deve, segundo as contas entregues ao Tesouro Nacional." />
+    <link rel="canonical" href="https://%DOMINIO%/" />
+    <meta name="robots" content="noindex" />
+
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="%NOME_SITE%" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="%NOME_SITE%: as contas dos estados" />
+    <meta property="og:description" content="Quanto cada governo estadual arrecada, gasta e deve, segundo as contas entregues ao Tesouro Nacional." />
+    <meta property="og:url" content="https://%DOMINIO%/" />
+    <meta property="og:image" content="https://%DOMINIO%/og/padrao.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="%NOME_SITE%: quanto cada governo estadual arrecada, gasta e deve" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <meta name="theme-color" content="#f7f3ea" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
   </head>
   <body>
     <div id="root"></div>

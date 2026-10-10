@@ -5,6 +5,8 @@ empresas fora destas contas (ex.: companhia de saneamento não dependente), nunc
 subtrair ou corrigir a despesa (docs/decisoes.md).
 """
 
+import re
+
 import pandas as pd
 
 
@@ -21,7 +23,8 @@ def funcao_das_estatais(estatais, setor_funcao, ajustes):
         raise ValueError("setor_funcao com setor repetido")
     if ajustes["cnpj"].duplicated().any():
         raise ValueError("ajustes com CNPJ repetido")
-    sem_setor = set(estatais["setor"]) - set(setor_funcao["setor"])
+    # Setor nulo (sem setor na edição e sem par para herdar) fica sem função, salvo ajuste por CNPJ
+    sem_setor = set(estatais["setor"].dropna()) - set(setor_funcao["setor"])
     if sem_setor:
         raise ValueError(f"setores sem linha em setor_funcao: {sorted(sem_setor)}")
 
@@ -54,14 +57,14 @@ def estatais_fora_das_contas(estatais_com_funcao):
 def edicao_para_ano(edicoes, ano):
     """Edição do dicionário (exercício) a usar para um ano da despesa: a mais recente que não passa do ano.
 
-    Ano anterior a todas as edições usa a mais antiga (até incorporarmos edições antigas).
-    Ex.: edições [2023, 2024] → 2019..2023 usam 2023; 2024 em diante usa 2024.
+    Ano anterior a todas as edições: None (sem informação de estatais para o ano).
+    Ex.: edições [2023, 2024] → até 2022, None; 2023 usa 2023; 2024 em diante usa 2024.
     """
     edicoes = sorted(int(e) for e in edicoes)
     if not edicoes:
         raise ValueError("nenhuma edição")
     anteriores = [e for e in edicoes if e <= int(ano)]
-    return anteriores[-1] if anteriores else edicoes[0]
+    return anteriores[-1] if anteriores else None
 
 
 def mudancas_de_dependencia(estatais_com_funcao):
@@ -97,10 +100,27 @@ def _tem_acento(texto):
     return any(ord(c) > 127 for c in str(texto))
 
 
+# Anotações de edição que algumas planilhas põem no nome ou na sigla (a situação já tem coluna própria)
+_ANOTACOES = [
+    re.compile(r"^[^\w\"(]+"),  # marcador no início ("▪Companhia ...", edição do exercício 2022)
+    re.compile(r"\s*\((?:baixada|torna-se|extinta|em liquida)[^)]*\)", re.IGNORECASE),
+    re.compile(r"\s*[-–]?\s*\"?em liquida[cç][aã]o\"?(?:\s+ordin[aá]ria)?\s*$", re.IGNORECASE),
+    re.compile(r"\s*[-–]\s*extinta\s*$", re.IGNORECASE),
+]
+
+
+def limpar_anotacoes(texto):
+    """Tira do nome ou da sigla as anotações da edição: marcador no início, "(Baixada em ...)",
+    "(Torna-se subsidiária ...)", "EM LIQUIDAÇÃO" e "- Extinta" no fim. Só para exibir."""
+    for padrao in _ANOTACOES:
+        texto = padrao.sub("", str(texto))
+    return texto.strip()
+
+
 def nomes_de_exibicao(estatais, correcoes):
     """Sigla e nome para exibir, por UF e CNPJ. Não altera o dicionário: só escolhe o que mostrar.
 
-    Ordem de prioridade:
+    Antes da escolha, nome e sigla perdem as anotações da edição (limpar_anotacoes). Ordem de prioridade:
     1. correção manual (`correcoes`: cnpj, sigla_exibicao, nome_exibicao), usada como está;
     2. entre as edições do mesmo CNPJ, a versão com acentos (a mais recente, se houver mais de uma);
     3. a versão da edição mais recente.
@@ -113,8 +133,12 @@ def nomes_de_exibicao(estatais, correcoes):
         grupo = grupo.sort_values("ano_referencia", ascending=False)
 
         def escolher(coluna):
-            com_acento = grupo[grupo[coluna].map(_tem_acento)]
-            return (com_acento if len(com_acento) else grupo)[coluna].iloc[0]
+            # Edições sem a coluna (sigla nos exercícios 2020 e 2019) não entram na escolha
+            limpos = grupo[coluna].dropna().map(limpar_anotacoes)
+            if limpos.empty:
+                return None
+            com_acento = limpos[limpos.map(_tem_acento)]
+            return (com_acento if len(com_acento) else limpos).iloc[0]
 
         linhas.append({"uf": uf, "cnpj": cnpj, "sigla_exibicao": escolher("sigla"),
                        "nome_exibicao": escolher("empresa"), "nome_manual": False})

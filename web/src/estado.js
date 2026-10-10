@@ -10,10 +10,13 @@ export const METRICAS = {
 export const VALORES = ['corrigidos', 'epoca']
 
 /** Telas do site, na ordem do menu. */
-export const VIEWS = { estado: 'Por estado', comparar: 'Comparar' }
+export const VIEWS = { estado: 'Por estado', comparar: 'Comparar', metodo: 'Como fazemos' }
 
 /** Tela aberta quando a URL não diz qual (a "página inicial"). É o único lugar que define isso. */
 export const VIEW_PADRAO = 'estado'
+
+/** Nível da explicação na página "Como fazemos" (?nivel=tecnico); o padrão é o primeiro. */
+export const NIVEIS_METODO = { simples: 'Explicação simples', tecnico: 'Explicação técnica' }
 
 /** Métrica da tabela de receitas (itens × anos) na tela "Por estado". */
 export const TABELAS_RECEITA = { liquida: 'Valor', per_capita: 'Por habitante', pct: '% da receita' }
@@ -60,9 +63,11 @@ export function lerEstado(busca, { ufs, anos, areas, areaPadrao, ufPadrao = null
     ? [...new Set(paresUrl.split(',').map((s) => s.trim().toUpperCase()))].filter((s) => siglas.has(s) && s !== uf)
     : paresPadrao(ufs, uf)
 
+  const nivel = p.get('nivel') in NIVEIS_METODO ? p.get('nivel') : 'simples'
+
   const abertas = [...new Set((p.get('abrir') ?? '').split(',').map((c) => c.trim()))].filter((c) => areas.includes(c))
 
-  return { view, area, areaExplicita, metrica, valores, ano, uf, pares, paresPersonalizados: personalizados, tabela, abertas, tabelaReceita }
+  return { view, area, areaExplicita, metrica, valores, ano, uf, pares, paresPersonalizados: personalizados, tabela, abertas, tabelaReceita, nivel }
 }
 
 /** Estado → string de busca (só grava o que difere do padrão: view, área escolhida, pares, tabela). */
@@ -78,5 +83,6 @@ export function escreverEstado(estado) {
   if (estado.tabela && estado.tabela !== 'per_capita') p.set('tabela', estado.tabela)
   if (estado.abertas?.length) p.set('abrir', estado.abertas.join(','))
   if (estado.tabelaReceita && estado.tabelaReceita !== 'liquida') p.set('treceita', estado.tabelaReceita)
+  if (estado.nivel && estado.nivel !== 'simples') p.set('nivel', estado.nivel)
   return `?${p.toString().replaceAll('%2C', ',')}`
 }

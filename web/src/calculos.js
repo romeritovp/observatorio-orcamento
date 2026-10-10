@@ -239,6 +239,30 @@ export function indicadoresDaFuncao(despesa, serieIpca, {
   }))
 }
 
+/**
+ * Passos da conta "gasto por habitante, corrigido pela inflação" de uma UF numa função e num ano, para a
+ * seção "Refaça a conta" da página "Como fazemos". Usa as mesmas funções da tela (indiceEncadeado,
+ * fatorDeflacao); o teste confere que o resultado é o de indicadoresDaFuncao e o do gabarito.json.
+ * Devolve: valor (R$ da época, do estágio), ipca ([{ano, variacao_pct}] dos anos depois de `ano` até
+ * `anoBase`), fator, real (valor × fator), populacao e porHabitante (real ÷ população).
+ */
+export function passosPorHabitante(despesa, serieIpca, { uf, funcao, ano, anoBase, estagio = 'liquidado', fonte = 'siconfi_dca' }) {
+  const [linha] = filtrar(despesa, { fonte_dado: fonte, nivel: 'funcao', intra: false, uf, ano, funcao_cod: funcao })
+  if (!linha || ehNulo(linha[estagio])) throw new Error(`sem ${estagio} para ${uf} ${ano} na função ${funcao}`)
+  const fator = fatorDeflacao(indiceEncadeado(serieIpca), ano, anoBase)
+  const real = linha[estagio] * fator
+  return {
+    uf, funcao, ano, anoBase, estagio,
+    valor: linha[estagio],
+    ipca: serieIpca.filter((p) => p.ano > ano && p.ano <= anoBase).sort((a, b) => a.ano - b.ano)
+      .map((p) => ({ ano: p.ano, variacao_pct: p.variacao_pct })),
+    fator,
+    real,
+    populacao: linha.populacao,
+    porHabitante: real / linha.populacao,
+  }
+}
+
 // --- mediana ------------------------------------------------------------------------
 
 /** Mediana dos valores não nulos (média dos dois do meio quando a quantidade é par). */
@@ -270,18 +294,31 @@ export function ordenarPorPosicao(linhas, colunaPosicao) {
 
 /**
  * Edição do dicionário de estatais para um ano da tela: a mais recente que não passa do ano;
- * ano anterior a todas usa a mais antiga. Espelha analytics.edicao_para_ano do Python.
+ * ano anterior a todas: null (sem informação de estatais). Espelha analytics.edicao_para_ano do Python.
  */
 export function edicaoParaAno(edicoes, ano) {
   const ordenadas = [...edicoes].map(Number).sort((a, b) => a - b)
   if (ordenadas.length === 0) throw new Error('nenhuma edição')
   const anteriores = ordenadas.filter((e) => e <= ano)
-  return anteriores.length ? anteriores[anteriores.length - 1] : ordenadas[0]
+  return anteriores.length ? anteriores[anteriores.length - 1] : null
+}
+
+/**
+ * Edição que informa as estatais da UF no ano, ou null: ano antes da primeira edição, ou UF ausente
+ * da edição (estatais.json → ufs_por_edicao; ex.: AP nos exercícios 2019 e 2020).
+ */
+export function edicaoDaUf(estatais, uf, ano) {
+  if (!estatais?.edicoes?.length) return null
+  const edicao = edicaoParaAno(estatais.edicoes, ano)
+  if (edicao === null) return null
+  const cobertas = estatais.ufs_por_edicao?.[String(edicao)]
+  return !cobertas || cobertas.includes(uf) ? edicao : null
 }
 
 function estataisDoAno(estatais, ano) {
   if (!estatais?.edicoes?.length) return {}
-  return estatais.por_edicao?.[String(edicaoParaAno(estatais.edicoes, ano))] ?? {}
+  const edicao = edicaoParaAno(estatais.edicoes, ano)
+  return edicao === null ? {} : estatais.por_edicao?.[String(edicao)] ?? {}
 }
 
 /**
@@ -289,6 +326,7 @@ function estataisDoAno(estatais, ano) {
  * A operação delas não aparece na despesa do estado; servem só para avisar.
  */
 export function estataisNaArea(estatais, uf, funcao, ano) {
+  if (edicaoDaUf(estatais, uf, ano) === null) return []
   return estataisDoAno(estatais, ano)[uf]?.[funcao] ?? []
 }
 
@@ -386,8 +424,10 @@ export function tabelaAreasPorAno(porFuncao, uf, anos, coluna, ordemFuncoes) {
  * não dependentes e dependentes, cada grupo pela sigla. Só cadastro: nenhum valor financeiro.
  */
 export function estataisDoEstado(estatais, uf, ano) {
-  if (!estatais?.edicoes?.length) return { edicao: null, painel: null, naoDependentes: [], dependentes: [] }
-  const edicao = edicaoParaAno(estatais.edicoes, ano)
+  const vazio = { edicao: null, painel: null, naoDependentes: [], dependentes: [] }
+  if (!estatais?.edicoes?.length) return vazio
+  const edicao = edicaoDaUf(estatais, uf, ano)
+  if (edicao === null) return vazio // ano antes da primeira edição, ou UF fora da edição: sem informação
   const todas = [...(estatais.lista_por_edicao?.[String(edicao)]?.[uf] ?? [])]
     .sort((a, b) => String(a.sigla_exibicao ?? a.sigla).localeCompare(String(b.sigla_exibicao ?? b.sigla), 'pt-BR'))
   return {
@@ -400,9 +440,13 @@ export function estataisDoEstado(estatais, uf, ano) {
 
 // --- subáreas (subfunções) ---------------------------------------------------------------
 
+/** Níveis de subárea: subfunção, demais declarado e demais calculado (função − Σ subfunções, onde a DCA não traz "demais"). */
+export const NIVEIS_SUBAREA = ['subfuncao', 'demais', 'demais_calculado']
+const ehDemais = (nivel) => nivel === 'demais' || nivel === 'demais_calculado'
+
 /**
- * Subáreas de todas as funções de uma UF, em todos os anos: linhas `subfuncao` e `demais`
- * (subfunções não listadas), com as mesmas medidas da área: nominal, real, por habitante (real e
+ * Subáreas de todas as funções de uma UF, em todos os anos: linhas `subfuncao`, `demais`
+ * (subfunções não listadas) e `demais_calculado`, com as mesmas medidas da área: nominal, real, por habitante (real e
  * da época) e % do orçamento, sempre sobre o orçamento TOTAL da UF no ano (não sobre a área).
  * Subfunções + demais de uma função = a função. Linha sem valor no estágio fica de fora, como na área.
  */
@@ -411,7 +455,7 @@ export function subareasDaUf(despesa, serieIpca, { uf, estagio = 'liquidado', an
   const totais = new Map(totaisPorUfAno(daUf, serieIpca, { estagio, anoBase, fonte }).map((t) => [t.ano, t]))
   const indice = indiceEncadeado(serieIpca)
   return daUf
-    .filter((l) => (l.nivel === 'subfuncao' || l.nivel === 'demais') && !ehNulo(l[estagio]))
+    .filter((l) => NIVEIS_SUBAREA.includes(l.nivel) && !ehNulo(l[estagio]))
     .map((l) => {
       const nominal = l[estagio]
       const real = nominal * fatorDeflacao(indice, l.ano, anoBase)
@@ -437,7 +481,7 @@ export function tabelaSubareasPorAno(subareas, funcao, anos, coluna, anoOrdem) {
     return { subfuncao_cod: membros[0].subfuncao_cod, nivel: membros[0].nivel, valores: anos.map((a) => porAno.get(a) ?? null) }
   })
   const iOrdem = anos.indexOf(anoOrdem)
-  return linhas.sort((a, b) => (a.nivel === 'demais') - (b.nivel === 'demais')
+  return linhas.sort((a, b) => ehDemais(a.nivel) - ehDemais(b.nivel)
     || (b.valores[iOrdem] ?? -Infinity) - (a.valores[iOrdem] ?? -Infinity)
     || String(a.subfuncao_cod).localeCompare(String(b.subfuncao_cod)))
 }
@@ -464,7 +508,7 @@ export function indicadoresDivida(linhas, serieIpca, { anoBase }) {
       juros_real: real(l.juros), amortizacao_real: real(l.amortizacao), pago_real: real(pago),
       dc_real: real(l.dc), dcl_real: real(l.dcl), deducoes_real: real(l.deducoes), rcl_real: real(l.rcl),
       limite_real: real(l.limite), alerta_real: real(l.alerta),
-      composicao_real: Object.fromEntries(TIPOS_DIVIDA.map((t) => [t, real(l.composicao?.[t])])),
+      composicao_real: l.composicao ? Object.fromEntries(TIPOS_DIVIDA.map((t) => [t, real(l.composicao[t])])) : null,
     }
   })
   return ranking(comValores, 'dcl_rcl_pct', ['ano']).map(({ dcl_rcl_pct_posicao: posicao, dcl_rcl_pct_n_ufs: n, ...l }) => ({
@@ -475,9 +519,10 @@ export function indicadoresDivida(linhas, serieIpca, { anoBase }) {
 /**
  * Composição da dívida de uma linha por tipo, do maior para o menor: [{tipo, valor, pct_dc}].
  * campo: 'composicao' (R$ da época) ou 'composicao_real'. pct_dc = participação na dívida consolidada.
+ * Composição nula (layout do RGF de 2015–2016, não comparável) → [].
  */
 export function composicaoDivida(linha, campo = 'composicao') {
-  if (!linha) return []
+  if (!linha || !linha[campo]) return []
   const total = TIPOS_DIVIDA.reduce((soma, t) => soma + (linha[campo]?.[t] ?? 0), 0)
   return TIPOS_DIVIDA.map((tipo) => ({ tipo, valor: linha[campo]?.[tipo] ?? 0 }))
     .map((c) => ({ ...c, pct_dc: total ? (c.valor / total) * 100 : null }))
@@ -585,4 +630,55 @@ export function tabelaReceita(linhas, uf, anos, ordemItens, { metrica, corrigido
       return metrica === 'per_capita' ? valor / populacao.get(`${uf}|${ano}`) : valor
     }),
   }))
+}
+
+/** Ressalvas de uma UF que valem no ano (as com `anos` só nesses exercícios; as sem `anos`, sempre). */
+export function ressalvasDoAno(ressalvas, ano) {
+  return (ressalvas ?? []).filter((r) => !r.anos || r.anos.includes(ano))
+}
+
+// --- petróleo e gás: DCA × ANP (só exibição; nenhum total da DCA muda) -----------------------------
+
+/**
+ * A prestação de contas da UF deixa de separar o petróleo no ano? receita.json → petroleo:
+ * UF em ufs_nao_separa_na_dca e ano ≥ nao_separa_desde[uf] (sem "desde": todos os anos).
+ */
+export function naoSeparaPetroleo(petroleo, uf, ano) {
+  if (!(petroleo?.ufs_nao_separa_na_dca ?? []).includes(uf)) return false
+  const desde = petroleo.nao_separa_desde?.[uf]
+  return desde == null || ano >= desde
+}
+
+/** Faixa em que a ANP "explica" a linha "Demais receitas patrimoniais" (docs/decisoes.md). */
+export const FAIXA_RECONCILIACAO = [0.95, 1.0]
+
+/** Linhas do bloco petróleo (receita.json → petroleo.linhas) de uma UF, por ano: Map ano → linha. */
+export function petroleoDaUf(linhas, uf) {
+  return new Map((linhas ?? []).filter((l) => l.uf === uf).map((l) => [l.ano, l]))
+}
+
+/**
+ * Para estado que não separa o petróleo na DCA: a ANP explica "Demais receitas patrimoniais" no ano?
+ * {situacao: 'explica' | 'nao_reconcilia' | 'parcial' | 'sem_dado', razao}. razao = ANP / linha.
+ * 'explica': ANP de 95% a 100% da linha (a ANP não pode passar da linha que a contém).
+ */
+export function reconciliacaoPetroleo(linha) {
+  if (!linha) return { situacao: 'sem_dado', razao: null }
+  if (linha.anp_parcial || ehNulo(linha.anp_total)) return { situacao: 'parcial', razao: null }
+  if (!(linha.anp_total > 0) || !(linha.demais_patrimoniais > 0)) return { situacao: 'sem_dado', razao: null }
+  const razao = linha.anp_total / linha.demais_patrimoniais
+  const [minimo, maximo] = FAIXA_RECONCILIACAO
+  return { situacao: razao >= minimo && razao <= maximo ? 'explica' : 'nao_reconcilia', razao }
+}
+
+/**
+ * Série de um campo do bloco petróleo (Map ano → linha) nos `anos`, × fator do ano (1 para R$ da época).
+ * fatorDoAno(ano) → número, ou null se não houver fator (o valor fica nulo). Campo nulo continua nulo.
+ */
+export function seriePetroleo(porAno, anos, campo, fatorDoAno = () => 1) {
+  return anos.map((ano) => {
+    const valor = porAno.get(ano)?.[campo]
+    const fator = fatorDoAno(ano)
+    return ehNulo(valor) || ehNulo(fator) ? null : valor * fator
+  })
 }

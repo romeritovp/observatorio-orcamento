@@ -21,7 +21,7 @@ const NOMES_TIPOS = {
 
 // Parte 3 da tela "Por estado": as dívidas do estado. Contas em calculos.js (indicadoresDivida e cia.);
 // aqui só se escolhem colunas e textos. divida: indicadoresDivida (todas as UFs e anos).
-export default function ParteDividas({ divida, notaComposicao, ressalvas, limites, porFuncao, uf, infoUf, ano, anos, corrigidos,
+export default function ParteDividas({ divida, notaComposicao, notaComposicaoAntiga, ressalvas, limites, porFuncao, uf, infoUf, ano, anos, corrigidos,
   emReais, anoBase }) {
   const sufixo = corrigidos ? '_real' : ''
   const linha = divida.find((l) => l.uf === uf && l.ano === ano)
@@ -97,10 +97,14 @@ export default function ParteDividas({ divida, notaComposicao, ressalvas, limite
     <>
       {cabecalho}
 
+      <hr class="intra-section"/>
+
       <section className="secao">
         <h3 className="titulo-secao">{ano}, em resumo</h3>
         <Resumo itens={resumo} />
       </section>
+
+      <hr class="intra-section"/>
 
       <section className="secao">
         <h3 className="titulo-secao">Dívida sobre a receita, {anos[0]}–{anos[anos.length - 1]}</h3>
@@ -108,12 +112,22 @@ export default function ParteDividas({ divida, notaComposicao, ressalvas, limite
         <Evolucao series={series} anos={anos} metrica="pct_total" anoSelecionado={ano} destaque={uf}
           referencias={[{ valor: limites.limite, rotulo: `limite ${limites.limite}%` }, { valor: limites.alerta, rotulo: `alerta ${limites.alerta}%` }]} />
       </section>
+      
+      <hr class="intra-section"/>
 
       <section className="secao">
         <h3 className="titulo-secao">Com quem é a dívida, fim de {ano}</h3>
-        <BarrasHorizontais itens={composicao} rotuloAcessivel="Dívida consolidada por tipo" />
-        <p className="nota">{notaComposicao} Valores {emReais}; o % é sobre a dívida consolidada.</p>
+        {composicao.length > 0 ? (
+          <>
+            <BarrasHorizontais itens={composicao} rotuloAcessivel="Dívida consolidada por tipo" />
+            <p className="nota">{notaComposicao} Valores {emReais}; o % é sobre a dívida consolidada.</p>
+          </>
+        ) : (
+          <p className="nota">{linha ? notaComposicaoAntiga : 'Sem dado de dívida para este ano.'}</p>
+        )}
       </section>
+
+      <hr class="intra-section"/>
 
       <section className="secao">
         <h3 className="titulo-secao">Quanto foi pago, {anos[0]}–{anos[anos.length - 1]}</h3>
@@ -123,6 +137,8 @@ export default function ParteDividas({ divida, notaComposicao, ressalvas, limite
         ]} />
         <p className="nota">Despesa liquidada com juros e amortização da dívida, {emReais}.</p>
       </section>
+
+      <hr class="intra-section"/>
 
       <section className="secao">
         <h3 className="titulo-secao">Dívida, saúde e educação em {ano}</h3>

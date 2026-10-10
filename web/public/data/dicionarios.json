@@ -208,6 +208,10 @@
       "funcao_nome": "Administração"
     },
     {
+      "funcao_cod": "05",
+      "funcao_nome": "Defesa Nacional"
+    },
+    {
       "funcao_cod": "06",
       "funcao_nome": "Segurança Pública"
     },
@@ -370,6 +374,18 @@
       "subfuncao_nome": "Comunicação Social"
     },
     {
+      "subfuncao_cod": "151",
+      "subfuncao_nome": "Defesa Área"
+    },
+    {
+      "subfuncao_cod": "152",
+      "subfuncao_nome": "Defesa Naval"
+    },
+    {
+      "subfuncao_cod": "153",
+      "subfuncao_nome": "Defesa Terrestre"
+    },
+    {
       "subfuncao_cod": "181",
       "subfuncao_nome": "Policiamento"
     },
@@ -380,6 +396,10 @@
     {
       "subfuncao_cod": "183",
       "subfuncao_nome": "Informação e Inteligência"
+    },
+    {
+      "subfuncao_cod": "211",
+      "subfuncao_nome": "Relações Diplomáticas"
     },
     {
       "subfuncao_cod": "212",
@@ -618,6 +638,10 @@
       "subfuncao_nome": "Mineração"
     },
     {
+      "subfuncao_cod": "664",
+      "subfuncao_nome": "Propriedade Industrial"
+    },
+    {
       "subfuncao_cod": "665",
       "subfuncao_nome": "Normalização e Qualidade"
     },
@@ -720,6 +744,14 @@
     {
       "subfuncao_cod": "846",
       "subfuncao_nome": "Outros Encargos Especiais"
+    },
+    {
+      "subfuncao_cod": "847",
+      "subfuncao_nome": "Transferências para a Educação Básica"
+    },
+    {
+      "subfuncao_cod": "999",
+      "subfuncao_nome": "Demais Subfunções Transporte"
     }
   ]
 }

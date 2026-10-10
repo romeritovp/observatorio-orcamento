@@ -1,0 +1,324 @@
+{
+ "aviso": "Gerado por publicacao/og.py; lido pelo index.php. Não editar à mão.",
+ "url_site": "https://apps.romeritopontes.com.br/orcamento",
+ "padrao": {
+  "title": "Observatório dos Orçamentos: as contas dos estados",
+  "description": "Quanto cada governo estadual arrecada, gasta e deve, segundo as contas entregues ao Tesouro Nacional.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
+ "comparar": {
+  "title": "Comparar estados · Observatório dos Orçamentos",
+  "description": "Quanto cada governo estadual gasta em cada área, por habitante e em % do orçamento. Dados entregues ao Tesouro Nacional.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
+ "views": [
+  "estado",
+  "comparar"
+ ],
+ "ufs": {
+  "RO": {
+   "nome": "Rondônia",
+   "title": "As contas de Rondônia · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 16,7 bi, dívida de -5,0% da receita, R$ 1.394 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ro.png"
+  },
+  "AC": {
+   "nome": "Acre",
+   "title": "As contas do Acre · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 12,7 bi, dívida de 13,2% da receita, R$ 2.616 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ac.png"
+  },
+  "AM": {
+   "nome": "Amazonas",
+   "title": "As contas do Amazonas · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 35,9 bi, dívida de 26,4% da receita, R$ 1.333 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-am.png"
+  },
+  "RR": {
+   "nome": "Roraima",
+   "title": "As contas de Roraima · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 10,0 bi, dívida de 9,5% da receita, R$ 2.621 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-rr.png"
+  },
+  "PA": {
+   "nome": "Pará",
+   "title": "As contas do Pará · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 50,4 bi, dívida de 9,0% da receita, R$ 772 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-pa.png"
+  },
+  "AP": {
+   "nome": "Amapá",
+   "title": "As contas do Amapá · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 12,0 bi, dívida de -8,0% da receita, R$ 2.920 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ap.png"
+  },
+  "TO": {
+   "nome": "Tocantins",
+   "title": "As contas do Tocantins · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 17,3 bi, dívida de 16,2% da receita, R$ 2.406 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-to.png"
+  },
+  "MA": {
+   "nome": "Maranhão",
+   "title": "As contas do Maranhão · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 34,4 bi, dívida de 5,3% da receita, R$ 782 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ma.png"
+  },
+  "PI": {
+   "nome": "Piauí",
+   "title": "As contas do Piauí · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 27,8 bi, dívida de 71,3% da receita, R$ 1.103 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-pi.png"
+  },
+  "CE": {
+   "nome": "Ceará",
+   "title": "As contas do Ceará · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 48,7 bi, dívida de 30,2% da receita, R$ 793 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ce.png"
+  },
+  "RN": {
+   "nome": "Rio Grande do Norte",
+   "title": "As contas do Rio Grande do Norte · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 21,1 bi, dívida de 48,5% da receita, R$ 876 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-rn.png"
+  },
+  "PB": {
+   "nome": "Paraíba",
+   "title": "As contas da Paraíba · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 23,1 bi, dívida de 3,2% da receita, R$ 990 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-pb.png"
+  },
+  "PE": {
+   "nome": "Pernambuco",
+   "title": "As contas de Pernambuco · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 52,5 bi, dívida de 31,8% da receita, R$ 1.218 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-pe.png"
+  },
+  "AL": {
+   "nome": "Alagoas",
+   "title": "As contas de Alagoas · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 21,0 bi, dívida de 71,5% da receita, R$ 938 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-al.png"
+  },
+  "SE": {
+   "nome": "Sergipe",
+   "title": "As contas de Sergipe · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 18,0 bi, dívida de 7,0% da receita, R$ 1.505 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-se.png"
+  },
+  "BA": {
+   "nome": "Bahia",
+   "title": "As contas da Bahia · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 78,1 bi, dívida de 35,7% da receita, R$ 993 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ba.png"
+  },
+  "MG": {
+   "nome": "Minas Gerais",
+   "title": "As contas de Minas Gerais · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 119 bi, dívida de 167,5% da receita, R$ 684 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-mg.png"
+  },
+  "ES": {
+   "nome": "Espírito Santo",
+   "title": "As contas do Espírito Santo · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 31,5 bi, dívida de -52,5% da receita, R$ 1.365 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-es.png"
+  },
+  "RJ": {
+   "nome": "Rio de Janeiro",
+   "title": "As contas do Rio de Janeiro · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 109 bi, dívida de 217,2% da receita, R$ 646 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-rj.png"
+  },
+  "SP": {
+   "nome": "São Paulo",
+   "title": "As contas de São Paulo · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 359 bi, dívida de 124,2% da receita, R$ 916 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-sp.png"
+  },
+  "PR": {
+   "nome": "Paraná",
+   "title": "As contas do Paraná · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 75,3 bi, dívida de -4,9% da receita, R$ 779 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-pr.png"
+  },
+  "SC": {
+   "nome": "Santa Catarina",
+   "title": "As contas de Santa Catarina · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 54,0 bi, dívida de 23,3% da receita, R$ 1.072 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-sc.png"
+  },
+  "RS": {
+   "nome": "Rio Grande do Sul",
+   "title": "As contas do Rio Grande do Sul · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 72,3 bi, dívida de 174,0% da receita, R$ 978 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-rs.png"
+  },
+  "MS": {
+   "nome": "Mato Grosso do Sul",
+   "title": "As contas do Mato Grosso do Sul · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 24,5 bi, dívida de 25,0% da receita, R$ 859 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-ms.png"
+  },
+  "MT": {
+   "nome": "Mato Grosso",
+   "title": "As contas do Mato Grosso · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 39,6 bi, dívida de -14,9% da receita, R$ 1.301 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-mt.png"
+  },
+  "GO": {
+   "nome": "Goiás",
+   "title": "As contas de Goiás · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 47,8 bi, dívida de 33,5% da receita, R$ 875 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-go.png"
+  },
+  "DF": {
+   "nome": "Distrito Federal",
+   "title": "As contas do Distrito Federal · Observatório dos Orçamentos",
+   "description": "Em 2025: receita de R$ 39,1 bi, dívida de 15,9% da receita, R$ 2.001 por habitante em saúde. De onde vem e para onde vai o dinheiro do estado, segundo as contas entregues ao Tesouro Nacional.",
+   "image": "https://apps.romeritopontes.com.br/orcamento/og/estado-df.png"
+  }
+ },
+ "funcoes": {
+  "01": {
+   "nome": "Legislativa",
+   "title": "Comparar estados: Legislativa · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em legislativa por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "02": {
+   "nome": "Judiciária",
+   "title": "Comparar estados: Judiciária · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em judiciária por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "03": {
+   "nome": "Essencial à Justiça",
+   "title": "Comparar estados: Essencial à Justiça · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em essencial à justiça por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "04": {
+   "nome": "Administração",
+   "title": "Comparar estados: Administração · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em administração por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "05": {
+   "nome": "Defesa Nacional",
+   "title": "Comparar estados: Defesa Nacional · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em defesa nacional por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "06": {
+   "nome": "Segurança Pública",
+   "title": "Comparar estados: Segurança Pública · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em segurança pública por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "07": {
+   "nome": "Relações Exteriores",
+   "title": "Comparar estados: Relações Exteriores · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em relações exteriores por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "08": {
+   "nome": "Assistência Social",
+   "title": "Comparar estados: Assistência Social · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em assistência social por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "09": {
+   "nome": "Previdência Social",
+   "title": "Comparar estados: Previdência Social · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em previdência social por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "10": {
+   "nome": "Saúde",
+   "title": "Comparar estados: Saúde · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em saúde por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "11": {
+   "nome": "Trabalho",
+   "title": "Comparar estados: Trabalho · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em trabalho por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "12": {
+   "nome": "Educação",
+   "title": "Comparar estados: Educação · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em educação por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "13": {
+   "nome": "Cultura",
+   "title": "Comparar estados: Cultura · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em cultura por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "14": {
+   "nome": "Direitos da Cidadania",
+   "title": "Comparar estados: Direitos da Cidadania · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em direitos da cidadania por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "15": {
+   "nome": "Urbanismo",
+   "title": "Comparar estados: Urbanismo · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em urbanismo por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "16": {
+   "nome": "Habitação",
+   "title": "Comparar estados: Habitação · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em habitação por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "17": {
+   "nome": "Saneamento",
+   "title": "Comparar estados: Saneamento · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em saneamento por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "18": {
+   "nome": "Gestão Ambiental",
+   "title": "Comparar estados: Gestão Ambiental · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em gestão ambiental por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "19": {
+   "nome": "Ciência e Tecnologia",
+   "title": "Comparar estados: Ciência e Tecnologia · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em ciência e tecnologia por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "20": {
+   "nome": "Agricultura",
+   "title": "Comparar estados: Agricultura · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em agricultura por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "21": {
+   "nome": "Organização Agrária",
+   "title": "Comparar estados: Organização Agrária · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em organização agrária por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "22": {
+   "nome": "Indústria",
+   "title": "Comparar estados: Indústria · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em indústria por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "23": {
+   "nome": "Comércio e Serviços",
+   "title": "Comparar estados: Comércio e Serviços · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em comércio e serviços por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "24": {
+   "nome": "Comunicações",
+   "title": "Comparar estados: Comunicações · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em comunicações por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "25": {
+   "nome": "Energia",
+   "title": "Comparar estados: Energia · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em energia por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "26": {
+   "nome": "Transporte",
+   "title": "Comparar estados: Transporte · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em transporte por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "27": {
+   "nome": "Desporto e Lazer",
+   "title": "Comparar estados: Desporto e Lazer · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em desporto e lazer por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  },
+  "28": {
+   "nome": "Encargos Especiais",
+   "title": "Comparar estados: Encargos Especiais · Observatório dos Orçamentos",
+   "description": "Quanto cada governo estadual gasta em encargos especiais por habitante e em % do orçamento, com a conta aberta. Dados entregues ao Tesouro Nacional."
+  }
+ }
+}

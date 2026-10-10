@@ -1,15 +1,18 @@
 {
-  "gerado_em": "2026-10-08T20:06:40+00:00",
+  "gerado_em": "2026-10-10T18:45:04+00:00",
   "versao_esquema": 1,
   "uf_padrao": "SP",
   "arquivos": {
     "meta.json": "este arquivo",
     "dicionarios.json": "UFs, funções e subfunções (código → nome)",
     "ipca.json": "variação anual dez/dez do IPCA, para deflacionar no front",
-    "despesa.json": "despesa por UF, ano, função e subfunção, em R$ nominais",
-    "receita.json": "receita por UF, ano e item (DCA I-C): bruta, deduções e líquida, em R$ nominais",
+    "despesa_funcoes.json": "despesa das 27 UFs nos níveis total e função, em R$ nominais",
+    "despesa/<UF>.json": "subfunções e demais de uma UF (carregado sob demanda), em R$ nominais",
+    "receita.json": "receita das 27 UFs: totais, itens, ressalvas e petróleo (sem as linhas por item)",
+    "receita/<UF>.json": "linhas por item de uma UF (DCA I-C), em R$ nominais (carregado sob demanda)",
     "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
     "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
+    "estatais/<UF>.json": "lista completa das estatais de uma UF por edição (carregado sob demanda)",
     "gabarito.json": "só para teste do front; não exibir"
   },
   "ufs": [
@@ -42,6 +45,10 @@
     "TO"
   ],
   "anos": [
+    2015,
+    2016,
+    2017,
+    2018,
     2019,
     2020,
     2021,
@@ -56,7 +63,7 @@
       "descricao": "SICONFI/Tesouro Nacional, DCA Anexo I-E (despesa por função e subfunção), dado anual",
       "nome_curto": "SICONFI, DCA Anexo I-E",
       "extraido_em_min": "2026-10-08T12:30:52+00:00",
-      "extraido_em_max": "2026-10-08T12:45:11+00:00"
+      "extraido_em_max": "2026-10-09T18:40:54+00:00"
     }
   ],
   "atribuicoes": [
@@ -69,6 +76,10 @@
       "url": "https://github.com/tesouro/empresas-estados",
       "licenca": "o repositório não declara licença; usados só dados cadastrais, com atribuição",
       "versoes": [
+        "tesouro/empresas-estados@b7f456b:v2020/dados/dados-originais/Quadro das Empresas Estatais Estaduais PAF 2020v1.xlsx#Dados",
+        "tesouro/empresas-estados@b7f456b:v2021/dados/dados-originais/quadro_estatais.xls#Estatais",
+        "tesouro/empresas-estados@b7f456b:v2022/dados/dados-originais/quadro_estatais.xlsx#Todos",
+        "tesouro/empresas-estados@b7f456b:v2023/dados/dados-originais/quadro_estatais.xlsx#Todos",
         "tesouro/empresas-estados@b7f456b:v2025/dados/dados-originais/dados_raw.xlsx#ex2023",
         "tesouro/empresas-estados@b7f456b:v2025/dados/dados-originais/dados_raw.xlsx#ex2024"
       ]
@@ -113,7 +124,7 @@
   "colunas_despesa": {
     "uf": "sigla da UF",
     "ano": "exercício",
-    "nivel": "nível da linha: total, funcao, subfuncao ou demais (subfunções não listadas da função)",
+    "nivel": "nível da linha: total, funcao, subfuncao, demais (subfunções não listadas da função) ou demais_calculado (função − soma das subfunções, onde a DCA não traz 'demais')",
     "funcao_cod": "código da função (2 dígitos); nulo no nível total",
     "subfuncao_cod": "código da subfunção (3 dígitos); só no nível subfuncao",
     "empenhado": "R$ nominais; nulo se a fonte não informa",
@@ -128,12 +139,13 @@
     "total": "total do ente (uma linha sem intra e uma intra)",
     "funcao": "uma linha por função",
     "subfuncao": "uma linha por subfunção listada",
-    "demais": "soma das subfunções não listadas daquela função"
+    "demais": "soma das subfunções não listadas daquela função",
+    "demais_calculado": "calculado, não declarado: função − soma das subfunções, onde a DCA não traz 'Demais subfunções' (só quando a diferença não é zero)"
   },
   "regras": [
     "Nunca somar linhas de níveis diferentes: filtrar um nivel antes de agregar.",
     "Soma das linhas nivel=funcao com intra=false = linha nivel=total com intra=false.",
-    "Subfunções + demais de uma função = a função.",
+    "Subfunções + demais (ou demais_calculado) de uma função = a função.",
     "As intraorçamentárias (intra=true) vêm só como total, sem detalhe por função; somá-las às demais conta o mesmo gasto duas vezes.",
     "Despesa executada padrão: liquidado.",
     "Valores em R$ nominais. Valores reais e per capita são calculados no front.",
@@ -146,6 +158,10 @@
     "metodo": "fator = I(ano_base) / I(ano), com I encadeado de variacao_pct (dez/dez)",
     "ano_base_padrao": 2025,
     "anos_ipca": [
+      2015,
+      2016,
+      2017,
+      2018,
       2019,
       2020,
       2021,
@@ -156,6 +172,58 @@
     ]
   },
   "linhas": {
-    "despesa": 23344
+    "despesa": 36396
+  },
+  "documentacao": {
+    "fontes": {
+      "siconfi": {
+        "nome": "SICONFI (Tesouro Nacional)",
+        "pagina_oficial": "https://siconfi.tesouro.gov.br/siconfi/index.jsf",
+        "documentacao_api": "https://apidatalake.tesouro.gov.br/docs/siconfi/",
+        "api": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt",
+        "extraido_em": "2026-10-09T19:21:26+00:00",
+        "partes": [
+          {
+            "sigla": "DCA",
+            "extraido_em": "2026-10-09T18:40:54+00:00"
+          },
+          {
+            "sigla": "RGF",
+            "extraido_em": "2026-10-09T18:40:55+00:00"
+          },
+          {
+            "sigla": "RREO",
+            "extraido_em": "2026-10-09T19:21:26+00:00"
+          }
+        ]
+      },
+      "anp": {
+        "nome": "ANP (Agência Nacional do Petróleo, Gás Natural e Biocombustíveis)",
+        "pagina_oficial": "https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/participacoes-governamentais",
+        "documentacao_api": null,
+        "extraido_em": "2026-10-08T22:26:02+00:00"
+      },
+      "tesouro_estatais": {
+        "nome": "Raio X das Empresas dos Estados Brasileiros (Tesouro Nacional)",
+        "pagina_oficial": "https://tesouro.github.io/empresas-estados/",
+        "documentacao_api": "https://github.com/tesouro/empresas-estados",
+        "commit": "b7f456b",
+        "versao_de": "2026-04-13"
+      },
+      "ibge_ipca": {
+        "nome": "IBGE: IPCA (SIDRA, tabela 1737)",
+        "pagina_oficial": "https://sidra.ibge.gov.br/tabela/1737",
+        "documentacao_api": "https://apisidra.ibge.gov.br/home/ajuda",
+        "consulta": "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2265,2266/p/201512,201612,201712,201812,201912,202012,202112,202212,202312,202412,202512",
+        "extraido_em": "2026-10-09"
+      }
+    },
+    "exemplo": {
+      "uf": "RJ",
+      "funcao_cod": "10",
+      "endpoint": "dca",
+      "anexo": "DCA-Anexo I-E",
+      "coluna": "Despesas Liquidadas"
+    }
   }
 }

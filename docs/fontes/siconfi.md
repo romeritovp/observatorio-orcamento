@@ -174,6 +174,11 @@ Tratado em `rreo.py` (identificação pelo `cod_conta` e pela `conta`): no Anexo
 
 | data | o que foi verificado | resultado |
 |---|---|---|
+| 2026-10-10 | `/dca` Anexo I-E, 27 UFs, 2015–2018 (`lote_dca.py`) | 108 ok. 2015–2016: totais com nomes variantes ("Despesas (Exceto Intraorçamentárias)") e sem linhas "FUnn - Demais Subfunções"; as subfunções somam a função em todas as UFs (nenhum `demais_calculado` necessário) |
+| 2026-10-10 | `/rreo` Anexo 02, 6º bim., 27 UFs, 2015–2018 (`lote_rreo.py`) | 108 ok. RN 2015 e BA 2016 trazem as colunas só como "Até o Bimestre (b)" (empenhado) e "(d)" (liquidado) |
+| 2026-10-10 | `/rgf` Anexo 02, 27 UFs, 2015–2018 (`lote_divida.py`) | 108 ok. 2015–2016 em layout antigo: dívida contratual = `DividaContratualInterna` + `DividaContratualExterna`, sem empréstimos/financiamentos/reestruturação. AP 2017: DCL declarada 0 com DC − deduções negativa |
+| 2026-10-10 | `/dca` Anexo I-D, 27 UFs, 2015–2018; conferência com o RREO Anexo 01 | 108 ok; pagamento da dívida igual ao RREO em 77 de 106 |
+| 2026-10-10 | `/dca` Anexo I-C, 27 UFs, 2015–2018 (`lote_receita.py`) | 108 ok. Até 2018 só `TotalReceitas` (sem totais exceto/intra): validado 1 + 2 + 7 + 8 = total. Codificação de 7 segmentos até 2017; 2018 já na codificação de 2019–2021. Líquida exceto intra = RREO Anexo 01 em 76 de 108 (diferenças em decisoes.md) |
 | 2026-10-08 | `/rgf` Anexo 02, 3º quadrimestre, Executivo, 27 UFs, 2019–2025 (`lote_divida.py`) | 189 ok, 0 vazias, 0 erros. Validado só o 3º quadrimestre: DC − deduções = DCL e subcontas = pai, em todos. Colunas intermediárias têm subcontas que não somam em vários estados (não usadas). Limite declarado diverge do legal em CE 2019–2022 (0), RR (90%), SP 2025 (170%), MS 2024 (200,8%) |
 | 2026-10-08 | `/dca` Anexo I-D, 27 UFs, 2019–2025 (`lote_divida.py`) | 189 ok. Grupo = modalidades DO + DI (a linha do grupo inclui intra) em 1.303 de 1.303 combinações. Juros + amortização (modalidades DO, liquidado) = RREO Anexo 01 em 178 de 189; = subfunções 841–844 em só 43 de 189 |
 | 2026-10-08 | `/rreo` Anexo 01, 6º bim., 27 UFs, 2019–2025 | 189 ok, para conferência da dívida e da receita |

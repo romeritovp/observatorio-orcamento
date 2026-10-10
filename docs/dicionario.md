@@ -17,7 +17,7 @@ Descreve as tabelas canônicas em `data/processed/`. Os valores de código → n
 
 | coluna | tipo | escopo | descrição |
 |---|---|---|---|
-| nivel | str | nacional | nível de agregação da linha: `total`, `funcao`, `subfuncao`, `demais` (subfunções não listadas da função, linhas `FUxx` da DCA). Nulo quando a fonte não tem hierarquia. **Nunca somar níveis diferentes** |
+| nivel | str | nacional | nível de agregação da linha: `total`, `funcao`, `subfuncao`, `demais` (subfunções não listadas da função, linhas `FUxx` da DCA) ou `demais_calculado` (função − soma das subfunções, calculado onde a DCA não traz `FUxx`, como em 2015–2016; não declarado pelo ente). Nulo quando a fonte não tem hierarquia. **Nunca somar níveis diferentes** |
 | intra | bool | nacional | `true` para despesas intraorçamentárias (dupla contagem se somadas ao resto) |
 | orgao_cod | str | **estadual** | unidade orçamentária |
 | funcao_cod | str | nacional | ex.: `10` Saúde |

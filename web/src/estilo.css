@@ -26,12 +26,17 @@
   --alerta-fundo: #2e2615; --alerta-borda: #c99a45; --alerta-texto: #ecd29b;
 }
 
+/* Inter (OFL, web/src/fontes/LICENSE.txt): a mesma fonte das imagens de prévia (publicacao/og.py) */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fontes/Inter-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fontes/Inter-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fontes/Inter-Bold.woff2") format("woff2"); }
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
   background: var(--fundo);
   color: var(--texto);
-  font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font: 17px/1.5 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 button, select { font: inherit; color: inherit; }
@@ -291,6 +296,7 @@ button, select { font: inherit; color: inherit; }
   border: 0; border-top: 3px solid var(--texto); margin: 48px 0 0;
   width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
 }
+hr.intra-section { margin-top: 32px; border: 0.5px solid #aaa }
 body { overflow-x: clip; }
 
 /* Tabela de áreas: subáreas */
@@ -368,3 +374,42 @@ body { overflow-x: clip; }
 .indice-texto strong { font-size: 1rem; }
 .indice-descricao { font-size: 0.82rem; color: var(--texto-2); margin-top: 2px; }
 @media (prefers-reduced-motion: reduce) { .indice-partes a { transition: none; } .indice-partes a:hover { transform: none; } }
+
+/* Página "Como fazemos" (textos em src/conteudo/metodo/).
+   Hierarquia: título da página (h1) > seção numerada (h2, com filete forte) > entrada (h3, com filete fino)
+   > subtítulo (h4) > texto. Cada nível muda de tamanho E de marca visual, não só de negrito. */
+.metodo .cabecalho h1 { font-size: 2.2rem; letter-spacing: -0.02em; margin-bottom: 8px; }
+.metodo .cabecalho p { max-width: 70ch; font-size: 1.02rem; }
+.nivel-metodo { margin-top: 20px; }
+.indice-metodo { margin-top: 20px; padding: 14px 18px; border: 1px solid var(--linha); border-radius: 12px; background: var(--superficie); }
+.indice-metodo ol { margin: 0; padding-left: 1.4em; columns: 2; column-gap: 32px; }
+.indice-metodo li { margin: 2px 0; break-inside: avoid; }
+.indice-metodo a { color: var(--texto); text-decoration-color: var(--linha); text-underline-offset: 3px; }
+.indice-metodo a:hover { color: var(--destaque); text-decoration-color: currentColor; }
+.indice-metodo li::marker { color: var(--destaque); font-weight: 700; }
+.secao-metodo { margin-top: 64px; padding-top: 20px; border-top: 3px solid var(--texto); scroll-margin-top: 12px; }
+.metodo-numero { margin: 0 0 4px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--destaque); }
+.secao-metodo > h2 { font-size: 1.85rem; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 18px; }
+.secao-metodo h3 {
+  font-size: 1.22rem; line-height: 1.3; margin: 40px 0 10px; padding-top: 16px;
+  border-top: 1px solid var(--linha); scroll-margin-top: 12px;
+}
+.secao-metodo > h2 + h3, .secao-metodo > h2 + p + h3 { border-top: 0; padding-top: 0; margin-top: 24px; }
+.secao-metodo h4 { margin: 22px 0 6px; color: var(--texto-2); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.82rem; }
+.secao-metodo p, .secao-metodo li { max-width: 72ch; }
+.secao-metodo a { color: var(--destaque); }
+.secao-metodo code { font-size: 0.85em; background: var(--superficie); border: 1px solid var(--linha); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+.md-codigo { background: var(--superficie); border: 1px solid var(--linha); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font-size: 0.85rem; line-height: 1.45; }
+.md-codigo code { border: 0; padding: 0; background: none; }
+.md-destaque { margin: 16px 0; padding: 10px 16px; border-left: 3px solid var(--destaque); background: var(--destaque-fundo); border-radius: 0 8px 8px 0; }
+.md-destaque p { margin: 6px 0; }
+.md-tabela td, .md-tabela th { vertical-align: top; }
+.entenda { font-size: 0.85rem; color: var(--destaque); white-space: nowrap; }
+@media (max-width: 640px) {
+  .indice-metodo ol { columns: 1; }
+  .metodo .cabecalho h1 { font-size: 1.8rem; }
+  .secao-metodo { margin-top: 48px; }
+  .secao-metodo > h2 { font-size: 1.5rem; }
+  .secao-metodo h3 { font-size: 1.1rem; }
+}
+.md-tabela th, .md-tabela td { text-align: left; }

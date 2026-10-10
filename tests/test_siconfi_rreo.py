@@ -73,6 +73,15 @@ def test_validacao_nao_depende_do_rotulo(df, funcoes):
     rreo.validar_anexo_02(outro, funcoes)
 
 
+def test_validacao_aceita_colunas_so_com_a_letra(df, funcoes):
+    # Relatórios antigos (RN 2015, BA 2016): "Até o Bimestre (b)" = empenhado, "(d)" = liquidado
+    antigo = df.copy()
+    antigo["coluna"] = antigo["coluna"].replace({"DESPESAS EMPENHADAS ATÉ O BIMESTRE (b)": "Até o Bimestre (b)",
+                                                 LIQUIDADO: "Até o Bimestre (d)"})
+    assert (antigo["coluna"] == "Até o Bimestre (d)").any()
+    rreo.validar_anexo_02(antigo, funcoes)
+
+
 def test_validacao_falha_se_funcao_nao_soma(df, funcoes):
     adulterado = df.copy()
     alvo = (adulterado["conta"] == "Saúde") & (adulterado["coluna"] == LIQUIDADO) \

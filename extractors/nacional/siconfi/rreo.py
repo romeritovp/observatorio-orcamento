@@ -29,8 +29,13 @@ FONTE_DADO = "siconfi_rreo"
 
 BLOCOS = {"RREO2TotalDespesas": "exceto", "RREO2TotalDespesasIntra": "intra"}
 
-# Colunas acumuladas no ano conferidas na validação (as demais são gravadas sem conferência)
-COLUNAS_CONFERIDAS = ("DESPESAS EMPENHADAS ATÉ O BIMESTRE", "DESPESAS LIQUIDADAS ATÉ O BIMESTRE")
+# Colunas acumuladas no ano conferidas na validação (as demais são gravadas sem conferência).
+# Alguns relatórios antigos (RN 2015, BA 2016) trazem só a letra: "Até o Bimestre (b)" = empenhado e
+# "Até o Bimestre (d)" = liquidado (as mesmas letras dos saldos "(c) = (a-b)" e "(e) = (a-d)").
+COLUNAS_CONFERIDAS = {
+    "empenhado": ("DESPESAS EMPENHADAS ATÉ O BIMESTRE", "Até o Bimestre (b)"),
+    "liquidado": ("DESPESAS LIQUIDADAS ATÉ O BIMESTRE", "Até o Bimestre (d)"),
+}
 
 
 def _normalizar(texto):
@@ -102,10 +107,11 @@ def validar_anexo_02(df, funcoes, tolerancia=1.0):
     classes = [classificar_linha(c, n, funcoes) for c, n in zip(df["cod_conta"], df["conta"])]
     df = df.assign(bloco=[c[0] for c in classes], tipo=[c[1] for c in classes])
 
-    for prefixo in COLUNAS_CONFERIDAS:
-        coluna = df[df["coluna"].str.startswith(prefixo)]
+    for estagio, prefixos in COLUNAS_CONFERIDAS.items():
+        coluna = df[df["coluna"].str.startswith(prefixos)]
         if coluna["coluna"].nunique() != 1:
-            raise base.ErroValidacao(f"esperada 1 coluna '{prefixo}...', há {sorted(coluna['coluna'].unique())}")
+            raise base.ErroValidacao(f"esperada 1 coluna de {estagio} acumulado ({' ou '.join(prefixos)}), "
+                                     f"há {sorted(coluna['coluna'].unique())}")
 
         def linha(bloco, tipo):
             return coluna[(coluna["bloco"] == bloco) & (coluna["tipo"] == tipo)][["valor"]]

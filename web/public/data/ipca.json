@@ -3,6 +3,26 @@
   "descricao": "variacao_pct = variação dez/dez do ano, em %; indice_dez = número-índice de dezembro",
   "serie": [
     {
+      "ano": 2015,
+      "variacao_pct": 10.67,
+      "indice_dez": 4493.17
+    },
+    {
+      "ano": 2016,
+      "variacao_pct": 6.29,
+      "indice_dez": 4775.7
+    },
+    {
+      "ano": 2017,
+      "variacao_pct": 2.95,
+      "indice_dez": 4916.46
+    },
+    {
+      "ano": 2018,
+      "variacao_pct": 3.75,
+      "indice_dez": 5100.61
+    },
+    {
       "ano": 2019,
       "variacao_pct": 4.31,
       "indice_dez": 5320.25

@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import { TABELAS } from '../estado.js'
 import { csv } from '../formatacao.js'
 
-const NOME_DEMAIS = 'Demais subfunções'
+const NOME_DEMAIS = { demais: 'Demais subfunções', demais_calculado: 'Demais subfunções (calculado)' }
 
 // Tabela áreas × anos com seletor de métrica e CSV no cabeçalho. Cada área abre as subáreas
 // (subfunções e "demais") logo abaixo; várias podem ficar abertas. O CSV traz sempre áreas e subáreas,
@@ -11,7 +11,7 @@ const NOME_DEMAIS = 'Demais subfunções'
 // linhas: tabelaAreasPorAno; subareas: Map funcao_cod → tabelaSubareasPorAno; formatar: número → texto.
 export default function TabelaAreas({ linhas, subareas, anos, nomes, nomesSub, titulo, unidade, metrica, formatar,
   destaqueArea, anoSelecionado, abertas, nomeArquivo, onMudarMetrica, onAlternarArea }) {
-  const nomeSub = (s) => (s.nivel === 'demais' ? NOME_DEMAIS : nomesSub[s.subfuncao_cod] ?? s.subfuncao_cod)
+  const nomeSub = (s) => NOME_DEMAIS[s.nivel] ?? nomesSub[s.subfuncao_cod] ?? s.subfuncao_cod
 
   const baixar = () => {
     const corpo = linhas.flatMap((l) => [

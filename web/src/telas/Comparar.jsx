@@ -136,7 +136,7 @@ export default function Comparar({ dados, estado, mudar, funcoes }) {
       <Alerta titulo="Antes de comparar">
         <Ressalvas
           ressalvas={meta.ressalvas} daArea={meta.ressalvas_por_funcao?.[estado.area] ?? []} nomeArea={nomeArea}
-          avisos={avisos.avisosEstatais} fonteAvisos={avisos.fonteEstatais}
+          avisos={avisos.avisosEstatais} fonteAvisos={avisos.fonteEstatais} semInfoEstatais={avisos.semInfoEstatais}
         />
       </Alerta>
 

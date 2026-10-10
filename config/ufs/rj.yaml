@@ -15,3 +15,28 @@ totais_oficiais:
   2025:
     dotacao_inicial: null   # valor da LOA
     pago: null
+
+# Publicação (site): ressalvas e marcações específicas do RJ, lidas por publicacao/exportar.py
+publicacao:
+  receita:
+    # A DCA não tem linha de petróleo a partir de 2018: royalties e participação especial estão em "Demais
+    # receitas patrimoniais". Até 2017 estavam em "Exploração de recursos naturais" (1.3.4 da codificação antiga).
+    petroleo_nao_separado: true
+    petroleo_nao_separado_desde: 2018
+    ressalvas:
+      - id: petroleo_rj
+        titulo: Petróleo separado até 2017; não separado a partir de 2018
+        texto: >-
+          O RJ separava royalties e participações especiais do petróleo nas contas que entrega ao Tesouro até 2017;
+          não separa a partir de 2018: desde então eles devem estar em "Demais receitas patrimoniais" (R$ 25,9 bi
+          em 2024, 26% da receita), dentro de "receita patrimonial". Por isso as compensações de petróleo do RJ
+          aparecem zeradas na prestação de contas a partir de 2018, e a série do item tem uma quebra entre 2017 e 2018.
+      - id: outorga_cedae
+        anos: [2021, 2022, 2023, 2024, 2025]
+        titulo: 'Linha "Outorga de Direitos de Uso de Recursos Hídricos": concessão da Cedae'
+        # Fonte: docs/fontes/rj.md (IstoÉ Dinheiro, 16/06/2021). Hipótese: não confirmada na prestação de contas.
+        texto: >-
+          Em 2021, o estado concedeu à iniciativa privada parte dos serviços da Cedae, com outorga total de
+          R$ 22,7 bi, dos quais R$ 14,5 bi destinados ao estado, pagos em parcelas (fonte: IstoÉ Dinheiro,
+          16/06/2021). É provável que os valores desta linha incluam esses pagamentos, o que não pôde ser confirmado
+          na prestação de contas. Não se trata de arrecadação recorrente.

@@ -1,7 +1,7 @@
 """Baixa e extrai o RREO Anexo 02 do 6º bimestre para todas as UFs, sem parar no primeiro erro.
 
 Uso:
-    uv run python -m extractors.nacional.siconfi.lote_rreo                # 2019 a 2025
+    uv run python -m extractors.nacional.siconfi.lote_rreo                # 2015 a 2025
     uv run python -m extractors.nacional.siconfi.lote_rreo 2022 2024      # outro intervalo
 
 As UFs vêm de dicionarios/nacional/ufs.csv. O cache do cliente evita baixar de novo.
@@ -12,9 +12,8 @@ import logging
 import sys
 
 from extractors.nacional.siconfi import rreo
-from extractors.nacional.siconfi.lote import anos_dos_argumentos, executar, resumo, ufs_do_dicionario
+from extractors.nacional.siconfi.lote import ANOS_PADRAO, anos_dos_argumentos, executar, resumo, ufs_do_dicionario
 
-ANOS_PADRAO = (2019, 2025)
 PERIODO = 6
 
 

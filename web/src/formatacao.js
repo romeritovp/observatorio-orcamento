@@ -58,7 +58,8 @@ const semAcento = (texto) => [...texto].map((c) => c.normalize('NFD')[0]).join('
  *    e formas societárias (SA, S/A, S.A.).
  * Nome que já tem minúsculas só perde o sufixo.
  */
-export function nomeEmpresa(empresa, sigla = '', siglasUfs = []) {
+export function nomeEmpresa(empresa, siglaOriginal = '', siglasUfs = []) {
+  const sigla = siglaOriginal ?? ''  // edições sem sigla (exercícios 2019 e 2020) trazem null
   const escapar = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   let nome = empresa.trim()
   if (sigla) {
@@ -95,6 +96,12 @@ export function nomeParaExibir(empresa, siglasUfs = []) {
   const nome = empresa.nome_exibicao ?? empresa.empresa
   if (empresa.nome_manual) return { sigla, nome }
   return { sigla, nome: nomeEmpresa(nome, empresa.sigla, siglasUfs) }
+}
+
+/** [2021, 2022, 2023] → "2021, 2022 e 2023" (anos em ordem crescente). */
+export function listaDeAnos(anos) {
+  const ordenados = [...anos].map(Number).sort((a, b) => a - b)
+  return ordenados.length < 2 ? ordenados.join('') : `${ordenados.slice(0, -1).join(', ')} e ${ordenados[ordenados.length - 1]}`
 }
 
 /** Data ISO → "08/10/2026". */

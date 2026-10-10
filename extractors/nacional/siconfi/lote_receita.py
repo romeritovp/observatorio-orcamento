@@ -1,7 +1,7 @@
 """Baixa e extrai a receita (DCA Anexo I-C) para todas as UFs, sem parar no primeiro erro.
 
 Uso:
-    uv run python -m extractors.nacional.siconfi.lote_receita                # 2019 a 2025
+    uv run python -m extractors.nacional.siconfi.lote_receita                # 2015 a 2025
     uv run python -m extractors.nacional.siconfi.lote_receita 2022 2024      # outro intervalo
 
 Duas etapas, cada uma com o resumo de sempre (certos, vazios, falhas):
@@ -18,17 +18,17 @@ import pandas as pd
 
 from extractors import base
 from extractors.nacional.siconfi import cliente, dca
-from extractors.nacional.siconfi.lote import anos_dos_argumentos, executar, resumo, ufs_do_dicionario
+from extractors.nacional.siconfi.lote import ANOS_PADRAO, anos_dos_argumentos, executar, resumo, ufs_do_dicionario
 
-ANOS_PADRAO = (2019, 2025)
 TOLERANCIA = 1.0
 
 
 def liquida_exceto_intra_i_c(itens):
-    df = pd.DataFrame(itens)
-    total = df[df["cod_conta"] == dca.TOTAL_EXCETO_INTRA].set_index("coluna")["valor"]
+    """Bruta − deduções das categorias 1 e 2 (exceto intra). Até 2018 o anexo não traz o total exceto intra."""
+    categorias = dca.categorias_receita(pd.DataFrame(itens))
+    exceto = lambda coluna: categorias.get(coluna, {}).get("exceto", 0.0)
     deducoes = [c for c in dca.COLUNAS_RECEITA if c != "Receitas Brutas Realizadas"]
-    return float(total.get("Receitas Brutas Realizadas", 0.0)) - sum(float(total.get(c, 0.0)) for c in deducoes)
+    return exceto("Receitas Brutas Realizadas") - sum(exceto(c) for c in deducoes)
 
 
 def receita_exceto_intra_rreo(itens):

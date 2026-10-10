@@ -1,4 +1,4 @@
-import { data } from '../formatacao.js'
+import { data, listaDeAnos } from '../formatacao.js'
 
 // Rodapé de fontes, igual nas duas telas.
 export default function Rodape({ fonte, estatais, divida, receita }) {
@@ -10,7 +10,7 @@ export default function Rodape({ fonte, estatais, divida, receita }) {
       </p>
       {receita && <p>Receita: {receita.fonte}.</p>}
       {divida && <p>Dívida: {divida.fonte}.</p>}
-      <p>{estatais.atribuicao} Exercícios {estatais.edicoes.join(' e ')}.</p>
+      <p>{estatais.atribuicao} Exercícios {listaDeAnos(estatais.edicoes)}.</p>
     </footer>
   )
 }

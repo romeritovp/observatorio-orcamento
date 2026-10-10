@@ -162,3 +162,141 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 ### 2026-10-08 — Página inicial e estado padrão do site
 **Decisão:** a tela aberta sem `?view=` passa a ser "Por estado" (`VIEW_PADRAO` em `web/src/estado.js`, o único lugar que define isso; "Comparar" vai na URL como `?view=comparar`). O estado aberto sem `?uf=` é configurável em `config/site.yaml` (`uf_padrao: SP`), levado ao `meta.json` por `publicacao/exportar.py` (validado contra `ufs.csv`) e lido pelo front: a sigla não fica no código, pela regra de agnosticismo. "Nenhum estado" escolhido pelo leitor vai na URL como `uf=` vazio, para o link compartilhado abrir igual.
 **Consequência:** links antigos sem `view` (que abriam "Comparar") passam a abrir "Por estado".
+
+### 2026-10-08 — Compensações financeiras: quatro itens, comparação pela bruta
+**Decisão:**
+- O item "royalties" de `receita_itens.csv` virou quatro, nos códigos de transferência e de receita patrimonial dos dois períodos: **petróleo e gás** (`1.7.1.8.02.3` a `.6` até 2021; `1.7.1.2.52` depois; royalties, excedente, participação especial e FEP juntos, porque vários estados rotulam errado: AC, AP e MG, não produtores, lançam o FEP como royalties ou participação especial), **mineração / CFEM** (`1.7.1.8.02.2`, `1.7.1.2.51`, `1.7.2.2.51`, `1.3.4.4.02`), **recursos hídricos** (`1.7.1.8.02.1`, `1.7.1.2.50`, `1.7.2.2.50`, `1.3.4.5.03`) e **outras compensações** (o resto de `1.7.1.8.02`, `1.7.1.2` e `1.7.2.2`). O código `1.3.4.1` virou item próprio, "Petróleo – regime de concessão (receita patrimonial)": só aparece em MG 2019 (R$ 891 mi), PR 2022 (R$ 410 mi) e DF 2022 (R$ 0,3 mi).
+- **Comparações de compensações entre estados usam a receita bruta**, porque a dedução da cota dos municípios varia: ES, RN, SE, AL, BA, PR, MT e CE deduzem parte do petróleo (ES, R$ 100 mi em 2024), os demais não. Pela líquida, a comparação misturaria os dois tratamentos. `receita.json` lista esses itens em `comparar_pela_bruta`.
+- **Ressalvas por UF:** RJ (petróleo não separado na fonte; "Demais receitas patrimoniais" de 26% a 40% da receita); DF (sem linha de petróleo em nenhum ano; tem mineração e hídricos); MG só em 2022 (linha de petróleo não localizada; campo `anos`). **Hipóteses não verificadas**, marcadas como tal: `1.3.4.1` como parte do bônus de leilões do pré-sal repassada aos estados; "outras compensações" do PR (R$ 299 mi em 2024) como compensação de Itaipu.
+
+### 2026-10-08 — ANP ao lado da DCA; regra dos 95%; ressalvas por UF na configuração
+**Contexto:** o RJ (e o DF) não separam o petróleo na DCA. A recodificação de 2022 **não** explica a sobra de ~R$ 11 bi entre "Demais receitas patrimoniais" (1.3.9) do RJ e a ANP em 2019–2020: a 1.3.9 tem o mesmo código nos dois períodos, e as linhas que só aparecem a partir de 2022 na receita patrimonial (juros, aluguéis, cessão de direitos, ~R$ 3,9 bi em 2022) são recodificações de linhas antigas, fora da 1.3.9. Achado no caminho: a "outorga de recursos hídricos" do RJ vai a **R$ 17,5 bi em 2021** (e R$ 3,0 bi em 2022, R$ 3,9 bi em 2024), o que casa com a outorga da concessão da CEDAE (leilão de 2021), hipótese não verificada.
+**Decisão:**
+- Nova fonte nacional, a ANP (`extractors/nacional/anp/`, tabela `compensacoes_anp`, `docs/fontes/anp.md`): royalties e participação especial destinados ao estado, por ano de caixa. **Nenhum total da DCA muda**: a ANP só aparece ao lado, com a fonte.
+- **A ANP por estado não inclui o FEP**; a DCA inclui. Comparações usam DCA sem o FEP declarado. Participação especial em dados abertos só até nov/2024: anos depois do último ano com participação especial ficam sem total da ANP (royalties marcados como parciais).
+- **Regra dos 95%:** onde a DCA não separa o petróleo (`petroleo_nao_separado` em `config/ufs/<uf>.yaml`: RJ, DF), se o total da ANP for **de 95% a 100%** de "Demais receitas patrimoniais" no ano, a tela diz que a linha contém os repasses ("…dos quais R$ Y bi são royalties e participação especial repassados ao estado, segundo a ANP"). Fora disso (inclusive quando a ANP passa da linha, como no RJ 2021, 112%), mostra os dois valores lado a lado com a nota de que não se reconciliam. Para o RJ: explica em 2022, 2023 e 2024; não reconcilia em 2019, 2020 e 2021; 2025 sem total. Regra em `calculos.js` (`reconciliacaoPetroleo`).
+- **Ressalvas e marcações por UF saem do código** (estavam em `publicacao/exportar.py`, com siglas escritas, contra a regra de agnosticismo) e vão para `config/ufs/<uf>.yaml` (`publicacao.receita`), lidas por `exportar.ler_config_ufs`.
+
+### 2026-10-08 — Metatags de prévia vêm do PHP
+**Contexto:** o site é uma SPA (React); o título e as metatags da página só existem depois que o JavaScript roda. Os robôs que montam as prévias de links (WhatsApp, Facebook, X, Telegram, LinkedIn) **não executam JavaScript**: leem só o HTML que o servidor devolve. Sem isso, todo link compartilhado (de um estado, de uma comparação) mostraria a mesma prévia genérica.
+**Decisão:**
+- `web/public/index.php` (o Hostgator roda PHP; `.htaccess` com `DirectoryIndex index.php`) lê o `index.html` do build e troca title, description, canonical, og:title, og:description, og:url e og:image conforme `view`, `uf` e `area`. Cada parâmetro é validado contra listas fechadas (UFs, funções e telas de `data/compartilhar.json`); qualquer outro valor cai na página padrão; tudo é escapado com `htmlspecialchars`. **O PHP não tem texto nem conta**: só escolhe entre os textos gerados no export (`publicacao/og.py`).
+- Alternativas descartadas: pré-renderizar um HTML por URL (são 27 UFs × telas × áreas × anos; e o estado da tela está na busca da URL, que um site estático não distingue); serviço externo de prévia (dependência e custo).
+- Imagens de prévia (1200×630, PNG < 300 KB) geradas pelo Python a partir dos JSONs exportados: `og/padrao.png` (sem números) e `og/estado-<uf>.png` (receita líquida, DCL/RCL e saúde por habitante do último ano). O teste confere os números com o `gabarito.json`. Para a imagem e o site usarem a mesma fonte, o site passou de `system-ui` para **Inter** (OFL), com os arquivos no repositório.
+- Domínio, nome do site e indexação ficam **só** em `config/site.yaml` (lidos pelo build do Vite e pelo Python). `<meta name="robots" content="noindex">` sai só com `indexar: true`, quando a publicação aberta for autorizada.
+
+### 2026-10-10 — Série estendida para 2015–2025
+**Decisão:** ano inicial único, **2015**, para tudo (despesa, população, receita, dívida, gabarito). `ANOS_PADRAO = (2015, 2025)` fica só em `extractors/nacional/siconfi/lote.py`; os lotes importam de lá. IPCA de 2015–2018 acrescentado em `data/reference/ipca.csv` (fonte em `docs/fontes/ibge.md`). Todos os lotes rodaram com 108/108 UF-anos em 2015–2018 (DCA I-C, I-D, I-E; RGF Anexo 02; RREO Anexos 01 e 02).
+
+**Despesa (DCA I-E) 2015–2016**
+- Os totais vêm com outros nomes ("Despesas (Exceto Intraorçamentárias)", "Intra-Orçamentárias"): o rótulo é comparado sem acento, parênteses e hífens (`dca._normalizar`).
+- Essas DCAs não trazem "FUnn - Demais Subfunções". Onde a função não tem "demais" e as subfunções não somam a função, a diferença vira uma linha `nivel = demais_calculado` (calculada, não declarada; nome na tela "Demais subfunções (calculado)"), e a validação de sempre continua (subfunções + demais = função). **Na prática nenhuma linha foi necessária:** nas 27 UFs, em 2015 e 2016, as subfunções somam exatamente a função. A regra fica para retificações futuras.
+- Dicionários de funções e subfunções regenerados com os nomes de 2015–2025 (prevalece o mais recente): entrou a função 05 Defesa Nacional e 7 subfunções.
+
+**RREO Anexo 02:** relatórios antigos (RN 2015, BA 2016) trazem as colunas só com a letra: "Até o Bimestre (b)" = empenhado e "(d)" = liquidado. A validação aceita os dois nomes.
+
+**Receita (DCA I-C) até 2018**
+- Até 2018 o anexo só traz o total geral (sem "exceto intra" e "intra"). A receita exceto intra é calculada pelas **categorias 1 e 2** (correntes e de capital); a validação passa a conferir sempre **1 + 2 + 7 + 8 = total**.
+- Três codificações: até 2017 (7 segmentos), 2018–2021 e 2022 em diante. **2018 já usa a codificação de 2019–2021**: as regras de 2019–2021 em `receita_itens.csv` valem desde 2018, e um bloco novo `ano_fim = 2017` mapeia a codificação antiga (ICMS, IPVA, ITCMD, IR retido, FPE, SUS, FUNDEB, petróleo, mineração, recursos hídricos, outras compensações, convênios e transferências da União).
+- **Multas, juros e dívida ativa dos impostos (até 2017):** os códigos identificam o imposto de origem (ex.: 1.9.1.1.42 = multas e juros do ICMS), então foram **somados ao imposto**, como na codificação atual, que já os inclui na linha do imposto. Efeito no ICMS (R$ bi, bruto): RJ 2015 35,0 → 36,0 (+2,7%), 2016 +2,0%, 2017 36,8 → 37,3 (+1,4%); PE 2015 +1,3%, 2016 +2,9%, 2017 14,15 → 14,34 (+1,3%). Com a soma, a série 2017 → 2018 fica suave (RJ 37,3 → 37,6; PE 14,3 → 15,4). Reversível só no CSV.
+- **Adicional do ICMS para fundos de pobreza (FECP):** só aparece separado a partir de 2018. Antes não está na linha do ICMS (o ICMS sem o adicional não salta entre 2017 e 2018; com ele, o RJ saltaria 13,6%). Fica como ressalva geral ("Até 2017, outra codificação das receitas").
+- **Petróleo até 2017:** o RJ lançava royalties e participação especial em "exploração de recursos naturais" (1.3.4, receita patrimonial), mapeada para petróleo e gás até 2017 (RJ 2015–2017: R$ 5,3 / 3,5 / 7,2 bi; ANP: 4,9 / 4,1 / 7,7 bi). Em MS e PA o 1.3.4 tem valores pequenos que podem ser outra receita mal rotulada; registrado, sem reclassificar.
+- **Conferência com a ANP estendida a 2015–2017:** o FEP de até 2017 (1.7.2.1.22.70) passa a ser descontado (`compensacoes.codigo_fep`). Dos 33 UF-anos com total da ANP em 2015–2017, **26 ficam entre 90% e 110%** (DCA sem o FEP ÷ ANP). Fora da faixa: AM 2016 (152%), ES 2015 (110,4%), RJ 2016 (86%), PR 2017 (465%; valores pequenos), MA 2015 e 2017 (lança todo o petróleo como FEP) e MA 2016 (139%). Nenhum total da DCA muda.
+- **RJ:** `petroleo_nao_separado_desde: 2018` em `config/ufs/rj.yaml`. Ressalva: separava até 2017; não separa a partir de 2018. `receita.json → petroleo.nao_separa_desde`; o front (`naoSeparaPetroleo`) só trata o RJ como "não separa" a partir de 2018.
+- Conferência I-C × RREO Anexo 01 em 2015–2018: 76 de 108 iguais. As 32 diferenças são declarações diferentes do mesmo estado nos dois relatórios (a I-C é a fonte). As maiores: BA 2015 (+R$ 9,1 bi), PR 2015–2017 (−R$ 2,7 a −9,0 bi), CE 2015–2018 (−R$ 2,7 a −3,3 bi), RJ 2016 (+R$ 1,9 bi), MA (−R$ 1,3 a −1,5 bi), RN 2015 (−R$ 1,2 bi).
+
+**Dívida (RGF Anexo 02) 2015–2016**
+- Layout antigo: a dívida contratual se divide só em interna e externa (`rgf.layout_antigo`). A validação usa a hierarquia daquele layout (`HIERARQUIA_ANTIGA`).
+- Exportados só DC, deduções, DCL, RCL e DCL/RCL; limite, alerta e **composição por tipo ficam nulos**, com nota de que não é comparável com 2017 em diante (`divida.json → nota_composicao_antiga`). Juros e amortização vêm da DCA I-D e continuam.
+- AP 2017: DC − deduções negativa e DCL declarada como zero; aceito pela validação.
+- Conferência do pagamento da dívida (I-D × RREO Anexo 01) em 2015–2018: 77 de 106 iguais; diferenças só como aviso.
+
+**Estatais:** anos antes da primeira edição do cadastro (hoje 2023) ficam **sem informação de estatais** (`edicao_para_ano` → None/null; a tela mostra "Sem informação de estatais para este ano."). Antes, usavam a edição mais antiga, o que punha em 2015 empresas de 2023.
+
+**Gabarito:** `gabarito.json` cobre 2015–2025 em todas as seções (despesa, totais, receita, dívida e medianas).
+
+### 2026-10-10 — Estatais: edições antigas, edição do exercício e mudanças de dependência
+**Decisão:** cada ano usa a edição do Raio X **daquele exercício** (`analytics.edicao_para_ano`: a mais recente que não passa do ano; anos sem edição mostram "Sem informação de estatais para este ano"; 2025 usa a de 2024, a última disponível). Entraram as edições dos exercícios **2021 (v2022) e 2022 (v2023)**, no mesmo formato das atuais; com elas a Sabesp aparece em SP de 2021 a 2023 e some em 2024. **2018–2020 ficam pendentes** (formatos e lacunas em `docs/fontes/tesouro_estatais.md`): até serem incorporados, mostram "sem informação".
+**Nomes:** `analytics.limpar_anotacoes` tira, só na exibição, as anotações das edições (marcador "▪" no início, "(Baixada em …)", "(Torna-se subsidiária …)", "EM LIQUIDAÇÃO" e "- Extinta" no fim). O dicionário continua como veio. A situação já tem coluna própria.
+**Mudanças de dependência** (todas as edições consecutivas; liquidado sem intra por habitante, R$ de dez/2025):
+- 2021→2022: 15 mudanças, 7 com função; 2022→2023: 5, 4 com função; 2023→2024: as 3 já revisadas (Gaspisa, Metrô, CIAMA).
+- **Quebra visível, no sentido da mudança: só CAEMA/MA, Saneamento (17), 2021→2022** (passou a dependente): de R$ 3,09 para R$ 85,13 por habitante (22º → 3º; 0,09% → 2,38% do orçamento), contra mediana de +19,6% nos outros estados.
+- Sem quebra visível ou em sentido contrário ao esperado: METROFOR/CE (dependente só em 2022: +27,6% e depois −19,0%, perto das medianas de +74,7% e −11,3%), CETURB/ES (passou a dependente em 2022 com +15,2% contra +74,7%; deixou em 2023 e o gasto subiu 28,2%), Porto Piauí/PI (deixou em 2023, gasto +29,1%), EMSERH/MA Saúde (deixou em 2022, +0,9%), CASEGO/GO Agricultura (deixou em 2022, −21,5% contra +43,0%), METAGO/GO (valores ínfimos), EPC/PB Comunicações (deixou em 2023, +44,5%).
+- Sem função (não testáveis): PRODUBAN/AL, BRB Serv/DF, PRODAGO/GO, MAPA/MA, TECPAR/PR, IAZPE/SC, BESCOR/SC, SAPIENS/SC, Investe Piauí/PI.
+**Até a revisão:** o site só mostrava as mudanças das edições já revisadas. (Revisto na entrada seguinte, «Estatais 2019 e 2020; regra fixa…»: todas aparecem.)
+
+### 2026-10-10 — Invariância 2019–2025 e desempenho da extensão
+**Invariância** (JSONs novos × `d5698fa`, último commit publicado): despesa, receita (totais), dívida e gabarito (valores, medianas, receita, dívida) de 2019–2025 **sem nenhum valor diferente**. Diferenças, todas esperadas: (1) `gabarito.totais` 2019 ganha a variação sobre 2018 (antes nula, por ser o primeiro ano); (2) a função 05 (Defesa Nacional) entra no dicionário e gera linhas zeradas no gabarito (nenhum estado declara gasto); (3) itens da receita de 2019–2025: a divisão de "royalties" em quatro itens e o bloco de petróleo/ANP vêm do trabalho de 2026-10-08, ainda não publicado, e não da extensão. Recalculando a receita com o dicionário sem as regras da extensão, as 4.137 linhas de 2019–2025 saem idênticas.
+**Desempenho** (build de produção, gzip, "Por estado" de SP, Chrome headless; mediana de 3): dados transferidos 744 → 1.136 KB. Desktop: tela pronta em 0,56 → 0,86 s. Celular médio (CPU 4×, 4G lento de 1,6 Mbps): 8,1 → 11,1 s, com 2,1 s de tarefa longa depois que os dados chegam. Trocar o ano: 34 → 44 ms (desktop), 163 → 214 ms (celular). Proposta (não implementada): dividir `despesa.json` em total+funções de todas as UFs (219 KB) e subfunções por UF (cerca de 31 KB cada), e as linhas de receita por UF.
+
+### 2026-10-10 — Página "Como fazemos" (documentação no site)
+**Decisão:**
+- Nova tela `?view=metodo` ("Como fazemos"), com o nível da explicação na URL (`&nivel=tecnico`; padrão: simples) valendo para a página toda. Oito seções: o que é o site, fontes, refaça a conta, como cada número é calculado, decisões, limitações, glossário e histórico de versões.
+- **Texto fora dos componentes:** um Markdown por seção em `web/src/conteudo/metodo/`, cada um com `## simples` e `## tecnico`, lido por um leitor de Markdown próprio (`web/src/markdown.js` e `componentes/Markdown.jsx`, sem biblioteca externa e sem `innerHTML`). Números entram por marcadores `{{...}}`, preenchidos por `telas/metodo/valores.js` a partir dos JSON publicados; marcador sem valor é erro.
+- **Refaça a conta:** gerado de `despesa.json` e `ipca.json` por `passosPorHabitante` (`calculos.js`), com o estado e a área de `config/site.yaml` (`exemplo_metodo`, hoje saúde do RJ) e o anexo e a coluna da DCA vindos do extractor (`meta.json → documentacao.exemplo`). Como o ano mais recente é o ano base, o fator de correção é 1; para mostrar a correção, o mesmo passo a passo é repetido para o primeiro ano da série. O teste confere que o resultado é igual ao da tela (`indicadoresDaFuncao`), ao do `gabarito.json` e ao texto formatado da tela Comparar.
+- **Fontes:** `meta.json → documentacao` traz links e a data da última extração de cada fonte, calculada no export a partir das tabelas processadas (SICONFI por demonstrativo, ANP), da data do commit do Raio X (`tesouro_estatais.COMMIT_DATA`) e da consulta ao SIDRA (`data/reference/ipca_fonte.yaml`). A população vem da DCA (não do IBGE), e a ficha diz isso.
+- **"Entenda":** toda ressalva e todo aviso das telas (estatais, quebra de série) leva um link para a âncora correspondente (`conteudo/metodo/ligacoes.js`). Links `?view=...` trocam de tela sem recarregar os dados e rolam até a âncora. Testes: todo link interno aponta para âncora existente, as âncoras são as mesmas nas duas versões, toda ressalva publicada tem ligação (e nenhuma ligação sobra).
+
+### 2026-10-10 — CE 2018: ICMS lançado como IVVC
+**Achado (ao escrever as limitações):** o CE declarou R$ 2,59 bi em 2018 no código 1.1.1.8.02.5, Imposto sobre Vendas a Varejo de Combustíveis (IVVC, extinto em 1993). ICMS: R$ 11,35 bi (2017), R$ 8,84 bi (2018), R$ 12,55 bi (2019); ICMS + IVVC em 2018 = R$ 11,43 bi. Quase certamente é ICMS sobre combustíveis no código errado.
+**Decisão:** não reclassificar (mesma regra das outras anomalias: fica onde o estado declarou, em "outros impostos e taxas"); registrado em "Limitações" na página do site. Pendente de confirmação do usuário.
+
+
+### 2026-10-10 — Estatais 2019 e 2020; regra fixa para mudanças de dependência
+**Decisões do usuário (2026-10-10):** incorporar o exercício 2020 (v2021, `.xls`, lido com `xlrd`, adicionado ao projeto); no exercício 2019 (v2020), setor e situação herdados pelo CNPJ da edição de 2021, com a dependência só da própria edição, e os campos herdados marcados; AP sem informação em 2019; 2018 sem informação; volta à **regra fixa** de avisos de mudança de dependência (todas as empresas com função, frase cautelosa atribuída ao Tesouro), com a verificação de efeito registrada aqui.
+**Implementação:**
+- Exercício 2020: 302 empresas, 26 UFs (o AP não aparece na planilha), sem coluna de sigla (fica nula). Setores já na classificação atual.
+- Exercício 2019: planilha "PAF 2020" (duas linhas de título, cabeçalho "Grupo > Coluna"; `tesouro_estatais.ler_aba_paf_2020`). 254 empresas, 25 UFs. Setor e situação herdados de 2021 em 242; marcados em `campos_herdados = "setor,situacao"` e `herdado_de = "2021"` no `estatais.csv`, e com † na lista da tela. 12 sem par em 2021 ficam sem setor e situação (sem área relacionada; fora dos avisos, que exigem situação ativa).
+- **Descartadas em 2019 (sem CNPJ de 14 dígitos; não corrigidas à mão):** MA: GASMAR, EMAP, MAPA, CAEMA (CNPJ em branco: por isso o **MA também fica sem informação em 2019**); SP: linha "EMAE – ações preferenciais" (em branco); PB: CEHAP (`09.111.168/00001-01`); PR: Estrada de Ferro Paraná Oeste (`80.544.042/001-22`); PE: SUAPE (`11.448.933/00001-62`); RJ: RIOTRILHOS (`46.118.18/0001-00`).
+- Cobertura por UF: `estatais.json → ufs_por_edicao`; UF ausente da edição do ano mostra "Sem informação de estatais para este ano" (`calculos.edicaoDaUf`). Sem informação: todas as UFs até 2018; AP em 2019 e 2020; MA em 2019.
+- Sabesp (SP): presente de 2019 a 2023 (em 2019, com setor e situação herdados), ausente em 2024.
+- **Regra fixa:** saem os avisos só das edições revisadas (`EDICOES_COM_MUDANCAS_REVISADAS`); todas as 26 mudanças com função entre edições consecutivas viram aviso no gráfico (frase de `textos.avisoQuebraSerie`). Empresas sem sigla em nenhuma edição aparecem pelo nome.
+
+**Verificação do efeito na despesa** (só registro; não muda o que é exibido). Liquidado sem intra por habitante, R$ de dez/2025, na função da empresa, ano anterior → ano da mudança; "mediana" = variação mediana dos outros estados na mesma função e anos. **Critério:** efeito visível ("sim") quando a variação da UF se afasta da mediana em 30 pontos percentuais ou mais **no sentido esperado** (para cima, se passou a dependente; para baixo, se deixou); "sentido contrário" quando se afasta 10 pontos ou mais no sentido oposto; senão, "não". Resultado: 10 sim, 6 não, 9 em sentido contrário, 1 não testável.
+
+| Edições | Empresa (UF) | Função | Mudança | Por habitante (posição) | Variação | Mediana | Efeito visível? |
+|---|---|---|---|---|---|---|---|
+| 2019→2020 | METROFOR (CE) | 26 Transporte | passou a dependente | R$ 178,29 → R$ 164,36 (8º → 11º) | −7,8% | +2,2% | não |
+| 2019→2020 | COHAB (ES) | 16 Habitação | deixou de ser dependente | R$ 1,08 → R$ 1,43 (24º → 23º) | +31,7% | −16,0% | não (sentido contrário) |
+| 2019→2020 | CETURB (ES) | 26 Transporte | passou a dependente | R$ 225,24 → R$ 335,37 (6º → 4º) | +48,9% | +1,5% | **sim** |
+| 2019→2020 | AGEHAB (GO) | 16 Habitação | passou a dependente | R$ 0,00 → R$ 0,00 (26º → 27º) | – | −11,7% | não testável (sem gasto antes) |
+| 2019→2020 | METROBUS (GO) | 26 Transporte | passou a dependente | R$ 30,63 → R$ 49,69 (26º → 23º) | +62,2% | +1,5% | **sim** |
+| 2019→2020 | Codapar (PR) | 20 Agricultura | passou a dependente | R$ 63,18 → R$ 86,71 (10º → 8º) | +37,2% | −3,9% | **sim** |
+| 2020→2021 | METROFOR (CE) | 26 Transporte | deixou de ser dependente | R$ 164,36 → R$ 165,44 (11º → 13º) | +0,7% | +39,3% | **sim** |
+| 2020→2021 | COHAB (ES) | 16 Habitação | passou a dependente | R$ 1,43 → R$ 1,94 (23º → 21º) | +36,2% | −1,1% | **sim** |
+| 2020→2021 | CETURB (ES) | 26 Transporte | deixou de ser dependente | R$ 335,37 → R$ 314,60 (4º → 6º) | −6,2% | +39,3% | **sim** |
+| 2020→2021 | Gaspisa (PI) | 25 Energia | deixou de ser dependente | R$ 0,26 → R$ 0,19 (11º → 11º) | −24,0% | +28,8% | **sim** |
+| 2020→2021 | PORTO PIAUI (PI) | 26 Transporte | passou a dependente | R$ 155,76 → R$ 214,87 (12º → 11º) | +38,0% | +39,3% | não |
+| 2020→2021 | CODERTE (RJ) | 26 Transporte | passou a dependente | R$ 45,36 → R$ 72,17 (25º → 25º) | +59,1% | +38,6% | não |
+| 2020→2021 | DERSA (SP) | 26 Transporte | passou a dependente | R$ 289,65 → R$ 294,20 (5º → 7º) | +1,6% | +39,3% | não (sentido contrário) |
+| 2021→2022 | METROFOR (CE) | 26 Transporte | passou a dependente | R$ 165,44 → R$ 211,14 (13º → 19º) | +27,6% | +74,7% | não (sentido contrário) |
+| 2021→2022 | COHAB (ES) | 16 Habitação | deixou de ser dependente | R$ 1,94 → R$ 2,98 (21º → 24º) | +53,6% | +62,3% | não |
+| 2021→2022 | CETURB (ES) | 26 Transporte | passou a dependente | R$ 314,60 → R$ 362,32 (6º → 12º) | +15,2% | +74,7% | não (sentido contrário) |
+| 2021→2022 | CASEGO (GO) | 20 Agricultura | deixou de ser dependente | R$ 28,46 → R$ 22,35 (23º → 27º) | −21,5% | +43,0% | **sim** |
+| 2021→2022 | METAGO (GO) | 22 Indústria | deixou de ser dependente | R$ 0,00 → R$ 0,09 (25º → 25º) | +2.900,7% | +30,4% | não (sentido contrário) |
+| 2021→2022 | EMSERH (MA) | 10 Saúde | deixou de ser dependente | R$ 570,08 → R$ 574,98 (26º → 25º) | +0,9% | +5,9% | não |
+| 2021→2022 | CAEMA (MA) | 17 Saneamento | passou a dependente | R$ 3,09 → R$ 85,13 (22º → 3º) | +2.653,5% | +19,6% | **sim** |
+| 2022→2023 | METROFOR (CE) | 26 Transporte | deixou de ser dependente | R$ 211,14 → R$ 171,09 (19º → 21º) | −19,0% | −11,3% | não |
+| 2022→2023 | CETURB (ES) | 26 Transporte | deixou de ser dependente | R$ 362,32 → R$ 464,66 (12º → 5º) | +28,2% | −11,8% | não (sentido contrário) |
+| 2022→2023 | EPC (PB) | 24 Comunicações | deixou de ser dependente | R$ 7,15 → R$ 10,34 (11º → 12º) | +44,5% | +20,9% | não (sentido contrário) |
+| 2022→2023 | PORTO PIAUI (PI) | 26 Transporte | deixou de ser dependente | R$ 303,42 → R$ 391,79 (13º → 8º) | +29,1% | −11,8% | não (sentido contrário) |
+| 2023→2024 | Gaspisa (PI) | 25 Energia | passou a dependente | R$ 2,10 → R$ 20,12 (6º → 3º) | +857,2% | +53,9% | **sim** |
+| 2023→2024 | Metrô (SP) | 26 Transporte | passou a dependente | R$ 443,11 → R$ 473,77 (6º → 8º) | +6,9% | +21,3% | não (sentido contrário) |
+
+**Leitura:** os casos mais claros são CAEMA/MA (2021→2022), Gaspisa/PI (2023→2024), Metrobus/GO e CETURB/ES (2019→2020). METROFOR/CE, CETURB/ES e COHAB/ES mudam de classificação quase todo ano (dependente, não dependente, dependente…), e o gasto não acompanha: a oscilação parece ser da classificação informada ao Tesouro, não da execução. A Gaspisa em 2020→2021 tem valores ínfimos (R$ 0,26 → R$ 0,19 por habitante). Mudanças sem função correspondente (não testáveis): 21, de Instituto BRB/DF a CIAMA/AM.
+
+### 2026-10-10 — Dados do site divididos por UF, carregados sob demanda
+**Contexto:** com a série 2015–2025, a tela "Por estado" ficou lenta num celular médio (CPU 4×, 4G lento de 1,6 Mbps): 10,8 s até a tela pronta, 1.136 KB transferidos (gzip).
+**Decisão (aprovada pelo usuário):** o export grava um arquivo geral e um por UF. Geral (abertura): `despesa_funcoes.json` (níveis total e função das 27 UFs: o que Comparar, rankings, medianas e resumos usam), `receita.json` sem as linhas por item, `estatais.json` sem a lista completa, mais meta, dicionários, IPCA e dívida. Por UF (tela "Por estado", sob demanda): `despesa/<UF>.json` (subfunção, demais, demais calculado), `receita/<UF>.json` (linhas por item), `estatais/<UF>.json` (lista completa por edição). `src/dados.js` busca a UF da URL junto com os gerais e guarda cada UF baixada na sessão. Os testes juntam todas as partes de novo (`src/testes/publicados.js`) e continuam comparando as 27 UFs com o `gabarito.json`; um teste confere que nada se perde nem se repete na divisão.
+**Medição** (mesmo método de 2026-10-10; "Por estado" de SP; mediana de 3; gzip como no Hostgator):
+
+| | Antes | Depois |
+|---|---|---|
+| Dados transferidos | 1.136 KB | 340 KB |
+| Celular médio: tela pronta | 10,8 s | 6,5 s |
+| Celular médio: dados chegam | 8,5 s | 4,6 s |
+| Celular médio: maior tarefa longa | 1,9 s | 1,4 s |
+| Celular médio: trocar o ano | 221 ms | 192 ms |
+| Desktop: tela pronta | 0,87 s | 0,71 s |
+
+**Consequência:** trocar de estado na tela baixa de 30 a 40 KB (gzip) do novo estado. O cálculo de todas as funções na abertura (rankings e medianas das 27 UFs) continua sendo a maior tarefa no celular.

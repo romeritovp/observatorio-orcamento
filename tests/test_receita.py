@@ -34,6 +34,15 @@ def test_i_c_intra_pela_categoria_mesmo_com_prefixo_ro(i_c):
     assert dca.e_intra("RO7.2.0.0.00.0.0") and not dca.e_intra("RO1.7.0.0.00.0.0")
 
 
+def test_i_c_ate_2018_so_com_total_geral(i_c):
+    # Até 2018 o anexo traz só TotalReceitas: valida 1 + 2 + 7 + 8 contra ele
+    so_total = i_c[~i_c["cod_conta"].isin([dca.TOTAL_EXCETO_INTRA, dca.TOTAL_INTRA])]
+    dca.validar_receita(so_total)
+    alvo = (so_total["cod_conta"] == dca.TOTAL_RECEITAS) & (so_total["coluna"] == "Receitas Brutas Realizadas")
+    with pytest.raises(base.ErroValidacao, match="1 \\+ 2 \\+ 7 \\+ 8"):
+        dca.validar_receita(so_total.assign(valor=so_total["valor"].where(~alvo, so_total["valor"] + 1000)))
+
+
 def test_i_c_recusa_total_que_nao_fecha(i_c):
     alvo = (i_c["cod_conta"] == dca.TOTAL_EXCETO_INTRA) & (i_c["coluna"] == "Receitas Brutas Realizadas")
     i_c.loc[alvo, "valor"] += 1000
@@ -42,8 +51,11 @@ def test_i_c_recusa_total_que_nao_fecha(i_c):
 
 
 def test_lote_compara_liquida_com_o_rreo():
-    itens = [{"cod_conta": dca.TOTAL_EXCETO_INTRA, "coluna": c, "valor": v} for c, v in
-             [("Receitas Brutas Realizadas", 100.0), ("Deduções - FUNDEB", 20.0), ("Outras Deduções da Receita", 5.0)]]
+    # pelas categorias 1 e 2 (até 2018 não há o total exceto intra); a categoria 7 (intra) fica de fora
+    itens = [{"cod_conta": c, "coluna": col, "valor": v} for c, col, v in [
+        ("RO1.0.0.0.00.00.00", "Receitas Brutas Realizadas", 90.0), ("RO2.0.0.0.00.00.00", "Receitas Brutas Realizadas", 10.0),
+        ("RI7.0.0.0.00.00.00", "Receitas Brutas Realizadas", 50.0), ("RO1.0.0.0.00.00.00", "Deduções - FUNDEB", 20.0),
+        ("RO1.0.0.0.00.00.00", "Outras Deduções da Receita", 5.0), ("RO1.1.0.0.00.00.00", "Receitas Brutas Realizadas", 60.0)]]
     assert lote_receita.liquida_exceto_intra_i_c(itens) == 75.0
     rreo = [{"cod_conta": "ReceitasExcetoIntraOrcamentarias", "coluna": "Até o Bimestre (c)", "valor": 75.0},
             {"cod_conta": "ReceitasExcetoIntraOrcamentarias", "coluna": "PREVISÃO INICIAL", "valor": 90.0}]
@@ -130,3 +142,7 @@ def test_dicionario_versionado_cobre_os_dois_periodos_e_tem_os_itens_da_lista():
         anos = dic[dic["item"] == item]
         assert (anos["ano_fim"] == "2021").any() and (anos["ano_inicio"] == "2022").any(), item
     assert {"1", "2", "7", "8"} <= set(dic["codigo"])  # catch-alls: nenhum código fica sem item
+    assert "royalties" not in set(dic["item"])
+    for item in ["petroleo_gas", "mineracao", "recursos_hidricos", "outras_compensacoes"]:
+        assert (dic[dic["item"] == item]["ano_fim"] == "2021").any() and (dic[dic["item"] == item]["ano_inicio"] == "2022").any(), item
+    assert dic[dic["item"] == "petroleo_concessao"]["codigo"].tolist() == ["1.3.4.1"]

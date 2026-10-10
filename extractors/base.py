@@ -53,6 +53,15 @@ ESQUEMAS = {
         "coluna": "str",
         "valor": "float",
     },
+    "compensacoes_anp": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "tipo": "str",
+        "valor": "float",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
     "populacao": {
         "uf": "str",
         "cod_ibge": "str",
