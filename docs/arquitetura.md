@@ -145,7 +145,7 @@ Os módulos ao lado (`receita.py`, `divida.py`, `compensacoes.py`, `pib.py`, `ib
 - `npm run build` gera o site pronto em `web/dist/`: HTML, JavaScript, CSS e os JSON.
 - `npm test` roda os testes (Vitest).
 - `web/vite.config.js` faz três coisas:
-  - usa caminho relativo (`base: './'`), para o site funcionar em qualquer pasta do servidor;
+  - usa como base a subpasta do site (`/orcamento/`, lida do `config/site.yaml`), em caminho absoluto, porque as páginas são caminhos (`/orcamento/sp/pib`);
   - **apaga o `gabarito.json`** do site publicado;
   - preenche domínio e nome do site a partir de `config/site.yaml`.
 
@@ -168,8 +168,11 @@ main.jsx ──► App.jsx ──► Navegacao (menu)
 
 | Arquivo ou pasta | Papel |
 |---|---|
-| `App.jsx` | Carrega os dados, mantém o estado da tela sincronizado com a URL e escolhe qual tela mostrar |
-| `estado.js` | Tudo o que muda a visão (estado, ano, área, etapa...) fica na URL: qualquer tela pode ser copiada e compartilhada |
+| `App.jsx` | Carrega os dados, lê a página do caminho da URL, troca de página sem recarregar e escolhe qual tela mostrar |
+| `navegacao.config.js` | **Fonte única da navegação:** eixos e indicadores (as UFs vêm do `dicionarios.json`). Menus, abas, seletores e títulos saem daqui |
+| `rotas.js` | Caminhos ↔ páginas (`/sp/pib`, `/indicadores/pib`...) e o redirect das URLs antigas (`?view=...`) |
+| `componentes/navegacao/` | Cabeçalho (Estados ▾, Indicadores ▾, busca de UF, tema), subcabeçalho do estado e gaveta do celular |
+| `estado.js` | O detalhe de cada tela (ano, área, etapa...) fica nos parâmetros da URL: qualquer tela pode ser copiada e compartilhada |
 | `dados.js` | Leitura dos JSON, com cache por sessão |
 | `calculos.js` | **Única** casa das contas. Espelha `analytics/` do Python e é testado contra o `gabarito.json` |
 | `estatistica/` | Regressão log-linear, intervalos, Newey–West, testes. Parâmetros em `configuracao.json` |
@@ -180,14 +183,21 @@ main.jsx ──► App.jsx ──► Navegacao (menu)
 
 ### As telas
 
-| Menu | URL | O que mostra |
+O conteúdo é uma matriz **estado × indicador**, com duas entradas no cabeçalho: **Estados ▾** e **Indicadores ▾**.
+
+| Página | URL (dentro de `/orcamento/`) | O que mostra |
 |---|---|---|
-| Por estado | `?uf=RJ` (padrão) | As contas de um estado em quatro partes: receitas, despesas, dívidas e estatais |
-| Comparar | `?view=comparar` | Uma área do orçamento (ex.: saúde) nos 27 estados: ranking, mediana, passo a passo da conta |
-| PIB dos Estados | `?view=pib` | Tamanho da economia, peso dos setores, crescimento, tendência por atividade |
-| Pesquisa e Inovação | `?view=inovacao` | Índice de inovação do INPI ao lado do gasto em ciência, tecnologia e ensino superior |
-| Educação | `?view=educacao` | IDEB por etapa e rede: série histórica, tendência, ranking, aprovação por série |
-| Como fazemos | `?view=metodo` | Fontes, contas, decisões, limitações e glossário, em três níveis de detalhe |
+| Início | `/` | As duas entradas: estados por região e indicadores por eixo |
+| Visão geral do estado | `/sp` | Um cartão por indicador, com o número principal e o link |
+| Orçamento num estado | `/sp/orcamento` | As contas do estado em quatro partes: receitas, despesas, dívidas e estatais |
+| PIB num estado | `/sp/pib` | Tamanho da economia, peso dos setores, crescimento, tendência por atividade |
+| Educação num estado | `/sp/educacao` | IDEB por etapa e rede: série histórica, tendência, ranking, aprovação por série |
+| Pesquisa e Inovação num estado | `/sp/pesquisa-e-inovacao` | Índice de inovação do INPI ao lado do gasto em ciência, tecnologia e ensino superior |
+| Visão nacional | `/indicadores/pib` (e os outros) | O indicador nas 27 UFs (no orçamento: uma área do orçamento, com ranking e mediana) |
+| Comparar | `/comparar?ufs=sp,pe&indicador=pib` | Estados lado a lado no indicador escolhido |
+| Metodologia | `/metodologia` | Fontes, contas, decisões, limitações e glossário, em três níveis de detalhe |
+
+URLs antigas (`?view=pib&uf=SP`) são redirecionadas para as novas.
 
 Toda ressalva exibida numa tela tem um link "entenda" para a explicação correspondente em "Como fazemos". Um teste garante que nenhuma fica sem link.
 
@@ -245,7 +255,7 @@ cd web && npm test && npm run build
 | Mudar os limites da classificação de tendência | `web/src/estatistica/configuracao.json` |
 | Mudar uma conta exibida | `web/src/calculos.js` **e** a equivalente em Python (`analytics/` ou `publicacao/`), para o gabarito continuar batendo |
 | Acrescentar uma fonte | Novo extrator em `extractors/nacional/<fonte>/`, esquema em `extractors/base.py`, ficha em `docs/fontes/`, testes em `tests/` |
-| Acrescentar uma tela | `web/src/telas/`, item em `VIEWS` (`estado.js`), carga em `dados.js`/`App.jsx`, arquivo gerado em `publicacao/`, testes de fumaça |
+| Acrescentar um indicador ao menu | Uma entrada em `INDICADORES` (`web/src/navegacao.config.js`); com `disponivel: false` ele aparece como "em breve". Para ter página: a tela em `web/src/telas/`, a chave dela em `VIEWS` (`estado.js`) e em `TELAS` (`App.jsx`), a carga dos dados em `dados.js`/`App.jsx`, o arquivo gerado em `publicacao/` e o slug em `publicacao/og.py` (prévias) |
 
 ## 15. Mapa de pastas
 

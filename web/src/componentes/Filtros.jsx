@@ -14,6 +14,9 @@ export function CampoArea({ estado, funcoes, onMudar }) {
 }
 
 export function CampoEstado({ estado, ufs, rotulo = 'Estado em destaque', onMudar }) {
+  // Nas páginas de um estado (/sp/pib), a UF já está no caminho e o seletor fica no subcabeçalho
+  if (estado.ufNoCaminho) return null
+
   const regioes = ufs.reduce((acc, uf) => {
     if (!acc[uf.regiao]) {
       acc[uf.regiao] = []

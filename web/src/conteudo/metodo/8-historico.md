@@ -42,10 +42,10 @@ Outubro de 2026. Dados extraídos até {{fontes.siconfi.extraido_em}} (SICONFI).
 - Compensações financeiras em quatro itens; tabela `compensacoes_anp` (ANP) exibida ao lado da DCA; regra dos 95% para UFs que não separam o petróleo.
 - Estatais: exercícios 2019 a 2022 (v2020 a v2023 do Raio X; 2019 com setor e situação herdados de 2021); edição do exercício para cada ano; cobertura por UF (`ufs_por_edicao`); regra fixa de avisos de mudança de dependência (26); limpeza de anotações nos nomes exibidos.
 - Dados divididos em arquivo geral + arquivos por UF carregados sob demanda (celular médio: 10,8 s → 6,5 s; 1.136 → 340 KB).
-- Página "Como fazemos" (`?view=metodo`).
-- Tela "Educação" (`?view=educacao`): IDEB do Inep (tabela `ideb`), `ideb.json` (sem metas) e `ideb/<UF>.json` (aprovação por série) carregados só nessa tela.
-- Tela "Pesquisa e Inovação" (`?view=inovacao`): IBID do INPI, tabelas `ibid_escore` e `ibid_ranking`, `ibid.json` carregado só nessa tela; cruzamento com a função 19 (DCA I-E).
-- Tela "PIB dos Estados" (`?view=pib`): IBGE Contas Regionais, edição {{fontes.pib.edicao}}, tabelas `pib_uf` e `pib_uf_atividade`; `pib.json` e `pib/<UF>.json` carregados só nessa tela.
+- Página "Como fazemos" (`/metodologia`).
+- Tela "Educação" (`/indicadores/educacao`): IDEB do Inep (tabela `ideb`), `ideb.json` (sem metas) e `ideb/<UF>.json` (aprovação por série) carregados só nessa tela.
+- Tela "Pesquisa e Inovação" (`/indicadores/pesquisa-e-inovacao`): IBID do INPI, tabelas `ibid_escore` e `ibid_ranking`, `ibid.json` carregado só nessa tela; cruzamento com a função 19 (DCA I-E).
+- Tela "PIB dos Estados" (`/indicadores/pib`): IBGE Contas Regionais, edição {{fontes.pib.edicao}}, tabelas `pib_uf` e `pib_uf_atividade`; `pib.json` e `pib/<UF>.json` carregados só nessa tela.
 - **Invariância conferida** contra a versão 1 (commit `d5698fa`): nenhum valor de 2019–2025 mudou em despesa, totais da receita, dívida e gabarito. Diferenças esperadas: variação de 2019 sobre 2018 (antes nula), linhas zeradas da função 05 e divisão do item royalties.
 
 ### Versão 1: 2019 a 2025 {#versao-1}

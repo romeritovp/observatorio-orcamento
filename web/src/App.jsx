@@ -4,58 +4,122 @@ import { JANELAS_IDEB, JANELAS_TENDENCIA } from './calculos.js'
 import {
   carregarDados, carregarDadosDaUf, carregarEnsinoSuperior, carregarIbid, carregarIdeb, carregarIdebDaUf, carregarPib, carregarPibDaUf,
 } from './dados.js'
-import { escreverEstado, lerEstado, paresPadrao, VIEW_PADRAO, VIEWS } from './estado.js'
-import Navegacao from './componentes/Navegacao.jsx'
+import { escreverEstado, lerEstado, paresPadrao } from './estado.js'
+import { indicadorPorSlug, tituloDoIndicador } from './navegacao.config.js'
+import { BASE, buscaDoEstado, caminho, destinoDoEstado, indicadorDaComparacao, lerRota, urlNovaDeAntiga, viewDaRota } from './rotas.js'
+import Header from './componentes/navegacao/Header.jsx'
+import SubheaderUF from './componentes/navegacao/SubheaderUF.jsx'
 import Comparar from './telas/Comparar.jsx'
-import Metodo from './telas/Metodo.jsx'
-import PibEstados from './telas/PibEstados.jsx'
-import PesquisaInovacao from './telas/PesquisaInovacao.jsx'
+import CompararUFs from './telas/CompararUFs.jsx'
 import Educacao from './telas/Educacao.jsx'
+import Inicio from './telas/Inicio.jsx'
+import Metodo from './telas/Metodo.jsx'
+import NaoEncontrada from './telas/NaoEncontrada.jsx'
+import PainelUF from './telas/PainelUF.jsx'
+import PesquisaInovacao from './telas/PesquisaInovacao.jsx'
+import PibEstados from './telas/PibEstados.jsx'
 import PorEstado from './telas/PorEstado.jsx'
 
 const AREA_PADRAO = '10'
+const NOME_SITE = 'Observatório dos Orçamentos'
+const TELAS = {
+  inicio: Inicio, painel: PainelUF, estado: PorEstado, comparar: Comparar, pib: PibEstados, inovacao: PesquisaInovacao,
+  educacao: Educacao, metodo: Metodo, naoEncontrada: NaoEncontrada,
+}
 
-/** Tela pedida na URL, antes de os dados chegarem (para o menu já mostrar a tela certa). */
-const viewDaUrl = () => {
-  const view = new URLSearchParams(window.location.search).get('view')
-  return view in VIEWS ? view : VIEW_PADRAO
+/** URL atual, com URLs antigas (?view=...) trocadas pela nova sem recarregar (o index.php faz o 301 no servidor). */
+function urlAtual() {
+  const { pathname, search, hash } = window.location
+  if (lerRota(pathname).tipo === 'inicio') {
+    const nova = urlNovaDeAntiga(search, hash)
+    if (nova) window.history.replaceState(null, '', nova)
+  }
+  return { pathname: window.location.pathname, search: window.location.search, hash: window.location.hash }
+}
+
+/** Link interno (mesma origem, dentro da base, que não é arquivo: data/, og/, .json...). */
+function hrefInterno(link) {
+  if (!link || link.target === '_blank' || link.hasAttribute('download')) return null
+  const url = new URL(link.getAttribute('href'), window.location.href)
+  if (url.origin !== window.location.origin || !url.pathname.startsWith(BASE)) return null
+  if (/\.[a-z0-9]+$/i.test(url.pathname) || /\/(data|og|assets)\//.test(url.pathname)) return null
+  // âncora na própria página: deixa o navegador rolar
+  if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return null
+  return `${url.pathname}${url.search}${url.hash}`
+}
+
+/** Título da aba do navegador para a rota. */
+function tituloDaRota(rota, busca) {
+  const partes = {
+    inicio: 'as contas dos estados', metodologia: 'Metodologia', naoEncontrada: 'Página não encontrada',
+    uf: rota.uf?.nome, ufIndicador: rota.indicador && tituloDoIndicador(rota.indicador, rota.uf),
+    indicador: rota.indicador && `${rota.indicador.nome}: os 27 estados`,
+    comparar: `Comparar estados: ${indicadorDaComparacao(busca).nome}`,
+  }
+  return rota.tipo === 'inicio' ? `${NOME_SITE}: ${partes.inicio}` : `${partes[rota.tipo]} · ${NOME_SITE}`
 }
 
 export default function App() {
+  const [url, setUrl] = useState(urlAtual)
+  const rota = useMemo(() => lerRota(url.pathname), [url.pathname])
   const [dados, setDados] = useState(null)
   const [erro, setErro] = useState(null)
 
+  // Trocar de página sem recarregar: empilha no histórico (o Voltar volta) ou substitui
+  const navegar = useCallback((destino, { substituir = false } = {}) => {
+    window.history[substituir ? 'replaceState' : 'pushState'](null, '', destino)
+    setUrl({ pathname: window.location.pathname, search: window.location.search, hash: window.location.hash })
+  }, [])
+
   useEffect(() => {
-    // Na tela "Por estado", a UF da URL começa a baixar junto com os dados gerais (sem esperar por eles)
-    const ufDaUrl = new URLSearchParams(window.location.search).get('uf')?.toUpperCase()
-    if (viewDaUrl() === 'estado' && ufDaUrl && /^[A-Z]{2}$/.test(ufDaUrl)) carregarDadosDaUf(ufDaUrl).catch(() => {})
-    if (viewDaUrl() === 'inovacao') Promise.all([carregarIbid(), carregarEnsinoSuperior()]).catch(() => {})
-    if (viewDaUrl() === 'educacao') {
-      carregarIdeb().catch(() => {})
-      if (ufDaUrl && /^[A-Z]{2}$/.test(ufDaUrl)) carregarIdebDaUf(ufDaUrl).catch(() => {})
+    const voltar = () => setUrl({ pathname: window.location.pathname, search: window.location.search, hash: window.location.hash })
+    window.addEventListener('popstate', voltar)
+    // Links internos (menus, "entenda", cartões): sem recarregar os dados
+    const clicar = (e) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+      const destino = hrefInterno(e.target.closest?.('a[href]'))
+      if (!destino) return
+      e.preventDefault()
+      navegar(destino)
     }
-    if (viewDaUrl() === 'pib') {
-      carregarPib().catch(() => {})
-      if (ufDaUrl && /^[A-Z]{2}$/.test(ufDaUrl)) carregarPibDaUf(ufDaUrl).catch(() => {})
+    document.addEventListener('click', clicar)
+    return () => {
+      window.removeEventListener('popstate', voltar)
+      document.removeEventListener('click', clicar)
     }
+  }, [navegar])
+
+  // Arquivos gerais na abertura; o da UF da URL começa a baixar junto (sem esperar por eles)
+  useEffect(() => {
+    const inicial = lerRota(window.location.pathname)
+    const view = viewDaRota(inicial, window.location.search)
+    const sigla = inicial.uf?.sigla
+    if (view === 'estado' && sigla) carregarDadosDaUf(sigla).catch(() => {})
+    if (view === 'inovacao' || view === 'painel') Promise.all([carregarIbid(), carregarEnsinoSuperior()]).catch(() => {})
+    if (view === 'educacao' || view === 'painel') carregarIdeb().catch(() => {})
+    if (view === 'pib' || view === 'painel') carregarPib().catch(() => {})
     carregarDados().then(setDados).catch((e) => setErro(e.message))
   }, [])
 
-  if (erro || !dados) {
-    return (
-      <>
-        <Navegacao view={viewDaUrl()} />
+  useEffect(() => { document.title = tituloDaRota(rota, url.search) }, [rota, url.search])
+
+  return (
+    <>
+      <Header rota={rota} onIr={navegar} />
+      {(rota.tipo === 'uf' || rota.tipo === 'ufIndicador') && (
+        <SubheaderUF uf={rota.uf} indicador={rota.tipo === 'ufIndicador' ? rota.indicador : null} onIr={navegar} />
+      )}
+      {erro || !dados ? (
         <main className="pagina">
           <p className="aviso">{erro ? `Não foi possível carregar os dados: ${erro}` : 'Carregando os dados…'}</p>
         </main>
-      </>
-    )
-  }
-  return <Site dados={dados} />
+      ) : <Site dados={dados} rota={rota} url={url} navegar={navegar} />}
+    </>
+  )
 }
 
-// Estado da tela (sempre lido da URL e gravado nela), menu e a tela escolhida.
-function Site({ dados }) {
+// Estado da tela (lido da URL: a rota dá a tela e a UF; a busca, o resto) e a tela escolhida.
+function Site({ dados, rota, url, navegar }) {
   const { meta, dicionarios, despesa } = dados
   const ufs = dicionarios.ufs
 
@@ -72,46 +136,23 @@ function Site({ dados }) {
     ideb: meta.ideb ?? null, janelasIdeb: JANELAS_IDEB.map((j) => j.id),
   }), [ufs, meta.anos, funcoes, meta.uf_padrao, meta.pib, meta.ibid, meta.ideb])
 
-  const [estado, setEstado] = useState(() => lerEstado(window.location.search, contexto))
-  useEffect(() => {
-    const voltar = () => setEstado(lerEstado(window.location.search, contexto))
-    window.addEventListener('popstate', voltar)
-    return () => window.removeEventListener('popstate', voltar)
-  }, [contexto])
+  const estado = useMemo(() => ({
+    ...lerEstado(buscaDoEstado(rota, url.search), contexto),
+    // a UF vem do caminho nas páginas de um estado: os filtros das telas não repetem o seletor de estado
+    ufNoCaminho: rota.tipo === 'uf' || rota.tipo === 'ufIndicador',
+  }), [rota, url.search, contexto])
 
+  // Mudança pedida por uma tela (filtro, aba, tabela...): grava na URL; trocar de página entra no histórico
   const mudar = useCallback((mudancas) => {
-    setEstado((atual) => {
-      const novo = { ...atual, ...mudancas }
-      if ('uf' in mudancas && !novo.paresPersonalizados) novo.pares = paresPadrao(ufs, novo.uf)
-      novo.pares = novo.pares.filter((p) => p !== novo.uf)
-      const busca = escreverEstado(novo)
-      // Trocar de tela entra no histórico (o botão Voltar volta à tela anterior); o resto só substitui
-      const metodo = 'view' in mudancas && mudancas.view !== atual.view ? 'pushState' : 'replaceState'
-      window.history[metodo](null, '', `${window.location.pathname}${busca}`)
-      return lerEstado(busca, contexto)
-    })
-  }, [ufs, contexto])
+    const novo = { ...estado, ...mudancas }
+    if ('uf' in mudancas && !novo.paresPersonalizados) novo.pares = paresPadrao(ufs, novo.uf)
+    novo.pares = novo.pares.filter((p) => p !== novo.uf)
+    const destino = destinoDoEstado(rota, novo, escreverEstado(novo))
+    const caminhoNovo = caminho(destino.rota)
+    navegar(`${caminhoNovo}${destino.busca}`, { substituir: caminhoNovo === url.pathname })
+  }, [estado, rota, ufs, navegar, url.pathname])
 
-  // Links internos para outra tela (?view=..., como o "entenda" das ressalvas): troca de tela sem recarregar
-  // os dados, guardando a âncora (#...) na URL para a tela de destino rolar até ela
-  useEffect(() => {
-    const clicar = (e) => {
-      const link = e.target.closest?.('a[href^="?view="]')
-      if (!link || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
-      e.preventDefault()
-      const [busca, ancora = ''] = link.getAttribute('href').split('#')
-      const destino = lerEstado(busca, contexto)
-      setEstado((atual) => {
-        const novo = { ...atual, view: destino.view, ...(destino.view === 'metodo' ? {} : destino) }
-        window.history.pushState(null, '', `${window.location.pathname}${escreverEstado(novo)}${ancora ? `#${ancora}` : ''}`)
-        return lerEstado(escreverEstado(novo), contexto)
-      })
-    }
-    document.addEventListener('click', clicar)
-    return () => document.removeEventListener('click', clicar)
-  }, [contexto])
-
-  // Dados da UF em destaque (subfunções, linhas da receita, lista de estatais), só para a tela "Por estado"
+  // Dados da UF em destaque (subfunções, linhas da receita, lista de estatais), só para a tela do orçamento
   const [porUf, setPorUf] = useState({})
   const [erroUf, setErroUf] = useState(null)
   useEffect(() => {
@@ -121,61 +162,60 @@ function Site({ dados }) {
       .catch((e) => setErroUf(e.message))
   }, [estado.view, estado.uf, porUf])
 
-  // PIB dos Estados: pib.json (todas as UFs) e pib/<UF>.json, só quando a tela é aberta
+  // PIB: pib.json (todas as UFs) e pib/<UF>.json; também no painel e na versão "Fórmulas" (UF do exemplo)
   const [pib, setPib] = useState(null)
   const [pibUf, setPibUf] = useState({})
   const [erroPib, setErroPib] = useState(null)
-  // Também na versão "Fórmulas" da página "Como fazemos", que usa o PIB da UF do exemplo
   const formulas = estado.view === 'metodo' && estado.nivel === 'formulas'
   const ufPib = formulas ? meta.documentacao?.exemplo?.uf : estado.uf
   useEffect(() => {
-    if (estado.view !== 'pib' && !formulas) return
+    if (estado.view !== 'pib' && estado.view !== 'painel' && !formulas) return
     if (!pib) carregarPib().then(setPib).catch((e) => setErroPib(e.message))
-    if (ufPib && !pibUf[ufPib]) {
+    if (estado.view !== 'painel' && ufPib && !pibUf[ufPib]) {
       carregarPibDaUf(ufPib)
         .then((linhas) => setPibUf((atual) => ({ ...atual, [ufPib]: linhas })))
         .catch((e) => setErroPib(e.message))
     }
   }, [estado.view, formulas, ufPib, pib, pibUf])
 
-  // Pesquisa e Inovação: ibid.json e despesa_ensino_superior.json, só quando a tela é aberta
+  // Pesquisa e Inovação: ibid.json e despesa_ensino_superior.json (também no painel)
   const [inovacao, setInovacao] = useState(null)
   const [erroIbid, setErroIbid] = useState(null)
   useEffect(() => {
-    if (estado.view !== 'inovacao' || inovacao) return
+    if ((estado.view !== 'inovacao' && estado.view !== 'painel') || inovacao) return
     Promise.all([carregarIbid(), carregarEnsinoSuperior()])
       .then(([ibid, ensinoSuperior]) => setInovacao({ ibid, ensinoSuperior }))
       .catch((e) => setErroIbid(e.message))
   }, [estado.view, inovacao])
 
-  // Educação: ideb.json e ideb/<UF>.json, só quando a tela é aberta (e na versão "Fórmulas" do "Como fazemos",
-  // que usa o IDEB da UF do exemplo)
+  // Educação: ideb.json e ideb/<UF>.json (também no painel e na versão "Fórmulas", com a UF do exemplo)
   const [idebGeral, setIdebGeral] = useState(null)
   const [idebUf, setIdebUf] = useState({})
   const [erroIdeb, setErroIdeb] = useState(null)
   const ufIdeb = formulas ? meta.documentacao?.exemplo?.uf : estado.uf
   useEffect(() => {
-    if (estado.view !== 'educacao' && !formulas) return
+    if (estado.view !== 'educacao' && estado.view !== 'painel' && !formulas) return
     if (!idebGeral) carregarIdeb().then(setIdebGeral).catch((e) => setErroIdeb(e.message))
-    if (ufIdeb && !idebUf[ufIdeb]) {
+    if (estado.view !== 'painel' && ufIdeb && !idebUf[ufIdeb]) {
       carregarIdebDaUf(ufIdeb).then((d) => setIdebUf((atual) => ({ ...atual, [ufIdeb]: d }))).catch((e) => setErroIdeb(e.message))
     }
   }, [estado.view, formulas, ufIdeb, idebGeral, idebUf])
 
-  // Nova tela começa do topo, salvo quando a URL aponta uma âncora (a tela rola até ela)
-  useEffect(() => { if (!window.location.hash) window.scrollTo(0, 0) }, [estado.view])
+  // Nova página começa do topo, salvo quando a URL aponta uma âncora (a tela rola até ela)
+  useEffect(() => { if (!window.location.hash) window.scrollTo(0, 0) }, [url.pathname])
 
-  const links = Object.fromEntries(Object.keys(VIEWS).map((view) => [view, escreverEstado({ ...estado, view })]))
-  const TELAS = { estado: PorEstado, comparar: Comparar, pib: PibEstados, inovacao: PesquisaInovacao, educacao: Educacao, metodo: Metodo }
-  const Tela = TELAS[estado.view]
-
-  return (
-    <>
-      <Navegacao view={estado.view} links={links} onIr={(view) => mudar({ view })} />
-      <Tela dados={dados} estado={estado} mudar={mudar} funcoes={funcoes} dadosUf={porUf[estado.uf]} erroUf={erroUf}
-        pib={pib} pibUf={pibUf[ufPib]} erroPib={erroPib}
-        ibid={inovacao?.ibid} ensinoSuperior={inovacao?.ensinoSuperior} erroIbid={erroIbid}
-        ideb={idebGeral} idebUf={idebUf[ufIdeb]} erroIdeb={erroIdeb} />
-    </>
+  const Tela = TELAS[estado.view] ?? NaoEncontrada
+  const tela = (
+    <Tela dados={dados} estado={estado} mudar={mudar} funcoes={funcoes} dadosUf={porUf[estado.uf]} erroUf={erroUf}
+      pib={pib} pibUf={pibUf[ufPib]} erroPib={erroPib}
+      ibid={inovacao?.ibid} ensinoSuperior={inovacao?.ensinoSuperior} erroIbid={erroIbid}
+      ideb={idebGeral} idebUf={idebUf[ufIdeb]} erroIdeb={erroIdeb} uf={rota.uf} />
   )
+  if (rota.tipo !== 'comparar') return tela
+  const trocarIndicador = (slug) => {
+    const p = new URLSearchParams(url.search)
+    p.set('indicador', indicadorPorSlug(slug).slug)
+    navegar(`${caminho(rota)}?${p.toString().replaceAll('%2C', ',')}`, { substituir: true })
+  }
+  return <CompararUFs indicador={indicadorDaComparacao(url.search)} onTrocar={trocarIndicador}>{tela}</CompararUFs>
 }

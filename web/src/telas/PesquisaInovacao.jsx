@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import {
   cruzamentoPesquisa, dispersaoIbid, indicadoresDaFuncao, indicadoresDaSubfuncao, pilaresComparados, rankingIbid, serieIbid,
 } from '../calculos.js'
+import { tituloDaPagina } from '../navegacao.config.js'
 import { EVOLUCOES_IBID, paresPadrao } from '../estado.js'
 import { data, numero, pct, reais } from '../formatacao.js'
 import { deUf, doEstado, fraseRankingIbid } from '../textos.js'
@@ -46,7 +47,7 @@ export default function PesquisaInovacao({ dados, estado, mudar, ibid, ensinoSup
   const cabecalho = (
     <>
       <header className="cabecalho">
-        <h1>{infoUf ? `Pesquisa e inovação ${doEstado(infoUf.nome, infoUf.artigo)}` : 'Pesquisa e inovação nos estados'}</h1>
+        <h1>{tituloDaPagina('pesquisa-e-inovacao', uf, 'Pesquisa e inovação nos estados')}</h1>
         <p>
           O Índice Brasil de Inovação e Desenvolvimento (IBID), publicado pelo INPI (Instituto Nacional da Propriedade
           Industrial), compara as 27 UFs em dois grupos de indicadores. O <strong>Contexto</strong> mede as condições para

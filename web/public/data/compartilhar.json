@@ -33,6 +33,12 @@
   "inovacao",
   "educacao"
  ],
+ "indicadores": {
+  "orcamento": "comparar",
+  "pib": "pib",
+  "educacao": "educacao",
+  "pesquisa-e-inovacao": "inovacao"
+ },
  "ufs": {
   "RO": {
    "nome": "Rondônia",

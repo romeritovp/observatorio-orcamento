@@ -4,6 +4,7 @@ import {
   composicaoDoAno, estataisDoEstado, indicadoresSobDemanda, indicadoresDivida, indicadoresReceita, populacoes, medianaPorAno, serieDaUf, subareasDaUf,
   tabelaAreasPorAno, tabelaSubareasPorAno, totaisPorUfAno,
 } from '../calculos.js'
+import { tituloDaPagina } from '../navegacao.config.js'
 import { pct, pctComSinal, reais, reaisCompacto } from '../formatacao.js'
 import { doEstado, porUf } from '../textos.js'
 import Alerta from '../componentes/Alerta.jsx'
@@ -47,7 +48,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erro
     () => (uf && dadosUf ? subareasDaUf([...despesa.filter((l) => l.uf === uf), ...dadosUf.despesa], ipca.serie, { uf, anoBase }) : []),
     [despesa, dadosUf, ipca.serie, uf, anoBase])
 
-  const titulo = infoUf ? `As contas ${doEstado(infoUf.nome, infoUf.artigo)}` : 'As contas de cada estado'
+  const titulo = tituloDaPagina('orcamento', uf, 'As contas de cada estado')
   const cabecalho = (
     <>
       <header className="cabecalho">

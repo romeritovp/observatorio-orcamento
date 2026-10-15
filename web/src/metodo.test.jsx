@@ -10,7 +10,8 @@ import { dadosDaUf, dadosDoSite, lerArquivo, lerJson } from './testes/publicados
 import { conferenciaDclRcl, indicadoresDaFuncao, passosPorHabitante } from './calculos.js'
 import { ENTENDA, linkEntenda } from './conteudo/metodo/ligacoes.js'
 import { INTRODUCAO, SECOES, lerSecao } from './conteudo/metodo/indice.js'
-import { escreverEstado, lerEstado, NIVEIS_METODO, VIEWS } from './estado.js'
+import { escreverEstado, lerEstado, NIVEIS_METODO } from './estado.js'
+import { lerRota } from './rotas.js'
 import { numero, reais } from './formatacao.js'
 import { ancora, ancorasELinks, lerInline, lerMarkdown, preencher } from './markdown.js'
 import Ressalvas from './componentes/Ressalvas.jsx'
@@ -114,10 +115,11 @@ describe('textos da página', () => {
       expect(new Set(ids).size, `âncora repetida na versão ${nivel}`).toBe(ids.length)
       for (const href of links) {
         if (href.startsWith('#')) expect(ids, `${nivel}: ${href}`).toContain(href.slice(1))
-        else if (href.startsWith('?')) {
-          const [busca, alvo] = href.split('#')
-          expect(Object.keys(VIEWS), href).toContain(new URLSearchParams(busca).get('view'))
-          if (alvo) expect(ids, `${nivel}: ${href}`).toContain(alvo)
+        else if (href.startsWith('/')) {
+          // página do site, escrita como caminho ("/indicadores/pib"): tem de ser uma rota que existe
+          const [caminhoDoLink, alvo] = href.split('#')
+          expect(lerRota(caminhoDoLink, '/').tipo, href).not.toBe('naoEncontrada')
+          if (alvo && lerRota(caminhoDoLink, '/').tipo === 'metodologia') expect(ids, `${nivel}: ${href}`).toContain(alvo)
         } else expect(href, `link externo sem https: ${href}`).toMatch(/^https:\/\//)
       }
     }

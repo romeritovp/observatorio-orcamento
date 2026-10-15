@@ -2,6 +2,7 @@ import {
   crescimentoAcumulado, participacaoNoPais, participacaoNoVab, participacoesNoPais, rebasear, setoresPorAno, tabelaPib,
   tendenciasDaAtividade,
 } from '../calculos.js'
+import { tituloDaPagina } from '../navegacao.config.js'
 import { ATIVIDADE_PIB_PADRAO, paresPadrao, TABELAS_PIB } from '../estado.js'
 import { CONFIGURACAO as CONFIG_TENDENCIA } from '../estatistica/tendencia.js'
 import { data, numero, pct, pctComSinal, reaisCompacto } from '../formatacao.js'
@@ -31,7 +32,7 @@ export default function PibEstados({ dados, estado, mudar, pib, pibUf, erroPib }
   const cabecalho = (
     <>
       <header className="cabecalho">
-        <h1>{infoUf ? `O PIB ${doEstado(infoUf.nome, infoUf.artigo)}` : 'O PIB dos estados'}</h1>
+        <h1>{tituloDaPagina('pib', uf, 'O PIB dos estados')}</h1>
         <p>
           O tamanho da economia de cada estado e o que ela produz, segundo o IBGE. É a régua para ler as contas do
           governo estadual: o PIB mede tudo o que se produz no estado, não só o que passa pelo governo.

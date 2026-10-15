@@ -27,9 +27,9 @@ Visualização das contas dos **governos estaduais** (27 UFs, o ente estadual co
 
 ### O que você encontra aqui {#o-que-e-encontra}
 
-- **Por estado** (`?view=estado`): receita (DCA Anexo I-C), despesa por função e subfunção (DCA Anexo I-E), dívida (RGF Anexo 02 e DCA Anexo I-D) e estatais (Raio X do Tesouro).
-- **Comparar** (`?view=comparar`): uma função de governo nas 27 UFs, por habitante (R$ corrigidos ou da época) ou em % da despesa total, com posição e mediana.
-- **Como fazemos** (`?view=metodo`): fontes, método, decisões, limitações e o exemplo refeito a partir dos dados publicados. Toda visão é reproduzível pela URL.
+- **Por estado** (`/<uf>/orcamento`): receita (DCA Anexo I-C), despesa por função e subfunção (DCA Anexo I-E), dívida (RGF Anexo 02 e DCA Anexo I-D) e estatais (Raio X do Tesouro).
+- **Comparar** (`/indicadores/orcamento`): uma função de governo nas 27 UFs, por habitante (R$ corrigidos ou da época) ou em % da despesa total, com posição e mediana.
+- **Como fazemos** (`/metodologia`): fontes, método, decisões, limitações e o exemplo refeito a partir dos dados publicados. Toda visão é reproduzível pela URL.
 
 ### O que este site não é {#o-que-e-nao-e}
 

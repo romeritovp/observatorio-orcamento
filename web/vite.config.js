@@ -40,9 +40,17 @@ function metatagsDoSite() {
   }
 }
 
-// Site estático (Hostgator): base relativa para funcionar em qualquer pasta do servidor.
+// Base do site: a subpasta do domínio em config/site.yaml ("apps.exemplo.com.br/orcamento" → "/orcamento/").
+// As rotas são caminhos reais (/orcamento/sp/pib), então os arquivos precisam de endereço absoluto: com base
+// relativa, /orcamento/sp/pib buscaria /orcamento/sp/assets/. O .htaccess manda todo caminho para o index.php.
+function baseDoSite() {
+  const caminho = lerSite().dominio?.split('/').slice(1).filter(Boolean).join('/') ?? ''
+  return caminho ? `/${caminho}/` : '/'
+}
+
+// Site estático (Hostgator), com rotas em caminho resolvidas no navegador (rotas.js).
 export default defineConfig({
-  base: './',
+  base: baseDoSite(),
   plugins: [react(), semGabarito(), metatagsDoSite()],
   test: {
     environment: 'node',

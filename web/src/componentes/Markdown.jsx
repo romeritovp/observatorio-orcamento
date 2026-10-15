@@ -1,8 +1,11 @@
 // Elementos React a partir da árvore de `lerMarkdown` (src/markdown.js). Sem innerHTML: o texto nunca vira HTML.
 
 import { lerMarkdown } from '../markdown.js'
+import { BASE } from '../rotas.js'
 
 const externo = (href) => /^https?:\/\//.test(href)
+// Links para outras páginas do site são escritos como caminho ("/indicadores/pib"); a base (subpasta) entra aqui
+const endereco = (href) => (href.startsWith('/') ? `${BASE}${href.slice(1)}` : href)
 
 function Inline({ partes }) {
   return partes.map((p, i) => {
@@ -11,7 +14,7 @@ function Inline({ partes }) {
     if (p.tipo === 'negrito') return <strong key={i}><Inline partes={p.filhos} /></strong>
     if (p.tipo === 'italico') return <em key={i}><Inline partes={p.filhos} /></em>
     return (
-      <a key={i} href={p.href} {...(externo(p.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      <a key={i} href={endereco(p.href)} {...(externo(p.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
         <Inline partes={p.filhos} />
       </a>
     )

@@ -9,10 +9,11 @@ export const METRICAS = {
 /** Valores corrigidos pela inflação (padrão) ou da época. Não se aplica ao % do orçamento. */
 export const VALORES = ['corrigidos', 'epoca']
 
-/** Telas do site, na ordem do menu. */
+/** Telas do site (chave → nome). */
+// O menu e as URLs saem de navegacao.config.js e rotas.js; aqui fica só a lista das telas, para validar o estado.
 export const VIEWS = {
-  estado: 'Por estado', comparar: 'Comparar', pib: 'PIB dos Estados', inovacao: 'Pesquisa e Inovação', educacao: 'Educação',
-  metodo: 'Como fazemos',
+  inicio: 'Início', painel: 'Visão geral do estado', estado: 'Orçamento', comparar: 'Orçamento: os 27 estados',
+  pib: 'PIB', inovacao: 'Pesquisa e Inovação', educacao: 'Educação', metodo: 'Metodologia', naoEncontrada: 'Não encontrada',
 }
 
 /** Tela aberta quando a URL não diz qual (a "página inicial"). É o único lugar que define isso. */

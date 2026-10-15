@@ -44,7 +44,7 @@ Todos os números vêm de fontes públicas e oficiais. Abaixo, uma ficha para ca
 
 **O que é:** o cálculo oficial do tamanho da economia de cada estado (o PIB) e do que ela produz em cada atividade (agropecuária, indústria, comércio, serviços públicos...).
 
-**O que usamos:** o PIB, o valor adicionado por atividade e o crescimento da economia de cada estado e do país, de {{fontes.pib.primeiro}} a {{fontes.pib.ultimo}}, na tela [PIB dos Estados](?view=pib). Não entram em nenhuma conta do orçamento.
+**O que usamos:** o PIB, o valor adicionado por atividade e o crescimento da economia de cada estado e do país, de {{fontes.pib.primeiro}} a {{fontes.pib.ultimo}}, na tela [PIB dos Estados](/indicadores/pib). Não entram em nenhuma conta do orçamento.
 
 **Onde conferir:** [página das Contas Regionais]({{fontes.pib.pagina}}) · [arquivos da edição {{fontes.pib.edicao}}]({{fontes.pib.arquivos}}). Não há API: são planilhas. Última extração: {{fontes.pib.extraido_em}}.
 
@@ -52,7 +52,7 @@ Todos os números vêm de fontes públicas e oficiais. Abaixo, uma ficha para ca
 
 **O que é:** um índice do INPI (Instituto Nacional da Propriedade Industrial) que compara as 27 UFs em inovação. Junta dois grupos de indicadores: o Contexto (condições para inovar) e o Resultado (o que se produz de conhecimento, tecnologia e economia criativa).
 
-**O que usamos:** os escores (de 0 a 1) e a posição no ranking de cada estado, de {{fontes.ibid.primeiro}} a {{fontes.ibid.ultimo}}, na tela [Pesquisa e Inovação](?view=inovacao). Não entram em nenhuma conta do orçamento.
+**O que usamos:** os escores (de 0 a 1) e a posição no ranking de cada estado, de {{fontes.ibid.primeiro}} a {{fontes.ibid.ultimo}}, na tela [Pesquisa e Inovação](/indicadores/pesquisa-e-inovacao). Não entram em nenhuma conta do orçamento.
 
 **Onde conferir:** [página do índice]({{fontes.ibid.pagina}}) · [planilha da série histórica]({{fontes.ibid.planilha}}). Não há API: é uma planilha. Última extração: {{fontes.ibid.extraido_em}}.
 
@@ -60,7 +60,7 @@ Todos os números vêm de fontes públicas e oficiais. Abaixo, uma ficha para ca
 
 **O que é:** o principal indicador de qualidade da educação básica do país, calculado pelo Inep a cada dois anos. Junta o aprendizado (notas do Saeb) e a aprovação num número de 0 a 10, para os anos iniciais e finais do fundamental e o ensino médio, por rede.
 
-**O que usamos:** o IDEB, as notas do Saeb e as taxas de aprovação de cada estado, região e do Brasil, de {{fontes.ideb.primeiro}} a {{fontes.ideb.ultimo}}, na tela [Educação](?view=educacao). As metas do IDEB não aparecem: não são resultado.
+**O que usamos:** o IDEB, as notas do Saeb e as taxas de aprovação de cada estado, região e do Brasil, de {{fontes.ideb.primeiro}} a {{fontes.ideb.ultimo}}, na tela [Educação](/indicadores/educacao). As metas do IDEB não aparecem: não são resultado.
 
 **Onde conferir:** [página de resultados]({{fontes.ideb.pagina}}). Não há API: são planilhas. Última extração: {{fontes.ideb.extraido_em}}.
 

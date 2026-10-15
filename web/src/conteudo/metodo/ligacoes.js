@@ -2,6 +2,8 @@
 // O teste confere que toda ressalva publicada (meta, receita, dívida e PIB, inclusive as por UF) tem ligação
 // e que toda âncora existe nas duas versões da página.
 
+import { BASE } from '../../rotas.js'
+
 export const ENTENDA = {
   // meta.json → ressalvas (gerais) e ressalvas_por_funcao
   municipios: 'decisao-so-estado',
@@ -56,5 +58,5 @@ export const ENTENDA = {
 /** Link "entenda" para uma ressalva ou aviso; null se não houver ligação (o teste impede isso). */
 export function linkEntenda(id) {
   const ancora = ENTENDA[id]
-  return ancora ? `?view=metodo#${ancora}` : null
+  return ancora ? `${BASE}metodologia#${ancora}` : null
 }

@@ -7,6 +7,7 @@ import { dadosDaUf, dadosDoSite, lerArquivo } from './testes/publicados.js'
 
 import { JANELAS_IDEB, JANELAS_TENDENCIA } from './calculos.js'
 import { lerEstado } from './estado.js'
+import { BASE } from './rotas.js'
 import Comparar from './telas/Comparar.jsx'
 import Educacao from './telas/Educacao.jsx'
 import PesquisaInovacao from './telas/PesquisaInovacao.jsx'
@@ -39,14 +40,14 @@ describe('telas renderizam com os dados publicados', () => {
 
   it('Por estado: título, resumo, composição, série, tabela e estatais', { timeout: 120000 }, () => {
     const pe = tela(PorEstado, '?view=estado&uf=PE&ano=2024')
-    expect(pe).toContain('As contas de Pernambuco')
+    expect(pe).toContain('O Orçamento de Pernambuco')
     expect(pe).toContain('Despesa total em 2024')
     expect(pe).toContain('/27')  // selo de posição
     expect(pe).toContain('Baixar CSV')
     expect(pe).toContain('Estatais não dependentes')
     expect(pe).toContain('COMPESA')
     expect(pe).toContain('https://tesouro.github.io/empresas-estados/v2025/')
-    expect(tela(PorEstado, '?view=estado&uf=RJ&ano=2020')).toContain('As contas do Rio de Janeiro')
+    expect(tela(PorEstado, '?view=estado&uf=RJ&ano=2020')).toContain('O Orçamento do Rio de Janeiro')
   })
 
   it('Por estado: quatro partes na ordem receitas, despesas, dívidas, estatais, com âncoras', () => {
@@ -190,7 +191,7 @@ describe('PIB dos Estados', () => {
     expect(rj).toContain('As atividades da economia do RJ')
     expect(rj).toContain('Baixar CSV')
     for (const r of pib.ressalvas) expect(rj).toContain(r.titulo)
-    expect(rj).toContain('href="?view=metodo#')
+    expect(rj).toContain(`href="${BASE}metodologia#`)
   })
 
   it('tendência: Indústria de transformação por padrão, quatro cards, linhas da tabela clicáveis (menos o total)', () => {
@@ -201,7 +202,7 @@ describe('PIB dos Estados', () => {
     }
     expect(rj).toMatch(/ao ano/)
     expect(rj).toContain('Ver os detalhes estatísticos')
-    expect(rj).toContain('href="?view=metodo#calculo-tendencia"')
+    expect(rj).toContain(`href="${BASE}metodologia#calculo-tendencia"`)
     expect(rj.match(/class="escolher-linha"/g)).toHaveLength(12)
     expect(rj).toContain('aria-pressed="true">Indústrias de transformação')
     // outra atividade e outra janela pela URL
@@ -328,7 +329,7 @@ describe('Educação (IDEB)', () => {
 
   it('resumo, frase, série, tendência, ranking, aprovação por série, Saeb, ressalvas e fonte (RS, valores de controle)', () => {
     const rs = telaIdeb('?view=educacao&uf=RS')
-    for (const texto of ['A educação do Rio Grande do Sul', 'IDEB em 2025', 'Variação sobre 2023', 'IDEB, 2005–2025',
+    for (const texto of ['A Educação do Rio Grande do Sul', 'IDEB em 2025', 'Variação sobre 2023', 'IDEB, 2005–2025',
       'Tendência do IDEB do RS', 'Aprovação por série em 2025', 'Notas do Saeb, 2005–2025', 'Antes de comparar', ideb.fonte.arquivos[0].sha256]) {
       expect(rs, texto).toContain(texto)
     }
@@ -337,7 +338,7 @@ describe('Educação (IDEB)', () => {
     expect(rs).toContain('1ª série')
     expect(rs).toContain('Ensino médio: Saeb amostral até 2017')
     expect(rs).toContain('2021: pandemia')
-    expect(rs).toContain('href="?view=metodo#limite-ideb-2021"')
+    expect(rs).toContain(`href="${BASE}metodologia#limite-ideb-2021"`)
     expect(rs).not.toContain('Rede estadual nos anos iniciais')  // ressalva só dos anos iniciais
     expect(telaIdeb('?view=educacao&uf=RS&etapa=anos_iniciais')).toMatch(/foi 6,4/)
     expect(telaIdeb('?view=educacao&uf=RS&etapa=anos_finais')).toMatch(/foi 5,4/)

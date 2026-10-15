@@ -208,6 +208,10 @@ def montar_compartilhar(site, dados, numeros):
                                     "ranking, com os dados do Inep.",
                      "image": imagem("padrao.png")},
         "views": ["estado", "comparar", "pib", "inovacao", "educacao"],
+        # slug do indicador na URL (/sp/pib, /indicadores/pib) → chave dos textos acima; o mesmo que
+        # web/src/navegacao.config.js (um teste do front confere). "orcamento" usa "comparar" na visão nacional
+        # e o texto da UF na página do estado.
+        "indicadores": {"orcamento": "comparar", "pib": "pib", "educacao": "educacao", "pesquisa-e-inovacao": "inovacao"},
         "ufs": ufs,
         "funcoes": funcoes,
     }

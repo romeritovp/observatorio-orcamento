@@ -1,6 +1,7 @@
 <?php
 // Metatags por página para os robôs de prévia (WhatsApp, Facebook, X), que não executam JavaScript.
 // Lê o index.html do build e troca title, description, canonical, og:title, og:description, og:url e og:image.
+// As páginas são caminhos (/orcamento/sp/pib); o .htaccess manda todo caminho que não é arquivo para cá.
 // Os textos vêm de data/compartilhar.json (gerado por publicacao/og.py), nunca escritos aqui.
 // Cada parâmetro é validado contra uma lista fechada; qualquer outro valor cai no padrão.
 
@@ -18,39 +19,75 @@ if (!is_array($textos)) {
     exit;
 }
 
-// Parâmetros validados (listas fechadas vindas do JSON)
+// Servidor embutido do PHP (testes): arquivos que existem são servidos direto
+if (PHP_SAPI === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
+    return false;
+}
+
+// Listas fechadas vindas do JSON: nada da URL entra na página sem estar nelas
 $ufs = $textos['ufs'] ?? [];
 $funcoes = $textos['funcoes'] ?? [];
-$view = in_array($_GET['view'] ?? '', $textos['views'] ?? [], true) ? $_GET['view'] : null;
-$uf = strtoupper((string) ($_GET['uf'] ?? ''));
-$uf = array_key_exists($uf, $ufs) ? $uf : null;
-$area = (string) ($_GET['area'] ?? '');
-$area = array_key_exists($area, $funcoes) ? $area : null;
+$indicadores = $textos['indicadores'] ?? [];
 
-// Página: comparar (com ou sem área), PIB dos Estados, Pesquisa e Inovação, Educação ou estado (com UF); o resto é a padrão
+// Caminho relativo à pasta do site (o .htaccess manda todo caminho que não é arquivo para cá):
+// /orcamento/sp/pib → ['sp', 'pib']
+$base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/') . '/';
+$caminho = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$relativo = substr($caminho, 0, strlen($base)) === $base ? substr($caminho, strlen($base)) : ltrim($caminho, '/');
+$partes = array_values(array_filter(explode('/', rawurldecode($relativo)), 'strlen'));
+$ufDe = fn($slug) => array_key_exists(strtoupper((string) $slug), $ufs) && strlen((string) $slug) === 2 ? strtoupper($slug) : null;
+
+// URLs antigas (?view=...&uf=..., antes das rotas em caminho): redirect 301 para a nova (mesma regra de src/rotas.js)
+if (!$partes && (isset($_GET['view']) || isset($_GET['uf']))) {
+    $resto = $_GET;
+    $view = (string) ($resto['view'] ?? 'estado');
+    $uf = $ufDe($resto['uf'] ?? '');
+    unset($resto['view'], $resto['uf']);
+    $porView = ['pib' => 'pib', 'educacao' => 'educacao', 'inovacao' => 'pesquisa-e-inovacao', 'estado' => 'orcamento'];
+    if ($view === 'metodo') {
+        $novo = 'metodologia';
+    } elseif ($view === 'comparar') {
+        if ($uf !== null) {
+            $pares = array_filter(array_map($ufDe, explode(',', (string) ($resto['pares'] ?? ''))));
+            unset($resto['pares']);
+            $resto = ['ufs' => strtolower(implode(',', array_merge([$uf], $pares))), 'indicador' => 'orcamento'] + $resto;
+            $novo = 'comparar';
+        } else {
+            $novo = 'indicadores/orcamento';
+        }
+    } elseif (isset($porView[$view])) {
+        $novo = $uf !== null ? strtolower($uf) . '/' . $porView[$view] : ($view === 'estado' ? '' : 'indicadores/' . $porView[$view]);
+    } else {
+        $novo = '';
+    }
+    $consulta = http_build_query($resto);
+    header('Location: ' . $base . $novo . ($consulta !== '' ? '?' . str_replace('%2C', ',', $consulta) : ''), true, 301);
+    exit;
+}
+
+// Página: início, metodologia, comparar (com a área, no orçamento), visão nacional de um indicador, painel do estado
+// ou indicador num estado. Caminho que não existe: página padrão e status 404 (o site mostra "não encontrada").
 $pagina = $textos['padrao'];
-$consulta = [];
-if ($view === 'comparar') {
-    $consulta['view'] = 'comparar';
+$valido = true;
+if (!$partes || $partes === ['metodologia']) {
+    // padrão
+} elseif ($partes === ['comparar']) {
     $pagina = $textos['comparar'];
-    if ($area !== null) {
-        $consulta['area'] = $area;
+    $area = (string) ($_GET['area'] ?? '');
+    if (array_key_exists($area, $funcoes) && ($_GET['indicador'] ?? 'orcamento') === 'orcamento') {
         $pagina = array_merge($pagina, $funcoes[$area]);
     }
-    if ($uf !== null) {
-        $consulta['uf'] = $uf;
-    }
-} elseif (in_array($view, ['pib', 'inovacao', 'educacao'], true) && isset($textos[$view])) {
-    $consulta['view'] = $view;
-    $pagina = $textos[$view];
-    if ($uf !== null) {
-        $consulta['uf'] = $uf;
-    }
-} elseif ($uf !== null) {
-    $consulta['uf'] = $uf;
+} elseif (count($partes) === 2 && $partes[0] === 'indicadores' && isset($indicadores[$partes[1]])) {
+    $pagina = $textos[$indicadores[$partes[1]]];
+} elseif (($uf = $ufDe($partes[0])) !== null && count($partes) === 1) {
     $pagina = $ufs[$uf];
+} elseif ($uf !== null && count($partes) === 2 && isset($indicadores[$partes[1]])) {
+    $pagina = $partes[1] === 'orcamento' ? $ufs[$uf] : $textos[$indicadores[$partes[1]]];
+} else {
+    $valido = false;
+    http_response_code(404);
 }
-$url = rtrim($textos['url_site'], '/') . '/' . ($consulta ? '?' . http_build_query($consulta) : '');
+$url = rtrim($textos['url_site'], '/') . '/' . ($valido ? implode('/', array_map('rawurlencode', $partes)) : '');
 
 $e = fn($texto) => htmlspecialchars((string) $texto, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 $trocas = [

@@ -1,6 +1,7 @@
 import {
   aprovacaoPorSerie, rankingIdeb, ressalvasDoIdeb, serieIdeb, tendenciasDoIdeb,
 } from '../calculos.js'
+import { tituloDaPagina } from '../navegacao.config.js'
 import { paresPadrao } from '../estado.js'
 import { CONFIGURACAO as CONFIG_TENDENCIA } from '../estatistica/tendencia.js'
 import { data, numero, pct, pctComSinal } from '../formatacao.js'
@@ -47,7 +48,7 @@ export default function Educacao({ dados, estado, mudar, ideb, idebUf, erroIdeb 
   const cabecalho = (
     <>
       <header className="cabecalho">
-        <h1>{infoUf ? `A educação ${doEstado(infoUf.nome, infoUf.artigo)}` : 'A educação nos estados'}</h1>
+        <h1>{tituloDaPagina('educacao', uf, 'A educação nos estados')}</h1>
         <p>
           O IDEB, índice do Inep, junta o aprendizado (as notas do Saeb em matemática e língua portuguesa) e o fluxo
           escolar (a aprovação) num número de 0 a 10, medido a cada dois anos. A tela abre no ensino médio da rede
