@@ -70,6 +70,28 @@ ESQUEMAS = {
         "extraido_em": "str",
         "populacao": "int",
     },
+    # FBSP (Anuário Brasileiro de Segurança Pública), formato longo e exploratório: uma linha por célula numérica das
+    # tabelas do anuário em que a UF (ou o Brasil, "BR") e o ano foram identificados (nunca capital, região ou município);
+    # `grupo_qualidade` é o grupo de qualidade dos dados que o FBSP dá à UF na tabela. `coluna` e `titulo` como vieram;
+    # ainda sem dicionário de indicadores. Ver extractors/nacional/fbsp/fbsp.py
+    "fbsp": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "edicao": "int",
+        "tabela_id": "str",
+        "arquivo": "str",
+        "local": "str",
+        "titulo": "str",
+        "rotulo": "str",
+        "grupo_qualidade": "str",
+        "coluna": "str",
+        "valor": "float",
+        "valor_texto": "str",
+        "ano_origem": "str",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
 }
 
 # Colunas que não podem ser nulas em nenhuma tabela

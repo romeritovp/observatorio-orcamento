@@ -1,28 +1,28 @@
-uf,cod_ibge,nome,regiao,artigo
-RO,11,Rondônia,Norte,
-AC,12,Acre,Norte,o
-AM,13,Amazonas,Norte,o
-RR,14,Roraima,Norte,
-PA,15,Pará,Norte,o
-AP,16,Amapá,Norte,o
-TO,17,Tocantins,Norte,o
-MA,21,Maranhão,Nordeste,o
-PI,22,Piauí,Nordeste,o
-CE,23,Ceará,Nordeste,o
-RN,24,Rio Grande do Norte,Nordeste,o
-PB,25,Paraíba,Nordeste,a
-PE,26,Pernambuco,Nordeste,
-AL,27,Alagoas,Nordeste,
-SE,28,Sergipe,Nordeste,
-BA,29,Bahia,Nordeste,a
-MG,31,Minas Gerais,Sudeste,
-ES,32,Espírito Santo,Sudeste,o
-RJ,33,Rio de Janeiro,Sudeste,o
-SP,35,São Paulo,Sudeste,
-PR,41,Paraná,Sul,o
-SC,42,Santa Catarina,Sul,
-RS,43,Rio Grande do Sul,Sul,o
-MS,50,Mato Grosso do Sul,Centro-Oeste,o
-MT,51,Mato Grosso,Centro-Oeste,o
-GO,52,Goiás,Centro-Oeste,
-DF,53,Distrito Federal,Centro-Oeste,o
+uf,cod_ibge,nome,regiao,artigo,capital
+RO,11,Rondônia,Norte,,Porto Velho
+AC,12,Acre,Norte,o,Rio Branco
+AM,13,Amazonas,Norte,o,Manaus
+RR,14,Roraima,Norte,,Boa Vista
+PA,15,Pará,Norte,o,Belém
+AP,16,Amapá,Norte,o,Macapá
+TO,17,Tocantins,Norte,o,Palmas
+MA,21,Maranhão,Nordeste,o,São Luís
+PI,22,Piauí,Nordeste,o,Teresina
+CE,23,Ceará,Nordeste,o,Fortaleza
+RN,24,Rio Grande do Norte,Nordeste,o,Natal
+PB,25,Paraíba,Nordeste,a,João Pessoa
+PE,26,Pernambuco,Nordeste,,Recife
+AL,27,Alagoas,Nordeste,,Maceió
+SE,28,Sergipe,Nordeste,,Aracaju
+BA,29,Bahia,Nordeste,a,Salvador
+MG,31,Minas Gerais,Sudeste,,Belo Horizonte
+ES,32,Espírito Santo,Sudeste,o,Vitória
+RJ,33,Rio de Janeiro,Sudeste,o,Rio de Janeiro
+SP,35,São Paulo,Sudeste,,São Paulo
+PR,41,Paraná,Sul,o,Curitiba
+SC,42,Santa Catarina,Sul,,Florianópolis
+RS,43,Rio Grande do Sul,Sul,o,Porto Alegre
+MS,50,Mato Grosso do Sul,Centro-Oeste,o,Campo Grande
+MT,51,Mato Grosso,Centro-Oeste,o,Cuiabá
+GO,52,Goiás,Centro-Oeste,,Goiânia
+DF,53,Distrito Federal,Centro-Oeste,o,Brasília

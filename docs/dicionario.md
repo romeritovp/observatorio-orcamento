@@ -59,11 +59,32 @@ Uma linha por UF e ano. Usada em `analytics.per_capita`.
 
 Arquivo: `data/processed/populacao/uf=<UF>/ano=<ano>/siconfi_dca_anexo_i_e.parquet`.
 
+## Tabela `fbsp`
+
+Formato longo e **exploratório**: uma linha por célula numérica das tabelas do Anuário Brasileiro de Segurança Pública (FBSP) em que a UF (ou o Brasil, `BR`) e o ano foram identificados (linhas de capital, região ou município nunca entram, mesmo com a UF ao lado) pelo extrator genérico (`extractors/nacional/fbsp/fbsp.py`). Ainda sem dicionário de indicadores: `titulo` e `coluna` vêm como estão no anuário.
+
+| coluna | tipo | descrição |
+|---|---|---|
+| edicao | int | edição do anuário (do nome do arquivo) |
+| tabela_id | str | identificador da tabela (hash de arquivo + página/aba) |
+| arquivo, local | str | arquivo bruto e página (`p12`) ou aba (`aba:T01`) |
+| titulo | str | título da tabela ("Tabela 12 - ...") |
+| rotulo | str | textos das colunas de identificação da linha, unidos por " \| " (ex.: `Grupo 1 \| Alagoas`), como vieram, com notas |
+| grupo_qualidade | str | grupo de qualidade dos dados atribuído pelo FBSP à UF naquela tabela (`Grupo 1`, `Grupo 2`, `Grupo 3`...); nulo na linha Brasil e nas tabelas sem grupo |
+| coluna | str | cabeçalho da coluna (indicador e/ou ano, cabeçalhos mesclados unidos por " \| ") |
+| valor, valor_texto | float, str | valor numérico e o texto original da célula |
+| fonte_dado | str | `fbsp_anuario` |
+
+`extraido_em` fica nulo (arquivos baixados à mão); o SHA-256 de cada arquivo está no catálogo. Tabela completa (inclusive células sem UF ou ano, com `nivel_territorial`: `uf`, `brasil`, `capital`, `total_capitais`, `regiao`, `municipio` ou nulo, e `capital`), catálogo e CSV de cada tabela em `data/interim/fbsp/`. Uma mesma estatística pode aparecer em várias edições, às vezes revisada: filtrar por `edicao`.
+
+Arquivo: `data/processed/fbsp/uf=<UF>/ano=<ano>/fbsp.parquet`.
+
 ## Dicionários (`dicionarios/`)
 
 | arquivo | origem | colunas |
 |---|---|---|
-| nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao, artigo (`o`, `a` ou vazio: "o RJ", "a BA", "SP"; usado nos textos do front) |
+| nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao, artigo (`o`, `a` ou vazio: "o RJ", "a BA", "SP"; usado nos textos do front), capital (nome oficial; o extrator do FBSP usa para separar linha de capital de linha de UF) |
+| nacional/territorios.csv | manual (IBGE) | uf, cod_ibge, nome. Territórios que não são UF: hoje só o Brasil (`BR`, `1`). Fica fora do `ufs.csv`, que é a lista das 27 UFs |
 | nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) |
 | nacional/funcoes.csv | SICONFI DCA Anexo I-E em cache (script `extractors/nacional/siconfi/dicionario_funcoes.py`) | funcao_cod, funcao_nome |
 | nacional/subfuncoes.csv | idem | subfuncao_cod, subfuncao_nome |

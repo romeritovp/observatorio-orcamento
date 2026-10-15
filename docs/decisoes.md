@@ -300,3 +300,33 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 | Desktop: tela pronta | 0,87 s | 0,71 s |
 
 **Consequência:** trocar de estado na tela baixa de 30 a 40 KB (gzip) do novo estado. O cálculo de todas as funções na abertura (rankings e medianas das 27 UFs) continua sendo a maior tarefa no celular.
+
+### 2026-10-15 — FBSP (Anuário Brasileiro de Segurança Pública): extrator genérico no padrão do projeto
+**Contexto:** extrator exploratório do usuário (`extractors/nacional/fbsp/fbsp.py`) gravava num "banco" próprio (`banco/`), fora do fluxo do projeto.
+**Decisão:** sem mudar a leitura (`para_longo`, `processa_pdf`, `processa_xlsx`):
+1. Entrada padrão `data/raw/fbsp/`; execução por `uv run python -m extractors.nacional.fbsp.fbsp`; `pdfplumber` vira dependência do projeto (`uv add`).
+2. **Tabela canônica `fbsp`** (esquema em `extractors/base.py`, gravada por `base.gravar` em `data/processed/fbsp/uf=<UF>/ano=<ano>/fbsp.parquet`) só com as células de UF (ou BR) e ano identificados, porque `uf`, `cod_ibge` e `ano` são obrigatórios; `cod_ibge` pelos dicionários; `extraido_em` nulo (arquivos baixados à mão).
+3. **Material de conferência** (todas as células, catálogo, CSV por tabela) em `data/interim/fbsp/`: não é tabela canônica, então fica fora de `processed/`. Pasta `data/interim/` passa a existir para esse tipo de saída.
+4. **Arquivos com o mesmo SHA-256 param a extração** (a edição vem do nome do arquivo e sairia trocada); `--ignorar` pula um arquivo. Motivo: `anuario-2016.xlsx` é cópia do de 2022.
+
+**Consequência:** a tabela é exploratória (sem dicionário de indicadores; ano por heurística do cabeçalho, com casos errados documentados em `docs/fontes/fbsp.md`). Não alimenta nenhuma tela.
+
+### 2026-10-15 — FBSP: ano só de uma fonte inequívoca, edições preservadas e a edição mais recente prevalece
+**Contexto:** a primeira extração dava a 414 valores da Tabela 64 da edição 2026 o ano 2026, tirado do intervalo "2022-2026" do título. A causa era dupla: o cabeçalho só aceitava 5 linhas (a tabela tem 7, e a linha dos anos virava dado) e o ano saía do último ano encontrado no texto. Ano de cabeçalho com nota de rodapé ("2023 (2)") tinha o mesmo efeito (edição 2025, Tabela 46).
+**Decisão (do usuário):**
+1. **Ano da célula:** o cabeçalho da própria coluna, se tiver exatamente um ano (`ano_origem = coluna`); senão o título, se tiver exatamente um ano (`ano_origem = titulo`); senão nulo, com o motivo (`varios_anos_no_titulo`, `varios_anos_na_coluna`, `sem_ano`), e a célula não vai para `processed/`. Intervalo nunca vira ano. Cabeçalho de até 10 linhas; ano com nota colada ("2023 (2)") conta como ano; a última linha do cabeçalho não propaga para a direita (célula vazia ali é "sem ano", ex.: "Variação (%)").
+2. **Edições preservadas:** a tabela `fbsp` guarda todas as edições em que um valor aparece, com `edicao`. Ex. real: mortes violentas intencionais (números absolutos), RJ, 2021: 4.755 na edição 2022 e 4.762 nas edições 2023 a 2026 (o anuário revisa o ano anterior). 617 das 672 combinações UF × ano aparecem em mais de uma edição.
+3. **Regra de uso:** para cada indicador, UF e ano, **prevalece a edição mais recente**. Ela será aplicada na leitura, quando existir o dicionário de indicadores (a chave "indicador" ainda não existe: `titulo` e `coluna` mudam de redação entre edições). Nada é apagado na tabela.
+
+**Consequência:** `processed/fbsp` passou a ter 188.289 valores (162.146 com ano da coluna e 26.143 com ano do título); 189.603 ficam fora, por motivo, em `data/interim/fbsp/fora_de_processed.csv` (sem UF: capitais, municípios, regiões e totais; sem ano inequívoco). O inventário das 15 mil combinações (edicao, titulo, coluna), em `data/interim/fbsp/inventario.csv`, é a base do dicionário de indicadores.
+
+### 2026-10-15 — FBSP: território em qualquer coluna de identificação, grupo de qualidade e capital à parte
+**Contexto:** o extrator só procurava a UF na 1ª coluna. Nas planilhas de 2018 em diante a tabela de mortes violentas intencionais (MVI) traz o grupo de qualidade dos dados na 1ª coluna ("Grupo 1") e a UF na 2ª; nos PDFs a 1ª coluna costuma vir vazia. O diagnóstico (`scripts/diagnostico_fbsp.py`) achou 91.307 valores de UF fora de `processed/` só por isso.
+**Decisão (do usuário):**
+1. **Colunas de identificação:** a 1ª coluna e as seguintes enquanto forem de texto nas linhas de dados (mais texto que número) ou de código/posição em ranking pelo cabeçalho (`Cód.`, `Código IBGE`, `Posição`, `Ranking`, `Nº` sozinho). O território é procurado em todas elas, pelos dicionários (`ufs.csv`, que ganhou a coluna `capital`, e `territorios.csv`); nada escrito no código.
+2. **Vale o território mais à direita;** o que fica à esquerda é atributo: "Grupo N" (ou o "N opurG" invertido de alguns PDFs) vai para `grupo_qualidade`; em "Grupo 1 | AL | Maceió" a linha é da capital (UF como atributo), e o nome vai para `capital`. Coluna cujo cabeçalho é só de capitais: "DF | -" é Brasília, "Rio de Janeiro" é a cidade. Coluna de municípios (ou título de municípios com nome que não é território): a linha é `municipio`.
+3. **Código e posição em ranking nunca viram valor.**
+4. **Só linhas de UF e Brasil vão para `processed/`** (`nivel_territorial` em `uf`/`brasil`); capitais, total das capitais, regiões e municípios ficam em `data/interim/fbsp/` com o nível. Sem tabela municipal por enquanto; regra do ano inalterada.
+5. **Aceitação:** em cada edição, a tabela de MVI por UF em `processed/` com as 27 UFs e a soma das UFs igual à linha Brasil em cada coluna de números absolutos ("-" conta zero na soma). Teste com a Tabela 02 de 2024 real (`tests/fixtures/fbsp/`); conferência de todas as edições no diagnóstico.
+
+**Consequência:** `processed/fbsp` passou de 188.289 para 231.783 valores (873 arquivos). O ganho líquido de 43.494 já desconta 6.237 valores de tabelas de capitais ("SE | Aracaju", UF na 1ª coluna) que antes entravam como se fossem da UF e agora saem. Fora de `processed/`: 189.603 → 144.206; "UF fora da 1ª coluna" caiu de 91.307 para 5.984 (o resto está em PDFs com o bloco de UFs numa célula só ou fora das colunas de identificação), e "UF sem ano inequívoco" subiu de 31.475 para 66.192: são linhas de UF agora identificadas que esbarram na regra do ano, inalterada. A tabela de MVI por UF passa na aceitação nas 9 edições em planilha (2018–2026); nos PDFs (2007–2017) ela não é encontrada, ou sai como texto em bloco (2017). Ver `data/interim/fbsp/diagnostico/`.
