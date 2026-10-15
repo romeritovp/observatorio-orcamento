@@ -72,22 +72,16 @@ def reler():
 
 
 def caminho_do_csv(t):
+    """CSV de conferência da aba (data/interim/fbsp/brutos/<arquivo>_<aba>.csv)."""
+    if not t.local.startswith("aba:"):
+        return None
     stem = t.arquivo.rsplit(".", 1)[0]
-    if t.local.startswith("aba:"):
-        csv = DIR / "brutos" / f"{stem}_{re.sub(r'\W+', '_', str(t.local[4:]))}.csv"
-        return csv if csv.exists() else None
-    # PDF: o catálogo não guarda o número da tabela na página; acha pelo tabela_id
-    p = int(t.local[1:])
-    for c in (DIR / "brutos").glob(f"{stem}_p{p}_t*.csv"):
-        if fbsp.tabela_id(t.arquivo, p, int(c.stem.rsplit("_t", 1)[1])) == t.tabela_id:
-            return c
-    return None
+    csv = DIR / "brutos" / f"{stem}_{re.sub(r'\W+', '_', str(t.local[4:]))}.csv"
+    return csv if csv.exists() else None
 
 
 def titulo_descritivo(linhas, t):
-    """Planilhas: as primeiras linhas de texto (o "titulo" é só "T07 — TABELA 07"). PDF: o título achado na página."""
-    if t.titulo and not t.local.startswith("aba:"):
-        return str(t.titulo)[:160]
+    """As primeiras linhas de texto da aba (o "titulo" é só "T07 — TABELA 07")."""
     cab = [next((str(c).strip() for c in l if str(c).strip()), "") for l in linhas[:4]]
     return " | ".join(x for x in cab if x and "Voltar" not in x)[:160]
 
@@ -113,7 +107,7 @@ def grupo_pelos_textos(r):
     textos = [norm(t) for t in r.textos_linha]
     siglas = [t.upper() for t in textos if t.upper() in SIGLAS]
     nomes = [t for t in textos if t.upper() not in SIGLAS and len(t) > 2
-             and not re.fullmatch(r"(grupo \d+|\d+ opurg|opurg \d*|urg|-)", t)]
+             and not re.fullmatch(r"(grupo \d+|-)", t)]
     contexto = norm(f"{r.titulo} {r.titulo_descritivo} {r.coluna}")
     municipal = re.search(r"\bmunicipios?\b|\bcidades?\b", contexto) is not None  # não "munição" nem "municipais"
     if any(t in TOTAIS_CAPITAIS for t in textos):
@@ -163,7 +157,7 @@ def aceitacao_mvi(df):
         linha = {"edicao": int(edicao), "arquivo": parte["arquivo"].iloc[0], "tabela": None, "ufs_em_processed": 0,
                  "colunas_absolutas": 0, "colunas_soma_diferente": None, "celulas_nao_disponiveis": None, "ok": False}
         if alvo.empty:
-            linha["observacao"] = "tabela de MVI por UF não encontrada na extração (PDF: texto em bloco)"
+            linha["observacao"] = "tabela de MVI por UF não encontrada na extração"
             linhas.append(linha)
             continue
         tabela_id = alvo["tabela_id"].iloc[0]
@@ -212,6 +206,8 @@ def main(argv=None):
     depois = resumo(fora)
     if ANTES.exists():
         antes_df = pd.read_parquet(ANTES)
+        # o retrato "antes" pode trazer valores dos PDFs (lidos até 2026-10-15): compara só as planilhas
+        antes_df = antes_df[~antes_df["arquivo"].str.lower().str.endswith(".pdf")]
         antes_df["grupo"] = antes_df["grupo"].replace(NOMES_ANTIGOS)
         antes = resumo(antes_df)
         tabela = pd.concat({"antes": antes, "depois": depois}, axis=1)

@@ -1,6 +1,6 @@
 """FBSP (Anuário Brasileiro de Segurança Pública): leitura de tabela em formato longo e as regras do projeto
 (arquivos repetidos, tabela canônica só com UF e ano, regra do ano, território em qualquer coluna de identificação).
-Sem rede; a Tabela 64 de 2026 e a Tabela 02 de 2024 (mortes violentas intencionais) são recortes reais em
+Sem rede; as Tabelas 64 e 45 de 2026 e a Tabela 02 de 2024 (mortes violentas intencionais) são recortes reais em
 tests/fixtures/fbsp/."""
 
 from pathlib import Path
@@ -79,11 +79,11 @@ def test_regra_do_ano(coluna, titulo, esperado):
 def test_inventario_e_resumo_do_que_ficou_fora():
     df = pd.DataFrame([
         {"edicao": 2026, "titulo": "T", "coluna": "c | 2024", "uf": "RJ", "ano_coluna": 2024, "ano_origem": "coluna",
-         "motivo_sem_ano": None, "valor": 1.0, "rotulo": "Rio de Janeiro", "nivel_territorial": "uf", "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
+         "motivo_sem_ano": None, "valor": 1.0, "rotulo": "Rio de Janeiro", "nivel_territorial": "uf", "variacao": False, "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
         {"edicao": 2026, "titulo": "T", "coluna": "c | 2024", "uf": None, "ano_coluna": 2024, "ano_origem": "coluna",
-         "motivo_sem_ano": None, "valor": 2.0, "rotulo": "Capitais", "nivel_territorial": "total_capitais", "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
+         "motivo_sem_ano": None, "valor": 2.0, "rotulo": "Capitais", "nivel_territorial": "total_capitais", "variacao": False, "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
         {"edicao": 2026, "titulo": "T", "coluna": "c", "uf": "SP", "ano_coluna": None, "ano_origem": None,
-         "motivo_sem_ano": "varios_anos_no_titulo", "valor": 3.0, "rotulo": "São Paulo", "nivel_territorial": "uf", "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
+         "motivo_sem_ano": "varios_anos_no_titulo", "valor": 3.0, "rotulo": "São Paulo", "nivel_territorial": "uf", "variacao": False, "tabela_id": "a", "arquivo": "x", "local": "aba:T"},
     ])
     inv = fbsp.inventario(df)
     assert inv[["coluna", "n_valores", "n_em_processed"]].values.tolist() == [["c", 1, 0], ["c | 2024", 2, 1]]
@@ -173,7 +173,7 @@ def test_municipios_ranking_e_codigo_nunca_viram_uf_nem_valor():
     assert [r["uf"] for r in regs] == ["BA", "AP"]  # a UF do município fica como atributo
 
 
-@pytest.mark.parametrize("texto, esperado", [("Grupo 2", "Grupo 2"), ("1 opurG", "Grupo 1"), ("Grupo 3 (1)", "Grupo 3"),
+@pytest.mark.parametrize("texto, esperado", [("Grupo 2", "Grupo 2"), ("Grupo 3 (1)", "Grupo 3"),
                                              ("Grupos segundo qualidade", None), ("Alagoas", None)])
 def test_grupo_de_qualidade(texto, esperado):
     assert fbsp.grupo_qualidade(texto) == esperado
@@ -206,3 +206,48 @@ def test_titulo_com_municipios_nao_faz_da_coluna_de_ufs_uma_coluna_de_municipios
     ]
     regs = fbsp.para_longo(tabela, {"tabela_id": "t54", "arquivo": "anuario-2026.xlsx", "local": "aba:T54", "titulo": "T54"})
     assert {(r["rotulo"], r["nivel_territorial"]) for r in regs} == {("Municípios", None), ("Acre", "uf")}
+
+
+def test_t45_2026_ano_com_duas_notas_e_variacao_fora_de_processed():
+    """Tabela 45 (2026), real: registros de arma de fogo, anos 2017–2025 com notas ("2023 (2) (3)") e duas colunas de
+    "Variação (%)". Antes, "2023 (2) (3)" não era ano: a linha dos anos virava dado e a tabela inteira caía no intervalo
+    do título. Agora: um ano por coluna, as 27 UFs em cada uma e a variação fora de processed/ (recalculável)."""
+    df = pd.DataFrame(fbsp.para_longo(ler_fixture("anuario-2026_T45.csv"),
+                                      {"tabela_id": "t45", "arquivo": "anuario-2026.xlsx", "local": "aba:T45", "titulo": "T45 — TABELA 45"}))
+    df["edicao"] = 2026
+    df["ano_coluna"] = df["ano_coluna"].astype("Int64")
+    assert not df["valor"].isin(range(2017, 2026)).any()  # a linha dos anos não é dado
+    canonica = base.validar_esquema(fbsp.tabela_canonica(df), "fbsp")
+    assert sorted(canonica["ano"].unique()) == list(range(2017, 2026))
+    assert set(canonica["ano_origem"]) == {"coluna"}
+    assert not canonica["coluna"].str.contains("Variação").any()
+    assert canonica.groupby("ano")["uf"].nunique().eq(28).all()  # 27 UFs + BR em cada ano
+    brasil_2023 = canonica[(canonica["uf"] == "BR") & (canonica["ano"] == 2023)]["valor"]
+    assert brasil_2023.tolist() == [2088048]
+    fora = fbsp.motivo_fora(df)
+    assert set(fora[df["variacao"]]) == {"variacao"} and len(fora[df["variacao"]]) == 56
+
+
+@pytest.mark.parametrize("celula, esperado", [("2019 (1) (2)", True), ("2023 (2) (3)", True), ("2024 (5)", True),
+                                              ("2024*", True), ("2024", True), ("2022-2023", False), ("12345", False)])
+def test_ano_de_cabecalho_com_qualquer_numero_de_notas(celula, esperado):
+    assert fbsp.eh_ano(celula) is esperado
+
+
+def test_variacao_com_um_so_ano_no_titulo_tambem_fica_fora():
+    """Coluna "Variação (%)" sem ano próprio herdaria o ano do título; mesmo assim não entra em processed/."""
+    tabela = [["Tabela 9 - Roubos - 2024", "", ""], ["UF", "Ns. Absolutos", "Variação (%)"], ["Acre", "100", "5,2"]]
+    df = pd.DataFrame(fbsp.para_longo(tabela, {"tabela_id": "t", "arquivo": "anuario-2025.xlsx", "local": "aba:T09", "titulo": "T09"}))
+    df["edicao"] = 2025
+    df["ano_coluna"] = df["ano_coluna"].astype("Int64")
+    assert fbsp.tabela_canonica(df)["valor"].tolist() == [100]
+    assert fbsp.motivo_fora(df).tolist() == [None, "variacao"]
+
+
+def test_so_planilhas_anuario_edicao_sao_lidas(tmp_path):
+    """PDFs, planilhas de trabalho e arquivos temporários do Excel ("~$...") na pasta dos brutos não entram."""
+    for nome in ["anuario-2024.xlsx", "anuario-2025.xlsx", "anuario-2017.pdf", "T2-2018-2026.xlsx", "~$anuario-2024.xlsx"]:
+        (tmp_path / nome).write_bytes(nome.encode())
+    lidos, ignorados = fbsp.arquivos_do_anuario(tmp_path, ignorar=["anuario-2025.xlsx"])
+    assert [p.name for p in lidos] == ["anuario-2024.xlsx"]
+    assert sorted(p.name for p in ignorados) == ["T2-2018-2026.xlsx", "anuario-2017.pdf", "anuario-2025.xlsx", "~$anuario-2024.xlsx"]

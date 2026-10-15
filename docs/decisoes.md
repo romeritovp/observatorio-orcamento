@@ -439,6 +439,15 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 
 **Consequência:** `processed/fbsp` passou de 188.289 para 231.783 valores (873 arquivos). O ganho líquido de 43.494 já desconta 6.237 valores de tabelas de capitais ("SE | Aracaju", UF na 1ª coluna) que antes entravam como se fossem da UF e agora saem. Fora de `processed/`: 189.603 → 144.206; "UF fora da 1ª coluna" caiu de 91.307 para 5.984 (o resto está em PDFs com o bloco de UFs numa célula só ou fora das colunas de identificação), e "UF sem ano inequívoco" subiu de 31.475 para 66.192: são linhas de UF agora identificadas que esbarram na regra do ano, inalterada. A tabela de MVI por UF passa na aceitação nas 9 edições em planilha (2018–2026); nos PDFs (2007–2017) ela não é encontrada, ou sai como texto em bloco (2017). Ver `data/interim/fbsp/diagnostico/`.
 
+### 2026-10-15 — FBSP: só as planilhas; ano com várias notas; colunas de variação fora de `processed/`
+**Contexto:** a leitura dos PDFs (edições 2007–2017, `pdfplumber`) trazia tabelas em bloco de texto, texto invertido e páginas sem texto; a tabela de MVI por UF não passava na aceitação em nenhuma edição em PDF. Nas planilhas, cabeçalhos como "2019 (1) (2)" (ano com duas notas) não eram reconhecidos como ano, e a tabela inteira caía no intervalo do título (11 tabelas das edições 2022–2026).
+**Decisão (do usuário):**
+1. **Só planilhas:** o extrator lê apenas `data/raw/fbsp/anuario-<edição>.xlsx` (2018–2026). Os PDFs continuam em `data/raw/fbsp/`, mas não são lidos; a leitura de PDF (`processa_pdf`, a dependência `pdfplumber`, a forma invertida "1 opurG" do grupo de qualidade e os ramos de PDF do diagnóstico) saiu do código. Outros arquivos da pasta (planilhas de trabalho, temporários do Excel "~$...") são listados e ignorados.
+2. **Ano de cabeçalho com qualquer número de notas** ("2019 (1) (2)", "2023 (2) (3)") é ano. A regra do ano (cabeçalho da coluna ou título com exatamente um ano) não mudou.
+3. **Colunas de variação** ("Variação (%)", reconhecidas pelo cabeçalho da própria coluna) nunca vão para `processed/` (motivo `variacao` em `data/interim/fbsp/fora_de_processed.csv`): **são recalculáveis a partir dos valores dos anos**, que estão na tabela.
+
+**Consequência:** `processed/fbsp`: 185.867 valores (9 edições, 806 tabelas, 28 territórios, 672 arquivos), contra 185.498 das planilhas e 46.285 dos PDFs antes. A aceitação de MVI por UF (27 UFs, soma das UFs = Brasil nas colunas absolutas) passa em 2018–2026. Não reaplicadas, de propostas anteriores: a exclusão de ano posterior à edição (os casos eram dos PDFs) e as colunas `formato_origem` e `n_ufs_tabela`. Cópia das mudanças descartadas em `backups/` (fora do git).
+
 ### 2026-10-15 — Navegação por estado e por indicador, com rotas em caminho
 **Contexto:** o menu tinha uma aba por tela ("Por estado | Comparar | PIB dos Estados | Pesquisa e Inovação | Educação | Como fazemos") e o botão de tema quebrava para uma segunda linha; cada indicador novo virava uma aba.
 **Decisão (do usuário, escolhida entre caminhos, parâmetros de busca e hash):**

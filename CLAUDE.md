@@ -45,7 +45,7 @@ Em qualquer outro lugar, a UF é parâmetro. Nunca escrever "RJ", "33" ou outra 
 - Brutos IBGE Contas Regionais: `data/raw/ibge/contas-regionais/<edicao>/` (zips intactos, índices e zips extraídos), com `data/raw/ibge/contas-regionais/manifesto.json` (URL, data, tamanho e SHA-256)
 - Brutos INPI (IBID): `data/raw/inpi/ibid/ibid-serie-historica.xlsx`, com `data/raw/inpi/manifesto.json` (URL, data, tamanho e SHA-256)
 - Brutos Inep (IDEB): `data/raw/inep/ideb/<edicao>/` (zips de regiões/UFs e do Brasil, intactos e extraídos), com `data/raw/inep/manifesto.json`
-- Brutos FBSP (Anuário Brasileiro de Segurança Pública): `data/raw/fbsp/anuario-<edição>.pdf|xlsx` (baixados à mão; a edição vem do nome)
+- Brutos FBSP (Anuário Brasileiro de Segurança Pública): `data/raw/fbsp/anuario-<edição>.xlsx` (baixados à mão; a edição vem do nome; só as planilhas, 2018 em diante, são lidas)
 - Material de conferência que não é tabela canônica (ex.: todas as células do anuário do FBSP, catálogo, CSV por tabela): `data/interim/<fonte>/`
 - Brutos estaduais: `data/raw/ufs/<uf>/<fonte>/<ano>.csv` (uf minúscula no caminho)
 - Séries de referência: `data/reference/` (IPCA; fonte em `docs/fontes/ibge.md`)

@@ -1,13 +1,14 @@
 """
-fbsp.py — extrai tabelas dos PDFs e XLSX do Fórum Brasileiro de Segurança Pública
-(Anuário Brasileiro de Segurança Pública) e junta tudo em formato longo.
+fbsp.py — extrai as tabelas das planilhas (XLSX) do Fórum Brasileiro de Segurança Pública
+(Anuário Brasileiro de Segurança Pública) e junta tudo em formato longo. Os PDFs (edições até 2017) não são lidos.
 
 Uso:
     uv run python -m extractors.nacional.fbsp.fbsp
     uv run python -m extractors.nacional.fbsp.fbsp --ignorar anuario-2016.xlsx   # pula um arquivo
     uv run python -m extractors.nacional.fbsp.fbsp --entrada <pasta> --conferencia <pasta>
 
-Entrada (brutos, nunca editados): data/raw/fbsp/anuario-<edição>.pdf|xlsx. A edição vem do nome do arquivo.
+Entrada (brutos, nunca editados): data/raw/fbsp/anuario-<edição>.xlsx. A edição vem do nome do arquivo. Qualquer outro
+arquivo da pasta (PDFs, planilhas de trabalho, arquivos temporários do Excel "~$...") é listado e ignorado.
 Dois arquivos com o mesmo conteúdo (SHA-256) param a extração: a edição sairia trocada. Use --ignorar.
 
 Saídas:
@@ -16,7 +17,7 @@ Saídas:
                                                          obrigatórios no projeto)
     data/interim/fbsp/fbsp_longo.parquet                 TODAS as células numéricas (para conferência e exploração):
                                                          tabela_id | titulo | rotulo | coluna | ano_coluna | valor ...
-    data/interim/fbsp/catalogo.parquet                   1 linha por tabela: arquivo, página/aba, título, tamanho,
+    data/interim/fbsp/catalogo.parquet                   1 linha por tabela: arquivo, aba, título, tamanho,
                                                          status, mais o SHA-256 de cada arquivo lido
     data/interim/fbsp/brutos/*.csv                       cada tabela como saiu do arquivo (para conferência)
     data/interim/fbsp/inventario.parquet|csv             combinações distintas de (edicao, titulo, coluna), com contagens:
@@ -30,6 +31,8 @@ Colunas de código (IBGE etc.) e de posição em ranking nunca viram valor. Só 
 
 Ano de cada célula (ano_origem): o cabeçalho da coluna, se tiver exatamente um ano ("coluna"); senão o título da
 tabela, se tiver exatamente um ano ("titulo"); senão nulo (intervalo "2022-2026" ou vários anos não viram ano).
+Ano de cabeçalho com qualquer número de notas ("2019 (1) (2)") continua sendo ano. Colunas de variação ("Variação (%)")
+nunca vão para processed/: são recalculáveis a partir dos anos.
 """
 import argparse
 import functools
@@ -39,7 +42,6 @@ import unicodedata
 from pathlib import Path
 
 import pandas as pd
-import pdfplumber
 
 from extractors import base
 
@@ -88,7 +90,7 @@ def tabela_id(*partes) -> str:
 # ----------------------------------------------------------------- território
 # Nível de cada linha (nivel_territorial): "uf", "brasil", "capital", "total_capitais", "regiao" ou "municipio";
 # nulo quando nada na linha identifica o território. Só "uf" e "brasil" vão para processed/.
-RE_GRUPO = re.compile(r"grupo\s*(\d)|(\d)\s*opurg|opurg\s*(\d)")  # PDF às vezes traz o texto invertido ("1 opurG")
+RE_GRUPO = re.compile(r"grupo\s*(\d)")
 RE_TOTAL_CAPITAIS = re.compile(r"(total (das |de )?)?capitais( e (o )?(df|distrito federal))?")
 RE_MUNICIPAL = re.compile(r"\bmunicipios?\b|\bcidades?\b|\bbairros?\b")  # não pega "munição" nem "municipais"
 # colunas que nunca são valor: código (IBGE etc.) e posição em ranking. "Nº de vítimas" é valor: o "nº" só conta sozinho
@@ -121,9 +123,9 @@ def territorios():
 
 
 def grupo_qualidade(texto: str):
-    """'Grupo 1' (ou o '1 opurG' de alguns PDFs) -> 'Grupo 1'."""
+    """'Grupo 1', 'Grupo 1 (2)' -> 'Grupo 1'."""
     m = RE_GRUPO.fullmatch(norm_territorio(texto))
-    return f"Grupo {next(g for g in m.groups() if g)}" if m else None
+    return f"Grupo {m.group(1)}" if m else None
 
 
 def tipo_celula(texto: str):
@@ -226,7 +228,9 @@ def territorio_da_linha(celulas, titulo_municipal: bool = False):
 
 # ------------------------------------------------------ tabela crua -> longo
 MAX_CABECALHO = 10  # linhas de cabeçalho aceitas (a Tabela 64 da edição 2026 tem 7)
-RE_ANO_DE_CABECALHO = re.compile(r"(19[89]\d|20[0-4]\d)\s*(\(\d+\)|\*+)*")  # "2024", "2023 (2)", "2024*"
+# ano de cabeçalho com qualquer número de notas: "2024", "2023 (2)", "2019 (1) (2)", "2024*"
+RE_ANO_DE_CABECALHO = re.compile(r"(19[89]\d|20[0-4]\d)(\s*(\(\d+\)|\*+))*")
+RE_VARIACAO = re.compile(r"\bvaria[cç][aã]o\b", re.I)
 
 
 def eh_ano(celula: str) -> bool:
@@ -324,6 +328,7 @@ def para_longo(linhas, meta, com_textos=False):
                 **terr,
                 "coluna": nomes[j],
                 "ano_coluna": ano,
+                "variacao": bool(RE_VARIACAO.search(" ".join(partes_coluna[j]))),
                 "ano_origem": origem,
                 "motivo_sem_ano": motivo,
                 "valor": v,
@@ -332,36 +337,6 @@ def para_longo(linhas, meta, com_textos=False):
                    if com_textos else {}),
             })
     return registros
-
-
-# -------------------------------------------------------------------- PDF
-def processa_pdf(caminho: Path, dir_brutos: Path):
-    catalogo, longos = [], []
-    titulo_corrente = ""
-    with pdfplumber.open(caminho) as pdf:
-        for pnum, page in enumerate(pdf.pages, start=1):
-            if not (page.extract_text() or "").strip():
-                catalogo.append({"arquivo": caminho.name, "local": f"p{pnum}",
-                                 "status": "sem_texto (precisa OCR)"})
-                continue
-            titulos = sorted(page.search(RE_TITULO), key=lambda m: m["top"])
-            for tnum, tab in enumerate(page.find_tables(), start=1):
-                acima = [m for m in titulos if m["top"] < tab.bbox[1]]
-                if acima:
-                    titulo_corrente = limpa_texto(acima[-1]["text"])
-                # sem título acima = provável continuação da tabela da página anterior
-                linhas = tab.extract()
-                tid = tabela_id(caminho.name, pnum, tnum)
-                meta = {"tabela_id": tid, "arquivo": caminho.name, "local": f"p{pnum}",
-                        "titulo": titulo_corrente}
-                pd.DataFrame(linhas).to_csv(dir_brutos / f"{caminho.stem}_p{pnum}_t{tnum}.csv",
-                                            index=False, header=False)
-                regs = para_longo(linhas, meta)
-                longos += regs
-                catalogo.append({**meta, "n_linhas": len(linhas),
-                                 "n_colunas": max((len(l) for l in linhas), default=0),
-                                 "n_valores": len(regs), "status": "ok" if regs else "sem_numeros"})
-    return catalogo, longos
 
 
 # ------------------------------------------------------------------- XLSX
@@ -386,6 +361,16 @@ def processa_xlsx(caminho: Path, dir_brutos: Path):
 
 
 # ------------------------------------------------------------------- main
+RE_ARQUIVO_ANUARIO = re.compile(r"anuario-(\d{4})\.xlsx?", re.I)
+
+
+def arquivos_do_anuario(entrada: Path, ignorar=()):
+    """(planilhas anuario-<edição>.xlsx, demais arquivos ignorados), em ordem de nome."""
+    todos = sorted(p for p in entrada.rglob("*") if p.is_file())
+    lidos = [p for p in todos if RE_ARQUIVO_ANUARIO.fullmatch(p.name) and p.name not in ignorar]
+    return lidos, [p for p in todos if p not in lidos]
+
+
 def sha256(caminho: Path) -> str:
     return hashlib.sha256(caminho.read_bytes()).hexdigest()
 
@@ -407,25 +392,27 @@ NIVEIS_CANONICOS = ("uf", "brasil")
 
 def tabela_canonica(df):
     """Linhas da tabela `fbsp`: só as células de UF ou Brasil (nunca capital, região ou município) com ano identificado,
-    com cod_ibge dos dicionários."""
+    sem as colunas de variação (recalculáveis a partir dos anos), com cod_ibge dos dicionários."""
     codigo = fbsp_codigos()
-    saida = df[df["nivel_territorial"].isin(NIVEIS_CANONICOS) & df["uf"].isin(codigo) & df["ano_coluna"].notna()].copy()
+    saida = df[df["nivel_territorial"].isin(NIVEIS_CANONICOS) & df["uf"].isin(codigo) & df["ano_coluna"].notna()
+               & ~df["variacao"].astype(bool)].copy()
     saida["cod_ibge"] = saida["uf"].map(codigo)
     saida["ano"] = saida["ano_coluna"].astype(int)
     saida["fonte_dado"] = FONTE_DADO
     saida["extraido_em"] = None  # arquivos baixados à mão, sem data de extração registrada (o SHA-256 vai no catálogo)
-    return saida.drop(columns=["ano_coluna", "motivo_sem_ano", "nivel_territorial", "capital"])
+    return saida.drop(columns=["ano_coluna", "motivo_sem_ano", "nivel_territorial", "capital", "variacao"])
 
 
 def motivo_fora(df):
     """Por que cada célula ficou fora da tabela canônica (None = entrou): o território ("sem_uf" quando não foi
-    identificado; "capital", "regiao", "municipio", "total_capitais" quando não é UF nem Brasil), o motivo do ano nulo,
-    ou os dois ("sem_uf + varios_anos_no_titulo")."""
+    identificado; "capital", "regiao", "municipio", "total_capitais" quando não é UF nem Brasil), o motivo do ano nulo
+    ("variacao" para coluna de variação), ou os dois ("sem_uf + varios_anos_no_titulo")."""
     nivel = df["nivel_territorial"]
     canonico = nivel.isin(NIVEIS_CANONICOS) & df["uf"].isin(set(fbsp_codigos()))
     motivo_terr = nivel.where(nivel.notna() & ~nivel.isin(NIVEIS_CANONICOS), "sem_uf")
-    sem_ano = df["ano_coluna"].isna()
-    motivo_ano = df["motivo_sem_ano"].fillna("sem_ano")
+    variacao = df["variacao"].astype(bool)
+    sem_ano = df["ano_coluna"].isna() | variacao
+    motivo_ano = df["motivo_sem_ano"].where(~variacao, "variacao").fillna("sem_ano")
     return pd.Series(
         [(t + " + " + m) if not c and a else t if not c else m if a else None
          for c, t, a, m in zip(canonico, motivo_terr, sem_ano, motivo_ano)], index=df.index, dtype="object")
@@ -478,7 +465,7 @@ def gravar_tabela(df, caminho):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--entrada", default=str(DIR_RAW), help="pasta com PDFs e XLSX do FBSP (padrão: data/raw/fbsp)")
+    ap.add_argument("--entrada", default=str(DIR_RAW), help="pasta com as planilhas do FBSP (padrão: data/raw/fbsp)")
     ap.add_argument("--conferencia", default=str(DIR_CONFERENCIA),
                     help="pasta da tabela longa completa, do catálogo e dos CSV (padrão: data/interim/fbsp)")
     ap.add_argument("--ignorar", nargs="*", default=[], help="nomes de arquivo a pular (ex.: anuario-2016.xlsx)")
@@ -488,16 +475,17 @@ def main(argv=None):
     dir_brutos = conferencia / "brutos"
     dir_brutos.mkdir(parents=True, exist_ok=True)
 
-    arquivos = sorted(p for p in entrada.rglob("*") if p.suffix.lower() in {".pdf", ".xlsx", ".xls"}
-                      and p.name not in args.ignorar)
+    arquivos, ignorados = arquivos_do_anuario(entrada, args.ignorar)
+    if ignorados:
+        print(f"ignorados ({len(ignorados)}, fora do padrão anuario-<edição>.xlsx ou em --ignorar): "
+              + ", ".join(p.name for p in ignorados))
     conferir_repetidos(arquivos)
 
     catalogo, longos = [], []
     for arq in arquivos:
         print(f"→ {arq.name}")
         try:
-            fn = processa_pdf if arq.suffix.lower() == ".pdf" else processa_xlsx
-            c, l = fn(arq, dir_brutos)
+            c, l = processa_xlsx(arq, dir_brutos)
             catalogo += [{**x, "sha256": sha256(arq)} for x in c]
             longos += l
         except Exception as e:  # um arquivo quebrado não derruba o lote
@@ -506,7 +494,7 @@ def main(argv=None):
     df = pd.DataFrame(longos)
     gravados = []
     if not df.empty:
-        # edição do Anuário a partir do nome do arquivo (ex.: anuario-2024.pdf)
+        # edição do Anuário a partir do nome do arquivo (ex.: anuario-2024.xlsx)
         df["edicao"] = df["arquivo"].str.extract(r"(20\d{2})", expand=False).astype("Int64")
         df["ano_coluna"] = df["ano_coluna"].astype("Int64")
         df.to_parquet(conferencia / "fbsp_longo.parquet", index=False)

@@ -134,13 +134,13 @@ Arquivo: `data/processed/ideb/uf=<UF>/ano=<ano>/inep_ideb.parquet`. JSON de saí
 
 ## Tabela `fbsp`
 
-Formato longo e **exploratório**: uma linha por célula numérica das tabelas do Anuário Brasileiro de Segurança Pública (FBSP) em que a UF (ou o Brasil, `BR`) e o ano foram identificados (linhas de capital, região ou município nunca entram, mesmo com a UF ao lado) pelo extrator genérico (`extractors/nacional/fbsp/fbsp.py`). Ainda sem dicionário de indicadores: `titulo` e `coluna` vêm como estão no anuário.
+Formato longo e **exploratório**: uma linha por célula numérica das tabelas do Anuário Brasileiro de Segurança Pública (FBSP) em que a UF (ou o Brasil, `BR`) e o ano foram identificados (linhas de capital, região ou município nunca entram, mesmo com a UF ao lado) pelo extrator genérico (`extractors/nacional/fbsp/fbsp.py`). Ainda sem dicionário de indicadores: `titulo` e `coluna` vêm como estão no anuário. Só as planilhas (edições 2018–2026); colunas de variação ("Variação (%)") nunca entram: são recalculáveis a partir dos anos.
 
 | coluna | tipo | descrição |
 |---|---|---|
 | edicao | int | edição do anuário (do nome do arquivo) |
 | tabela_id | str | identificador da tabela (hash de arquivo + página/aba) |
-| arquivo, local | str | arquivo bruto e página (`p12`) ou aba (`aba:T01`) |
+| arquivo, local | str | planilha bruta e aba (`aba:T01`) |
 | titulo | str | título da tabela ("Tabela 12 - ...") |
 | rotulo | str | textos das colunas de identificação da linha, unidos por " \| " (ex.: `Grupo 1 \| Alagoas`), como vieram, com notas |
 | grupo_qualidade | str | grupo de qualidade dos dados atribuído pelo FBSP à UF naquela tabela (`Grupo 1`, `Grupo 2`, `Grupo 3`...); nulo na linha Brasil e nas tabelas sem grupo |
