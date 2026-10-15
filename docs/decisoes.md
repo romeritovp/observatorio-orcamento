@@ -301,6 +301,20 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 
 **Consequência:** trocar de estado na tela baixa de 30 a 40 KB (gzip) do novo estado. O cálculo de todas as funções na abertura (rankings e medianas das 27 UFs) continua sendo a maior tarefa no celular.
 
+### 2026-10-12 — PIB por UF: Contas Regionais do IBGE (`pib_uf` e `pib_uf_atividade`)
+**Contexto:** nova fonte nacional para normalizar e contextualizar os orçamentos pelo tamanho da economia de cada UF. Inspeção do layout da edição 2023 (série 2002–2023) antes do parser; ficha em `docs/fontes/ibge_contas_regionais.md`.
+**Decisão (do usuário):**
+1. **Território:** 27 UFs e Brasil (`uf = BR`, `cod_ibge = 1`, o código do Brasil no IBGE e o `id_ente` da União no SICONFI), num dicionário novo, `dicionarios/nacional/territorios.csv`, para o `ufs.csv` continuar sendo a lista das 27 UFs. Regiões ficam de fora.
+2. **Abas pela posição**, conferidas pelo conteúdo (território e atividade nas linhas 4 e 5 de cada bloco), nunca pelo nome da aba nem pelo ano do título: a Tabela19 tem abas com nome errado e 364 títulos dizem 2002-2022. Território ou atividade diferente do esperado faz o extractor falhar.
+3. **Nomes de território normalizados** (sem acento, minúsculas, espaços nas pontas e repetidos removidos) antes da ligação com `ufs.csv`, como na ANP: cobre `Santa catarina`, `Mato Grosso `, regiões e Brasil indentados.
+4. **#REF! e células vazias viram nulo**, nunca o código do erro. Acre 2002, atividades `09` a `13`: VBP e VAB nulos, **sem** preencher pela tab07; cada ocorrência vai para o log.
+5. **R$ nominais** (fonte em R$ milhão × 1.000.000), sem coluna de unidade.
+6. **`pib_uf`:** pib_corrente (tab01), vab (tab04), volume_pib_2002_100 (tab03), edicao. **Impostos não são gravados:** são calculados em `analytics/` como `pib_corrente − vab`.
+7. **`pib_uf_atividade`:** atividade_cod (`01` a `13`, texto com zero à esquerda, para ordenar certo como texto; o número é o sufixo da aba), nivel (`total` para `01`, `atividade` para `02` a `13`), valor_producao, consumo_intermediario, vab (preço corrente) e vab_indice_volume (índice anual da Conta da Produção, nulo em 2002), edicao.
+8. **`dicionarios/nacional/atividades_ibge.csv`:** atividade_cod, nome (oficial), nome_curto, grande_setor (Agropecuária = 02; Indústria = 03 a 06; Serviços = 07 a 13; Total = 01). A tab07 (com subtotais Indústria e Serviços) não é lida.
+
+**Consequência:** a cada extração o extractor confere soma das atividades = total, VBP − CI = VAB e VAB da Conta = tab04 (tolerância de R$ 0,01 milhão), e falha se não bater. Os testes conferem também soma das UFs = Brasil e os índices anuais contra a tab05. A coluna `edicao` permite guardar edições diferentes no futuro (cada uma revisa a série inteira); hoje cada extração sobrescreve os parquets.
+
 ### 2026-10-15 — FBSP (Anuário Brasileiro de Segurança Pública): extrator genérico no padrão do projeto
 **Contexto:** extrator exploratório do usuário (`extractors/nacional/fbsp/fbsp.py`) gravava num "banco" próprio (`banco/`), fora do fluxo do projeto.
 **Decisão:** sem mudar a leitura (`para_longo`, `processa_pdf`, `processa_xlsx`):

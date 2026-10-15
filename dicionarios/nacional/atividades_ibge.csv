@@ -1,0 +1,14 @@
+atividade_cod,nome,nome_curto,grande_setor
+01,Total das Atividades,Total,total
+02,Agropecuária,Agropecuária,agropecuaria
+03,Indústrias extrativas,Indústrias extrativas,industria
+04,Indústrias de transformação,Indústria de transformação,industria
+05,"Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação","Eletricidade, gás, água e esgoto",industria
+06,Construção,Construção,industria
+07,Comércio e reparação de veículos automotores e motocicletas,Comércio,servicos
+08,"Transporte, armazenagem e correio",Transporte e correio,servicos
+09,Informação e comunicação,Informação e comunicação,servicos
+10,"Atividades financeiras, de seguros e serviços relacionados",Finanças e seguros,servicos
+11,Atividades imobiliárias,Atividades imobiliárias,servicos
+12,"Administração, defesa, educação e saúde públicas e seguridade social",Administração pública,servicos
+13,Outros serviços,Outros serviços,servicos

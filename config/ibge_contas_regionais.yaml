@@ -1,0 +1,12 @@
+# Contas Regionais do IBGE (fonte nacional): PIB por UF, série 2002 até a edição, referência 2010.
+# A próxima edição só troca o ano: a URL e os nomes dos arquivos são montados a partir de `edicao`.
+edicao: 2023
+serie_inicio: 2002
+url_base: https://ftp.ibge.gov.br/Contas_Regionais/{edicao}/xls
+# Nomes dos arquivos na pasta da edição ({inicio} e {edicao} são preenchidos)
+arquivos:
+  - Conta_da_Producao_{inicio}_{edicao}_xls.zip
+  - Especiais_{inicio}_{edicao}_xls.zip
+  - Conta_da_Producao_{inicio}_{edicao}_indice_das_tabelas.txt
+  - Especiais_{inicio}_{edicao}_indice_das_tabelas.txt
+timeout_segundos: 120

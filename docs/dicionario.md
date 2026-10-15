@@ -59,6 +59,39 @@ Uma linha por UF e ano. Usada em `analytics.per_capita`.
 
 Arquivo: `data/processed/populacao/uf=<UF>/ano=<ano>/siconfi_dca_anexo_i_e.parquet`.
 
+## Tabela `pib_uf`
+
+Uma linha por território e ano (27 UFs e Brasil, `uf = BR`, `cod_ibge = 1`). IBGE, Contas Regionais, Especiais (ver `fontes/ibge_contas_regionais.md`). Valores em R$ nominais.
+
+| coluna | tipo | descrição |
+|---|---|---|
+| pib_corrente | float | PIB a preços correntes (tab01) |
+| vab | float | valor adicionado bruto a preços correntes (tab04). Impostos líquidos = `pib_corrente − vab`, calculados em `analytics/` |
+| volume_pib_2002_100 | float | série encadeada do volume do PIB, 2002 = 100 (tab03). Variação real do ano = valor do ano / valor do ano anterior |
+| edicao | int | edição das Contas Regionais (ano final da série); cada edição revisa a série inteira |
+| fonte_dado | str | `ibge_cr_especiais` |
+
+Arquivo: `data/processed/pib_uf/uf=<UF>/ano=<ano>/ibge_contas_regionais.parquet`.
+
+## Tabela `pib_uf_atividade`
+
+Uma linha por território, ano e atividade. IBGE, Contas Regionais, Conta da Produção. Valores em R$ nominais, a preço corrente.
+
+| coluna | tipo | descrição |
+|---|---|---|
+| atividade_cod | str | `01` a `13`, texto com zero à esquerda (sufixo da aba; nomes em `dicionarios/nacional/atividades_ibge.csv`) |
+| nivel | str | `total` (atividade `01`) ou `atividade` (`02` a `13`). Nunca somar os dois níveis |
+| valor_producao | float | valor bruto da produção |
+| consumo_intermediario | float | consumo intermediário |
+| vab | float | valor adicionado bruto (= valor_producao − consumo_intermediario) |
+| vab_indice_volume | float | índice de volume anual do VAB (razão, 1,0587 = +5,87%); nulo no primeiro ano da série |
+| edicao | int | edição das Contas Regionais |
+| fonte_dado | str | `ibge_cr_conta_producao` |
+
+Nulos conhecidos: Acre 2002, atividades `09` a `13`, `valor_producao` e `vab` (#REF! na fonte).
+
+Arquivo: `data/processed/pib_uf_atividade/uf=<UF>/ano=<ano>/ibge_contas_regionais.parquet`.
+
 ## Tabela `fbsp`
 
 Formato longo e **exploratório**: uma linha por célula numérica das tabelas do Anuário Brasileiro de Segurança Pública (FBSP) em que a UF (ou o Brasil, `BR`) e o ano foram identificados (linhas de capital, região ou município nunca entram, mesmo com a UF ao lado) pelo extrator genérico (`extractors/nacional/fbsp/fbsp.py`). Ainda sem dicionário de indicadores: `titulo` e `coluna` vêm como estão no anuário.
@@ -85,6 +118,7 @@ Arquivo: `data/processed/fbsp/uf=<UF>/ano=<ano>/fbsp.parquet`.
 |---|---|---|
 | nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao, artigo (`o`, `a` ou vazio: "o RJ", "a BA", "SP"; usado nos textos do front), capital (nome oficial; o extrator do FBSP usa para separar linha de capital de linha de UF) |
 | nacional/territorios.csv | manual (IBGE) | uf, cod_ibge, nome. Territórios que não são UF: hoje só o Brasil (`BR`, `1`). Fica fora do `ufs.csv`, que é a lista das 27 UFs |
+| nacional/atividades_ibge.csv | manual (IBGE, Contas Regionais) | atividade_cod (`01` a `13`, texto), nome (texto oficial), nome_curto (tela), grande_setor (`total`, `agropecuaria`, `industria`, `servicos`) |
 | nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) |
 | nacional/funcoes.csv | SICONFI DCA Anexo I-E em cache (script `extractors/nacional/siconfi/dicionario_funcoes.py`) | funcao_cod, funcao_nome |
 | nacional/subfuncoes.csv | idem | subfuncao_cod, subfuncao_nome |

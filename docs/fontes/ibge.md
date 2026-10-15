@@ -1,6 +1,6 @@
 # Fonte: IBGE
 
-Séries de referência nacionais, guardadas em `data/reference/`.
+Séries de referência nacionais, guardadas em `data/reference/`. O PIB por UF (Contas Regionais) tem ficha própria: `docs/fontes/ibge_contas_regionais.md`.
 
 ## IPCA (`data/reference/ipca.csv`)
 

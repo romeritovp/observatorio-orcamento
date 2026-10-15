@@ -70,6 +70,32 @@ ESQUEMAS = {
         "extraido_em": "str",
         "populacao": "int",
     },
+    # PIB por UF (e Brasil, uf "BR") das Contas Regionais do IBGE, em R$ nominais
+    "pib_uf": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "pib_corrente": "float",
+        "vab": "float",
+        "volume_pib_2002_100": "float",
+        "edicao": "int",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
+    "pib_uf_atividade": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "atividade_cod": "str",
+        "nivel": "str",
+        "valor_producao": "float",
+        "consumo_intermediario": "float",
+        "vab": "float",
+        "vab_indice_volume": "float",
+        "edicao": "int",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
     # FBSP (Anuário Brasileiro de Segurança Pública), formato longo e exploratório: uma linha por célula numérica das
     # tabelas do anuário em que a UF (ou o Brasil, "BR") e o ano foram identificados (nunca capital, região ou município);
     # `grupo_qualidade` é o grupo de qualidade dos dados que o FBSP dá à UF na tabela. `coluna` e `titulo` como vieram;

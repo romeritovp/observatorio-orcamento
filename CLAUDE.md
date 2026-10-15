@@ -6,7 +6,7 @@ Contexto para a IA. Leia antes de qualquer tarefa.
 Repositório Python para análises rápidas de orçamentos estaduais brasileiros com dados públicos. Começa pelo Rio de Janeiro, mas **é agnóstico de UF**: qualquer estado entra sem alterar o núcleo.
 
 Duas famílias de fontes:
-- **Nacionais** (servem a todas as UFs com o mesmo código): API do SICONFI (Tesouro Nacional), fonte principal para comparar estados; ANP (royalties e participação especial por estado, `docs/fontes/anp.md`); Tesouro, Raio X das estatais (`docs/fontes/tesouro_estatais.md`).
+- **Nacionais** (servem a todas as UFs com o mesmo código): API do SICONFI (Tesouro Nacional), fonte principal para comparar estados; ANP (royalties e participação especial por estado, `docs/fontes/anp.md`); Tesouro, Raio X das estatais (`docs/fontes/tesouro_estatais.md`); IBGE, Contas Regionais (PIB por UF, `docs/fontes/ibge_contas_regionais.md`).
 - **Estaduais** (formato próprio de cada UF): TCE e portal da transparência do estado. Usadas para o detalhe que o SICONFI não tem (programa, ação, órgão).
 
 ## Regra de ouro do agnosticismo
@@ -42,6 +42,7 @@ Em qualquer outro lugar, a UF é parâmetro. Nunca escrever "RJ", "33" ou outra 
 ## Caminhos
 - Brutos SICONFI: `data/raw/siconfi/<endpoint>/<cod_ibge>/<ano>_<periodo>_<anexo>.json`
 - Brutos ANP: `data/raw/anp/royalties-estados/<ano>.csv` e `data/raw/anp/participacao-especial/pe_estado.csv`, com `data/raw/anp/manifesto.json` (URL e data da extração)
+- Brutos IBGE Contas Regionais: `data/raw/ibge/contas-regionais/<edicao>/` (zips intactos, índices e zips extraídos), com `data/raw/ibge/contas-regionais/manifesto.json` (URL, data, tamanho e SHA-256)
 - Brutos FBSP (Anuário Brasileiro de Segurança Pública): `data/raw/fbsp/anuario-<edição>.pdf|xlsx` (baixados à mão; a edição vem do nome)
 - Material de conferência que não é tabela canônica (ex.: todas as células do anuário do FBSP, catálogo, CSV por tabela): `data/interim/<fonte>/`
 - Brutos estaduais: `data/raw/ufs/<uf>/<fonte>/<ano>.csv` (uf minúscula no caminho)
@@ -60,6 +61,10 @@ uf, cod_ibge, ano, fonte_dado, extraido_em, populacao
 
 **`compensacoes_anp`** — royalties e participação especial do petróleo destinados ao estado (nunca aos municípios), por ano de caixa (ANP):
 uf, cod_ibge, ano, tipo, valor, fonte_dado, extraido_em
+
+**`pib_uf`** e **`pib_uf_atividade`** — PIB, VAB e conta da produção por UF e Brasil (`uf` BR, `cod_ibge` 1, de `dicionarios/nacional/territorios.csv`), IBGE Contas Regionais, R$ nominais:
+uf, cod_ibge, ano, pib_corrente, vab, volume_pib_2002_100, edicao, fonte_dado, extraido_em
+uf, cod_ibge, ano, atividade_cod, nivel, valor_producao, consumo_intermediario, vab, vab_indice_volume, edicao, fonte_dado, extraido_em
 
 Detalhes em `docs/dicionario.md`.
 
