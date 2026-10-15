@@ -1,7 +1,9 @@
 // Carrega os JSON de public/data/ (gerados por `uv run python -m publicacao.exportar`).
 // Geral (todas as UFs, na abertura): meta, dicionários, IPCA, despesa por função, estatais (avisos),
 // dívida e receita (totais). Por UF (sob demanda, tela "Por estado"): subfunções, linhas da receita e
-// lista completa de estatais.
+// lista completa de estatais. Tela "PIB dos Estados" (sob demanda): pib.json (todas as UFs e o país) e
+// pib/<UF>.json (atividades da UF). Tela "Pesquisa e Inovação" (sob demanda): ibid.json e
+// despesa_ensino_superior.json. Tela "Educação" (sob demanda): ideb.json e ideb/<UF>.json.
 
 // Nome no objeto de dados → arquivo
 const GERAIS = {
@@ -40,3 +42,33 @@ export function carregarDadosDaUf(uf) {
   }
   return cacheUf.get(uf)
 }
+
+// PIB dos Estados: o arquivo geral e o de cada UF, uma busca por arquivo na sessão inteira
+const cachePib = new Map()
+
+function lerUmaVez(caminho) {
+  if (!cachePib.has(caminho)) {
+    const promessa = lerJson(caminho)
+    promessa.catch(() => cachePib.delete(caminho))  // falhou: tenta de novo na próxima vez
+    cachePib.set(caminho, promessa)
+  }
+  return cachePib.get(caminho)
+}
+
+/** pib.json: PIB, VAB e volume de todas as UFs e do país, dicionário das atividades e ressalvas. */
+export const carregarPib = () => lerUmaVez('pib')
+
+/** ibid.json: IBID (INPI), escores e ranking das 27 UFs, das regiões e do Brasil (tela "Pesquisa e Inovação"). */
+export const carregarIbid = () => lerUmaVez('ibid')
+
+/** ideb.json: IDEB das 27 UFs, regiões e Brasil, sem metas (tela "Educação"). */
+export const carregarIdeb = () => lerUmaVez('ideb')
+
+/** ideb/<UF>.json: aprovação por série da UF (tela "Educação"). */
+export const carregarIdebDaUf = (uf) => lerUmaVez(`ideb/${uf}`)
+
+/** despesa_ensino_superior.json: subfunção 364 em Educação, 27 UFs (mesma tela). */
+export const carregarEnsinoSuperior = () => lerUmaVez('despesa_ensino_superior')
+
+/** pib/<UF>.json: a conta da produção da UF por atividade. */
+export const carregarPibDaUf = (uf) => lerUmaVez(`pib/${uf}`)

@@ -1,6 +1,6 @@
 // Textos gerados a partir dos dados: factuais, sem adjetivos.
 
-import { reaisCompacto, valorDaMetrica } from './formatacao.js'
+import { pct, pctComSinal, reaisCompacto, valorDaMetrica } from './formatacao.js'
 
 /** "o RJ", "a BA", "SP" (artigo vem de dicionarios.json). */
 export function sujeito(uf, artigo) {
@@ -164,4 +164,73 @@ export function fraseReconciliacaoPetroleo({ situacao, demais, anp }) {
       + `repassados ao estado (ANP): ${reaisCompacto(anp)}. Os valores da ANP e da prestação de contas não se reconciliam neste ano.`
   }
   return null
+}
+
+/**
+ * Frase do PIB: "Em 2023, o RJ respondeu por 10,9% do PIB do país, o 2º maior entre 27 estados. De 2015 a 2023,
+ * a economia do RJ cresceu 5,1% descontada a inflação; a do país, 12,0%." Partes sem dado ficam de fora.
+ */
+export function frasePib({ ano, uf, artigo, pctPais, posicao, nUfs, desde, crescimentoUf, crescimentoPais }) {
+  if (pctPais === null || pctPais === undefined) return null
+  const verbo = (v) => (v >= 0 ? `cresceu ${pct(v)}` : `encolheu ${pct(-v)}`)
+  const partes = [`Em ${ano}, ${sujeito(uf, artigo)} respondeu por ${pct(pctPais)} do PIB do país`
+    + (posicao ? `, a ${posicao}ª maior economia entre ${nUfs} estados.` : '.')]
+  if (crescimentoUf !== null && crescimentoUf !== undefined && desde < ano) {
+    partes.push(`De ${desde} a ${ano}, a economia ${deUf(uf, artigo)} ${verbo(crescimentoUf)} em volume (sem o efeito dos preços)`
+      + (crescimentoPais === null || crescimentoPais === undefined ? '.' : `; a do país ${verbo(crescimentoPais)}.`))
+  }
+  return partes.join(' ')
+}
+
+/** "+2,1% ao ano" (taxa anual de tendência). */
+export const taxaAoAno = (v) => (v === null || v === undefined ? '–' : `${pctComSinal(v)} ao ano`)
+
+/**
+ * O que os dados permitem afirmar sobre a tendência (resultado de estatistica/tendencia.js), em linguagem simples.
+ * Separa a evidência (o intervalo de confiança) da intensidade (a categoria, mostrada à parte).
+ * margem: margem de equivalência da configuração (% ao ano), para o texto da estabilidade.
+ */
+export function textoEvidencia(r, margem = 1) {
+  const ic = r.inferencia?.icTaxa
+  const intervalo = ic ? `${pctComSinal(ic[0])} a ${pctComSinal(ic[1])} ao ano` : null
+  const nivel = `${Math.round((r.inferencia?.confianca ?? 0.95) * 100)}%`
+  if (r.evidencia === 'insuficiente') return 'Poucos anos para medir a incerteza: só a direção.'
+  if (r.evidencia === 'positiva') return `Alta confirmada pelos dados (intervalo de ${nivel}: ${intervalo}).`
+  if (r.evidencia === 'negativa') return `Queda confirmada pelos dados (intervalo de ${nivel}: ${intervalo}).`
+  if (r.estabilidade) return `Estabilidade confirmada: a variação fica entre −${margem}% e +${margem}% ao ano (intervalo: ${intervalo}).`
+  return `Direção incerta: o intervalo de ${nivel} vai de ${intervalo}.`
+}
+
+/** "Rio de Janeiro está em 4º lugar em 2025; em 2014, estava em 2º no índice geral, entre 27 estados." */
+export function fraseRankingIbid({ nome, ano, atual, anoInicial, inicial }) {
+  if (atual === null || atual === undefined) return null
+  const agora = `${nome} está em ${atual}º lugar em ${ano}`
+  const antes = inicial === null || inicial === undefined || ano === anoInicial ? ''
+    : atual === inicial ? `, como em ${anoInicial}` : `; em ${anoInicial}, estava em ${inicial}º`
+  return `${agora}${antes} no índice geral do IBID, entre 27 estados.`
+}
+
+/** "+0,8 ponto", "−0,1 ponto", "0,0 ponto" (variação do IDEB entre edições). */
+export function pontosComSinal(v) {
+  if (v === null || v === undefined) return '–'
+  const arredondado = Math.round(v * 10) / 10
+  const sinal = arredondado > 0 ? '+' : arredondado < 0 ? '−' : ''
+  return `${sinal}${Math.abs(arredondado).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${Math.abs(arredondado) > 1 ? 'pontos' : 'ponto'}`
+}
+
+/**
+ * "Em 2025, o IDEB do ensino médio na rede estadual do RS foi 4,7, o 5º maior entre 27 estados (Brasil: 4,2).
+ * Em 2023, era 3,9: subiu 0,8 ponto." Partes sem dado ficam de fora; sem IDEB no ano, null.
+ */
+export function fraseIdeb({ uf, artigo, etapa, rede, ano, ideb, posicao, nUfs, brasil, anoAnterior, anterior }) {
+  if (ideb === null || ideb === undefined) return null
+  const um = (v) => v.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  let frase = `Em ${ano}, o IDEB ${etapa} na ${rede} ${deUf(uf, artigo)} foi ${um(ideb)}`
+  if (posicao) frase += `, o ${posicao}º maior entre ${nUfs} estados`
+  frase += brasil === null || brasil === undefined ? '.' : ` (Brasil: ${um(brasil)}).`
+  if (anterior !== null && anterior !== undefined) {
+    const d = Math.round((ideb - anterior) * 10) / 10
+    frase += ` Em ${anoAnterior}, era ${um(anterior)}: ${d > 0 ? `subiu ${pontosComSinal(d).slice(1)}` : d < 0 ? `caiu ${pontosComSinal(d).slice(1)}` : 'ficou igual'}.`
+  }
+  return frase
 }

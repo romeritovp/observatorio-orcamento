@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { escreverEstado, lerEstado, paresPadrao } from './estado.js'
 import { csv, iniciaisMaiusculas, listaDeAnos, nomeEmpresa, nomeParaExibir, pct, pctComSinal, reais, reaisCompacto } from './formatacao.js'
-import { artigoEmpresa, artigoSigla, avisoEstatal, deUf, doEstado, fraseDivida, fraseReconciliacaoPetroleo, fraseResultado, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
+import { artigoEmpresa, artigoSigla, avisoEstatal, deUf, doEstado, fraseDivida, fraseReconciliacaoPetroleo, fraseResultado, frasePib, avisoQuebraSerie, emUf, fonteDasQuebras, fraseResumo, notaSemGasto, porUf, sujeito } from './textos.js'
 
 const UFS = [
   { uf: 'AA', regiao: 'Norte' }, { uf: 'BB', regiao: 'Norte' },
@@ -15,7 +15,63 @@ describe('estado na URL', () => {
     expect(lerEstado('', CONTEXTO)).toEqual({
       view: 'estado', area: '10', areaExplicita: false, metrica: 'per_capita', valores: 'corrigidos', ano: 2024,
       uf: null, pares: [], paresPersonalizados: false, tabela: 'per_capita', abertas: [], tabelaReceita: 'liquida', nivel: 'simples',
+      anoPib: null, desdePib: null, desdePadrao: null, tabelaPib: 'pct', atividadePib: '04', janelaPib: 'tudo',
+      anoIbid: null, evolucaoIbid: 'posicao',
+      anoIdeb: null, etapaIdeb: null, redeIdeb: null, janelaIdeb: 'tudo', padroesIdeb: { etapa: null, rede: null },
     })
+  })
+
+  it('PIB dos Estados: anos próprios (pano, desde), tabela (tpib), gravados só nessa tela', () => {
+    const comPib = { ...CONTEXTO, anosPib: [2020, 2021, 2022, 2023] }
+    expect(lerEstado('?view=pib', comPib)).toMatchObject({ view: 'pib', anoPib: 2023, desdePib: 2020, tabelaPib: 'pct' })
+    // desde padrão: primeiro ano do orçamento quando há PIB nele
+    expect(lerEstado('?view=pib', { ...comPib, anos: [2021, 2022, 2024] }).desdePib).toBe(2021)
+    const estado = lerEstado('?view=pib&uf=aa&pano=2021&desde=2022&tpib=valor', comPib)
+    expect(estado).toMatchObject({ uf: 'AA', anoPib: 2021, desdePib: 2022, tabelaPib: 'valor' })
+    expect(escreverEstado(estado)).toBe('?view=pib&metrica=per_capita&ano=2024&uf=AA&pano=2021&desde=2022&tpib=valor')
+    expect(lerEstado(escreverEstado(estado), comPib)).toEqual(estado)
+    // inválidos: ano fora da série, desde no último ano (não há crescimento a medir), tabela desconhecida
+    expect(lerEstado('?view=pib&pano=1990&desde=2023&tpib=x', comPib)).toMatchObject({ anoPib: 2023, desdePib: 2020, tabelaPib: 'pct' })
+    expect(escreverEstado(lerEstado('?view=pib', comPib))).not.toContain('desde=')
+    expect(escreverEstado({ ...estado, view: 'estado' })).not.toMatch(/pano|desde|tpib/)
+  })
+
+  it('Educação: ano, etapa, rede e janela do IDEB, padrões do meta.json, gravados só nessa tela', () => {
+    const ideb = { anos: [2021, 2023, 2025], etapas: ['anos_iniciais', 'medio'], redes: ['estadual', 'total'], etapa_padrao: 'medio', rede_padrao: 'estadual' }
+    const comIdeb = { ...CONTEXTO, ideb, janelasIdeb: ['6', '10', 'tudo'] }
+    expect(lerEstado('?view=educacao', comIdeb)).toMatchObject({ view: 'educacao', anoIdeb: 2025, etapaIdeb: 'medio', redeIdeb: 'estadual', janelaIdeb: 'tudo' })
+    const estado = lerEstado('?view=educacao&uf=aa&eano=2021&etapa=anos_iniciais&erede=total&ejan=6', comIdeb)
+    expect(estado).toMatchObject({ uf: 'AA', anoIdeb: 2021, etapaIdeb: 'anos_iniciais', redeIdeb: 'total', janelaIdeb: '6' })
+    expect(escreverEstado(estado)).toContain('eano=2021&etapa=anos_iniciais&erede=total&ejan=6')
+    expect(lerEstado(escreverEstado(estado), comIdeb)).toEqual(estado)
+    expect(lerEstado('?view=educacao&eano=2020&etapa=x&erede=municipal&ejan=3', comIdeb))
+      .toMatchObject({ anoIdeb: 2025, etapaIdeb: 'medio', redeIdeb: 'estadual', janelaIdeb: 'tudo' })
+    expect(escreverEstado(lerEstado('?view=educacao', comIdeb))).not.toMatch(/etapa=|erede=|ejan=/)  // padrões fora da URL
+    expect(escreverEstado({ ...estado, view: 'estado' })).not.toMatch(/eano|etapa|erede|ejan/)
+  })
+
+  it('Pesquisa e Inovação: ano do IBID (iano, padrão o último) e medida da evolução (ievo), só nessa tela', () => {
+    const comIbid = { ...CONTEXTO, anosIbid: [2014, 2015, 2025] }
+    expect(lerEstado('?view=inovacao', comIbid)).toMatchObject({ view: 'inovacao', anoIbid: 2025, evolucaoIbid: 'posicao' })
+    const estado = lerEstado('?view=inovacao&uf=aa&iano=2014&ievo=escore', comIbid)
+    expect(estado).toMatchObject({ uf: 'AA', anoIbid: 2014, evolucaoIbid: 'escore' })
+    expect(escreverEstado(estado)).toContain('iano=2014&ievo=escore')
+    expect(lerEstado(escreverEstado(estado), comIbid)).toEqual(estado)
+    expect(lerEstado('?view=inovacao&iano=1999&ievo=x', comIbid)).toMatchObject({ anoIbid: 2025, evolucaoIbid: 'posicao' })
+    expect(escreverEstado({ ...estado, view: 'estado' })).not.toMatch(/iano|ievo/)
+  })
+
+  it('PIB dos Estados: atividade da tendência (ativ, padrão 04) e janela do gráfico (jan)', () => {
+    const comPib = { ...CONTEXTO, anosPib: [2020, 2021, 2022, 2023], janelas: ['3', '5', '10', 'tudo'] }
+    expect(lerEstado('?view=pib', comPib)).toMatchObject({ atividadePib: '04', janelaPib: 'tudo' })
+    const estado = lerEstado('?view=pib&ativ=07&jan=5', comPib)
+    expect(estado).toMatchObject({ atividadePib: '07', janelaPib: '5' })
+    expect(escreverEstado(estado)).toContain('ativ=07&jan=5')
+    expect(lerEstado(escreverEstado(estado), comPib)).toEqual(estado)
+    // total (01), texto e janela desconhecida voltam ao padrão; o padrão não vai para a URL
+    expect(lerEstado('?view=pib&ativ=01&jan=7', comPib)).toMatchObject({ atividadePib: '04', janelaPib: 'tudo' })
+    expect(lerEstado('?view=pib&ativ=xx', comPib).atividadePib).toBe('04')
+    expect(escreverEstado(lerEstado('?view=pib', comPib))).not.toMatch(/ativ|jan=/)
   })
 
   it('pares padrão: mesma região, sem o destaque', () => {
@@ -276,5 +332,19 @@ describe('petróleo: frases', () => {
     expect(fraseReconciliacaoPetroleo({ situacao: 'nao_reconcilia', demais: 19.4e9, anp: 21.7e9 }))
       .toContain('não se reconciliam neste ano')
     expect(fraseReconciliacaoPetroleo({ situacao: 'parcial', demais: 1, anp: 1 })).toBeNull()
+  })
+})
+
+describe('frase do PIB', () => {
+  const base = { ano: 2023, uf: 'RJ', artigo: 'o', pctPais: 10.94, posicao: 2, nUfs: 27, desde: 2015 }
+  it('participação, posição e crescimento do estado e do país', () => {
+    expect(frasePib({ ...base, crescimentoUf: 5.12, crescimentoPais: -1.5 })).toBe(
+      'Em 2023, o RJ respondeu por 10,9% do PIB do país, a 2ª maior economia entre 27 estados. '
+      + 'De 2015 a 2023, a economia do RJ cresceu 5,1% em volume (sem o efeito dos preços); a do país encolheu 1,5%.')
+  })
+  it('sem crescimento (ano inicial igual ao ano), só a participação; sem participação, nada', () => {
+    expect(frasePib({ ...base, desde: 2023, crescimentoUf: null, crescimentoPais: null })).toBe(
+      'Em 2023, o RJ respondeu por 10,9% do PIB do país, a 2ª maior economia entre 27 estados.')
+    expect(frasePib({ ...base, pctPais: null })).toBeNull()
   })
 })

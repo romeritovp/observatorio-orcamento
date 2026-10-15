@@ -13,7 +13,9 @@ const MARGEM = { topo: 12, direita: 92, base: 28, esquerda: 58 }
 // compacto: versão menor para gráficos lado a lado (sem a tabela de números embaixo).
 // referencias: linhas horizontais tracejadas fixas, ex.: [{valor: 200, rotulo: 'limite 200%'}].
 // legenda: itens próprios [{classe, rotulo}] no lugar da legenda padrão (destaque, pares, mediana).
-export default function Evolucao({ series, anos, metrica, anoSelecionado, destaque, quebras = [], compacto = false, referencias = [], legenda }) {
+// escala (opcional): {min, max, marcas, invertido} fixa o eixo vertical; invertido põe o min no topo (posição
+// em ranking: 1º em cima). Sem ela, o eixo vai de 0 ao maior valor.
+export default function Evolucao({ series, anos, metrica, anoSelecionado, destaque, quebras = [], compacto = false, referencias = [], legenda, escala }) {
   const ref = useRef(null)
   const largura = useLargura(ref)
   const [anoDica, setAnoDica] = useState(null)
@@ -22,10 +24,13 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
   const altura = compacto ? 210 : largura < 520 ? 250 : 300
   const area = { x0: margem.esquerda, x1: largura - margem.direita, y0: altura - margem.base, y1: margem.topo }
   const valores = series.flatMap((s) => s.pontos.map((p) => p.valor)).filter((v) => v !== null)
-  const marcas = marcasEixo(Math.max(...valores, ...referencias.map((r) => r.valor), 0))
-  const topo = marcas[marcas.length - 1]
-  const x = (ano) => area.x0 + ((ano - anos[0]) / Math.max(anos.length - 1, 1)) * (area.x1 - area.x0)
-  const y = (v) => area.y0 - (v / topo) * (area.y0 - area.y1)
+  const marcas = escala?.marcas ?? marcasEixo(Math.max(...valores, ...referencias.map((r) => r.valor), 0))
+  const minimo = escala?.min ?? 0
+  const topo = escala?.max ?? marcas[marcas.length - 1]
+  // Posição pelo tempo (vale para séries anuais e bienais, como o IDEB): do primeiro ao último ano
+  const x = (ano) => area.x0 + ((ano - anos[0]) / Math.max(anos[anos.length - 1] - anos[0], 1)) * (area.x1 - area.x0)
+  const fracao = (v) => (v - minimo) / (topo - minimo)
+  const y = (v) => (escala?.invertido ? area.y1 + fracao(v) * (area.y0 - area.y1) : area.y0 - fracao(v) * (area.y0 - area.y1))
 
   const caminho = (pontos) => pontos.filter((p) => p.valor !== null)
     .map((p, i) => `${i ? 'L' : 'M'}${x(p.ano).toFixed(1)},${y(p.valor).toFixed(1)}`).join('')
@@ -39,6 +44,9 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
   const yAfastados = afastar(comRotulo.map(([p]) => y(p.valor)), 14)
   const yRotulos = Object.fromEntries(comRotulo.map(([, i], k) => [i, yAfastados[k]]))
 
+  // Rótulos de ano no eixo: a cada `passoAnos` (≥ 36 px entre eles), contados do último ano
+  const passoAnos = Math.max(1, Math.ceil(36 / ((area.x1 - area.x0) / Math.max(anos.length - 1, 1))))
+
   const escolherAno = (evento) => {
     const caixa = ref.current.getBoundingClientRect()
     const px = evento.clientX - caixa.left
@@ -48,7 +56,10 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
 
   const ordemDica = anoDica === null ? [] : series
     .map((s) => ({ ...s, valor: s.pontos.find((p) => p.ano === anoDica)?.valor ?? null }))
-    .sort((a, b) => (b.valor ?? -Infinity) - (a.valor ?? -Infinity))
+    .sort((a, b) => {  // o "melhor" primeiro: maior valor, ou menor posição no eixo invertido; sem valor por último
+      const v = (s) => s.valor ?? (escala?.invertido ? Infinity : -Infinity)
+      return escala?.invertido ? v(a) - v(b) : v(b) - v(a)
+    })
 
   const estilo = { destaque: { stroke: 'var(--destaque)', width: 3 }, par: { stroke: 'var(--barra-par)', width: 1.5 },
     mediana: { stroke: 'var(--mediana)', width: 2 } }
@@ -63,11 +74,11 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
           <g className="eixo">
             {marcas.map((m) => (
               <g key={m}>
-                <line className={m === 0 ? 'base' : 'grade'} x1={area.x0} x2={area.x1} y1={y(m)} y2={y(m)} />
-                <text x={area.x0 - 8} y={y(m)} dy="0.32em" textAnchor="end">{metrica === 'pct_total' ? `${m.toLocaleString('pt-BR')}%` : valorDaMetrica(m, metrica)}</text>
+                <line className={m === minimo && !escala?.invertido ? 'base' : 'grade'} x1={area.x0} x2={area.x1} y1={y(m)} y2={y(m)} />
+                <text x={area.x0 - 8} y={y(m)} dy="0.32em" textAnchor="end">{metrica === 'pct_total' ? `${m.toLocaleString('pt-BR')}%` : metrica === 'indice' ? m.toLocaleString('pt-BR') : valorDaMetrica(m, metrica)}</text>
               </g>
             ))}
-            {anos.map((a, i) => ((compacto ? largura >= 360 : largura >= 420) || i % 2 === 0 || a === anos[anos.length - 1]) && (
+            {anos.map((a, i) => (anos.length - 1 - i) % passoAnos === 0 && (
               <text key={a} x={x(a)} y={area.y0 + 18} textAnchor="middle"
                 fontWeight={a === anoSelecionado ? 700 : 400}>{a}</text>
             ))}

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import {
-  composicaoDoAno, estataisDoEstado, indicadoresDeTodasAsFuncoes, indicadoresDivida, indicadoresReceita, populacoes, medianaPorAno, serieDaUf, subareasDaUf,
+  composicaoDoAno, estataisDoEstado, indicadoresSobDemanda, indicadoresDivida, indicadoresReceita, populacoes, medianaPorAno, serieDaUf, subareasDaUf,
   tabelaAreasPorAno, tabelaSubareasPorAno, totaisPorUfAno,
 } from '../calculos.js'
 import { pct, pctComSinal, reais, reaisCompacto } from '../formatacao.js'
@@ -33,7 +33,10 @@ export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erro
   const nomesFuncoes = Object.fromEntries(funcoes.map((f) => [f.funcao_cod, f.funcao_nome]))
   const fonte = meta.fontes.find((f) => f.fonte_dado === 'siconfi_dca')
 
-  const porFuncao = useMemo(() => indicadoresDeTodasAsFuncoes(despesa, ipca.serie, { anoBase }), [despesa, ipca.serie, anoBase])
+  // Indicadores por função calculados por partes, sob demanda e memorizados (mesmas contas do cálculo completo):
+  // o ano escolhido (posições), a área escolhida (série e mediana) e a UF (tabela). Trocar de ano ou de área
+  // calcula só a parte nova; voltar a uma já vista não recalcula.
+  const sobDemanda = useMemo(() => indicadoresSobDemanda(despesa, ipca.serie, { anoBase }), [despesa, ipca.serie, anoBase])
   const totais = useMemo(() => totaisPorUfAno(despesa, ipca.serie, { anoBase }), [despesa, ipca.serie, anoBase])
   const populacao = useMemo(() => populacoes(despesa), [despesa])
   const indReceita = useMemo(
@@ -97,13 +100,14 @@ export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erro
   ]
 
   // 2. Composição do ano e área selecionada (padrão: a maior)
-  const composicao = composicaoDoAno(porFuncao, uf, ano)
-  const area = estado.areaExplicita && porFuncao.has(estado.area) ? estado.area : composicao[0]?.funcao_cod
+  const doAno = sobDemanda.doAno(ano)
+  const composicao = composicaoDoAno(doAno, uf, ano)
+  const area = estado.areaExplicita && doAno.has(estado.area) ? estado.area : composicao[0]?.funcao_cod
   const nomeArea = nomesFuncoes[area] ?? ''
   const escolherArea = (funcao) => mudar({ area: funcao, areaExplicita: true })
 
   // 3. Série histórica da área: por habitante e % com a mediana nacional; total em R$ da época
-  const linhasArea = porFuncao.get(area) ?? []
+  const linhasArea = area ? sobDemanda.daFuncao(area) : []
   const daUf = new Map(serieDaUf(linhasArea, uf).map((l) => [l.ano, l]))
   const serieComMediana = (coluna) => {
     const medianas = medianaPorAno(linhasArea, coluna)
@@ -125,7 +129,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erro
     pct_total: { coluna: 'pct_despesa_total', formatar: (v) => pct(v), unidade: '% do orçamento estadual (não muda com a inflação).' },
     total: { coluna: colTotal, formatar: (v) => reaisCompacto(v), unidade: `Valor total gasto, ${emReais}.` },
   }[estado.tabela]
-  const tabela = tabelaAreasPorAno(porFuncao, uf, meta.anos, metricaTabela.coluna, composicao.map((l) => l.funcao_cod))
+  const tabela = tabelaAreasPorAno(sobDemanda.daUf(uf), uf, meta.anos, metricaTabela.coluna, composicao.map((l) => l.funcao_cod))
   const subareasDaTabela = new Map(tabela.map((l) => [
     l.funcao_cod, tabelaSubareasPorAno(subareas, l.funcao_cod, meta.anos, metricaTabela.coluna, ano)]))
   const nomesSub = Object.fromEntries(dicionarios.subfuncoes.map((s) => [s.subfuncao_cod, s.subfuncao_nome]))
@@ -233,7 +237,7 @@ export default function PorEstado({ dados, estado, mudar, funcoes, dadosUf, erro
 
       <div className="parte" id="dividas">
         <ParteDividas
-          divida={indDivida} notaComposicao={divida.nota_composicao} notaComposicaoAntiga={divida.nota_composicao_antiga} ressalvas={divida.ressalvas} porFuncao={porFuncao}
+          divida={indDivida} notaComposicao={divida.nota_composicao} notaComposicaoAntiga={divida.nota_composicao_antiga} ressalvas={divida.ressalvas} porFuncao={doAno}
           limites={{ limite: divida.limite_legal_pct, alerta: divida.alerta_legal_pct }}
           uf={uf} infoUf={infoUf} ano={ano} anos={meta.anos} corrigidos={corrigidos} emReais={emReais} anoBase={anoBase}
         />

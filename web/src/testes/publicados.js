@@ -7,9 +7,14 @@ import { readFileSync } from 'node:fs'
 export const lerArquivo = (caminho) => JSON.parse(readFileSync(new URL(`../../public/data/${caminho}`, import.meta.url), 'utf-8'))
 
 const UFS = lerArquivo('meta.json').ufs
+const TERRITORIOS_PIB = lerArquivo('pib.json').territorios.map((t) => t.uf)
 
-/** Arquivo publicado; "despesa.json", "receita.json" e "estatais.json" vêm com as partes de todas as UFs juntas. */
+/**
+ * Arquivo publicado; "despesa.json", "receita.json" e "estatais.json" vêm com as partes de todas as UFs juntas,
+ * e "pib/<todas>.json" junta pib/<UF>.json de todos os territórios (27 UFs e o país).
+ */
 export function lerJson(nome) {
+  if (nome === 'pib/<todas>.json') return TERRITORIOS_PIB.flatMap((uf) => lerArquivo(`pib/${uf}.json`))
   if (nome === 'despesa.json') return [...lerArquivo('despesa_funcoes.json'), ...UFS.flatMap((uf) => lerArquivo(`despesa/${uf}.json`))]
   if (nome === 'receita.json') return { ...lerArquivo('receita.json'), linhas: UFS.flatMap((uf) => lerArquivo(`receita/${uf}.json`)) }
   if (nome === 'estatais.json') {

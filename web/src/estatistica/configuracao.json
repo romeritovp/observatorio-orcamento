@@ -1,0 +1,20 @@
+{
+  "_sobre": "Parâmetros metodológicos da análise de tendência (web/src/estatistica/tendencia.js). Provisórios: podem mudar sem mexer na lógica. Taxas em % ao ano.",
+  "categorias": [
+    { "id": "queda_acentuada", "nome": "Queda acentuada", "ate": -5, "inclui_limite": true },
+    { "id": "queda_leve", "nome": "Queda leve", "ate": -1, "inclui_limite": false },
+    { "id": "manutencao", "nome": "Manutenção", "ate": 1, "inclui_limite": true },
+    { "id": "crescimento_leve", "nome": "Crescimento leve", "ate": 5, "inclui_limite": false },
+    { "id": "crescimento_acentuado", "nome": "Crescimento acentuado", "ate": null, "inclui_limite": true }
+  ],
+  "janelas_anos": [3, 5, 10, null],
+  "_janelas": "Janelas dos cards: últimos N anos = do ano escolhido menos N até ele (N + 1 observações); null = série completa.",
+  "janelas_ideb_anos": [6, 10, null],
+  "_janelas_ideb": "IDEB é bienal: últimos 6 anos = 4 edições, 10 anos = 6 edições; null = série completa.",
+  "confianca": 0.95,
+  "margem_equivalencia_pct_ano": 1,
+  "minimo_observacoes_inferencia": 4,
+  "minimo_observacoes_autocorrelacao": 8,
+  "nivel_teste_autocorrelacao": 0.1,
+  "observacoes_qualidade_adequada": 15
+}

@@ -194,7 +194,20 @@ def montar_compartilhar(site, dados, numeros):
                      "description": "Quanto cada governo estadual gasta em cada área, por habitante e em % do "
                                     "orçamento. Dados entregues ao Tesouro Nacional.",
                      "image": imagem("padrao.png")},
-        "views": ["estado", "comparar"],
+        "pib": {"title": f"PIB dos Estados · {nome}",
+                "description": "O tamanho da economia de cada estado, o peso de cada setor ano a ano e o crescimento"
+                               + (f" desde {dados['meta']['pib']['anos'][0]}" if dados["meta"].get("pib") else "")
+                               + ", segundo o IBGE.",
+                "image": imagem("padrao.png")},
+        "inovacao": {"title": f"Pesquisa e Inovação · {nome}",
+                     "description": "O índice de inovação do INPI (IBID) dos 27 estados, com o gasto estadual em ciência "
+                                    "e tecnologia ao lado.",
+                     "image": imagem("padrao.png")},
+        "educacao": {"title": f"Educação · {nome}",
+                     "description": "O IDEB de cada estado, por etapa e rede, de 2005 a 2025: série histórica, tendência e "
+                                    "ranking, com os dados do Inep.",
+                     "image": imagem("padrao.png")},
+        "views": ["estado", "comparar", "pib", "inovacao", "educacao"],
         "ufs": ufs,
         "funcoes": funcoes,
     }

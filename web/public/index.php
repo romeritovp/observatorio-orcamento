@@ -27,7 +27,7 @@ $uf = array_key_exists($uf, $ufs) ? $uf : null;
 $area = (string) ($_GET['area'] ?? '');
 $area = array_key_exists($area, $funcoes) ? $area : null;
 
-// Página: comparar (com ou sem área) ou estado (com UF); o resto é a página padrão
+// Página: comparar (com ou sem área), PIB dos Estados, Pesquisa e Inovação, Educação ou estado (com UF); o resto é a padrão
 $pagina = $textos['padrao'];
 $consulta = [];
 if ($view === 'comparar') {
@@ -37,6 +37,12 @@ if ($view === 'comparar') {
         $consulta['area'] = $area;
         $pagina = array_merge($pagina, $funcoes[$area]);
     }
+    if ($uf !== null) {
+        $consulta['uf'] = $uf;
+    }
+} elseif (in_array($view, ['pib', 'inovacao', 'educacao'], true) && isset($textos[$view])) {
+    $consulta['view'] = $view;
+    $pagina = $textos[$view];
     if ($uf !== null) {
         $consulta['uf'] = $uf;
     }

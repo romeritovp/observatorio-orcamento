@@ -163,3 +163,70 @@ export function FiltrosEstado({ estado, ufs, anos, anoBase, onMudar }) {
     </div>
   )
 }
+
+// Tela "PIB dos Estados": estado, ano, ano inicial do crescimento e estados para comparar (anos do PIB, não os do orçamento).
+export function FiltrosPib({ estado, ufs, anos, regioes, paresPadrao, onMudar }) {
+  return (
+    <div className="filtros filtros-pib">
+      <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
+      <label className="campo">
+        <span>Ano</span>
+        <select value={estado.anoPib} onChange={(e) => onMudar({ anoPib: Number(e.target.value) })}>
+          {[...anos].reverse().map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
+      </label>
+      <label className="campo">
+        <span>Crescimento desde</span>
+        <select value={estado.desdePib} onChange={(e) => onMudar({ desdePib: Number(e.target.value) })}>
+          {anos.slice(0, -1).reverse().map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
+      </label>
+      {estado.uf && <CampoPares estado={estado} ufs={ufs} regioes={regioes} paresPadrao={paresPadrao} onMudar={onMudar} />}
+    </div>
+  )
+}
+
+// Tela "Pesquisa e Inovação": estado, ano (do IBID) e estados para comparar.
+export function FiltrosInovacao({ estado, ufs, anos, regioes, paresPadrao, onMudar }) {
+  return (
+    <div className="filtros filtros-inovacao">
+      <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
+      <label className="campo">
+        <span>Ano</span>
+        <select value={estado.anoIbid ?? ''} onChange={(e) => onMudar({ anoIbid: Number(e.target.value) })}>
+          {[...anos].reverse().map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
+      </label>
+      {estado.uf && <CampoPares estado={estado} ufs={ufs} regioes={regioes} paresPadrao={paresPadrao} onMudar={onMudar} />}
+    </div>
+  )
+}
+
+// Tela "Educação": estado, ano (do IDEB), etapa, rede e estados para comparar. etapas e redes: [{id, nome}];
+// redesDisponiveis: as que existem na etapa (as outras ficam desativadas).
+export function FiltrosEducacao({ estado, ufs, anos, etapas, redes, redesDisponiveis, regioes, paresPadrao, onMudar }) {
+  return (
+    <div className="filtros filtros-educacao">
+      <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
+      <label className="campo">
+        <span>Ano</span>
+        <select value={estado.anoIdeb ?? ''} onChange={(e) => onMudar({ anoIdeb: Number(e.target.value) })}>
+          {[...anos].reverse().map((a) => <option key={a} value={a}>{a}</option>)}
+        </select>
+      </label>
+      <label className="campo">
+        <span>Etapa</span>
+        <select value={estado.etapaIdeb ?? ''} onChange={(e) => onMudar({ etapaIdeb: e.target.value })}>
+          {etapas.map((e) => <option key={e.id} value={e.id}>{e.nome}</option>)}
+        </select>
+      </label>
+      <label className="campo">
+        <span>Rede</span>
+        <select value={estado.redeIdeb ?? ''} onChange={(e) => onMudar({ redeIdeb: e.target.value })}>
+          {redes.map((r) => <option key={r.id} value={r.id} disabled={!redesDisponiveis.includes(r.id)}>{r.nome}</option>)}
+        </select>
+      </label>
+      {estado.uf && <CampoPares estado={estado} ufs={ufs} regioes={regioes} paresPadrao={paresPadrao} onMudar={onMudar} />}
+    </div>
+  )
+}

@@ -301,6 +301,22 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 
 **Consequência:** trocar de estado na tela baixa de 30 a 40 KB (gzip) do novo estado. O cálculo de todas as funções na abertura (rankings e medianas das 27 UFs) continua sendo a maior tarefa no celular.
 
+### 2026-10-10 — "Por estado": indicadores por função calculados por partes, sob demanda
+**Contexto:** depois da divisão dos dados por UF, a maior tarefa da abertura no celular era calcular os indicadores de todas as funções, para as 27 UFs e os 11 anos (~620 ms no Node; ~1,5 s com CPU 4×), embora a tela só precise de três partes deles.
+**Decisão (pedida pelo usuário):** `calculos.indicadoresSobDemanda` calcula, com memorização, só o que a tela pede: `doAno(ano)` (todas as funções no ano escolhido, 27 UFs, com posições: composição e dívida × áreas), `daFuncao(funcao)` (a área escolhida em todos os anos: série com a mediana) e `daUf(uf)` (todas as funções da UF em todos os anos, só valores: tabela áreas × anos; sem posição e `n_ufs`, que numa fatia de uma UF não valem). **Nenhuma conta muda:** em `indicadoresDaFuncao`, participação, zero para ausência e posição são por ano, e deflação e por habitante são por linha, então as partes dão os mesmos números do cálculo completo. Testes: cada parte igual ao cálculo completo (todos os anos, todas as funções, as 27 UFs); os testes contra o `gabarito.json` não mudaram; o HTML da tela foi comparado com o da versão anterior em 27 combinações de UF, ano, área e métrica, idêntico (teste temporário, apagado). "Comparar" continua com o cálculo de uma função, como antes.
+**Medição** (celular médio: CPU 4×, 4G lento; "Por estado" de SP; mediana de 3):
+
+| | Cálculo completo | Sob demanda |
+|---|---|---|
+| Tela pronta | 6,5 s | 5,5 s |
+| Da chegada dos dados à tela | 1,87 s | 0,90 s |
+| Tarefas longas (soma) | 1,65 s | 0,58 s |
+| Maior tarefa longa | 1,51 s | 0,46 s |
+| Trocar para um ano ainda não visto | 188 ms | 362 ms |
+| Desktop: tela pronta | 0,65 s | 0,47 s |
+
+**Consequência:** trocar para um ano ainda não calculado custa mais (o ano é calculado na hora); voltar a um ano já visto não recalcula. O restante do tempo de abertura no celular é rede (dados chegam em ~4,6 s).
+
 ### 2026-10-12 — PIB por UF: Contas Regionais do IBGE (`pib_uf` e `pib_uf_atividade`)
 **Contexto:** nova fonte nacional para normalizar e contextualizar os orçamentos pelo tamanho da economia de cada UF. Inspeção do layout da edição 2023 (série 2002–2023) antes do parser; ficha em `docs/fontes/ibge_contas_regionais.md`.
 **Decisão (do usuário):**
@@ -314,6 +330,84 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 8. **`dicionarios/nacional/atividades_ibge.csv`:** atividade_cod, nome (oficial), nome_curto, grande_setor (Agropecuária = 02; Indústria = 03 a 06; Serviços = 07 a 13; Total = 01). A tab07 (com subtotais Indústria e Serviços) não é lida.
 
 **Consequência:** a cada extração o extractor confere soma das atividades = total, VBP − CI = VAB e VAB da Conta = tab04 (tolerância de R$ 0,01 milhão), e falha se não bater. Os testes conferem também soma das UFs = Brasil e os índices anuais contra a tab05. A coluna `edicao` permite guardar edições diferentes no futuro (cada uma revisa a série inteira); hoje cada extração sobrescreve os parquets.
+
+### 2026-10-14 — Tela "PIB dos Estados" (`?view=pib`)
+**Contexto:** `pib.json` e `pib/<UF>.json` já eram publicados, mas sem tela.
+**Decisão (do usuário: tela própria no menu; peso dos setores no ano **e** na série histórica):**
+1. **Item novo no menu**, entre "Comparar" e "Como fazemos". `pib.json` e `pib/<UF>.json` só são baixados quando a tela é aberta (`dados.js`: `carregarPib`, `carregarPibDaUf`), como os arquivos por UF.
+2. **Anos próprios na URL:** a série do PIB (2002–2023) não é a do orçamento, então a tela não usa `ano`: `pano` (ano, padrão o último do PIB), `desde` (início do crescimento; padrão o primeiro ano do orçamento quando há PIB nele, senão o primeiro do PIB; nunca o último) e `tpib` (tabela em % do VAB ou em R$). Gravados só quando `view=pib`. UF e pares são os mesmos das outras telas.
+3. **Conteúdo:** resumo (PIB em R$ da época, participação no país com posição, crescimento em volume desde `desde`, com o do país); peso dos grandes setores no ano, as 12 atividades no ano e a composição dos setores ano a ano (barras 100% empilhadas, `setoresPorAno`: ano com algum setor nulo fica vazio, ex.: Acre 2002); crescimento pelo volume rebaseado (UF, pares e Brasil); participação no país ao longo do tempo e ranking das 27 UFs no ano; tabela atividades × anos; as três ressalvas de `pib.json`, cada uma com "entenda".
+4. **Comparação entre UFs só normalizada:** % do país, % do VAB ou índice de volume. Valores em R$ só da própria UF e sempre da época: o PIB não é deflacionado pelo IPCA (o IBGE já separa preço e volume).
+5. **Como fazemos:** ficha da fonte (`#fonte-pib`), cálculo (`#calculo-pib`) e três limitações (`#limite-pib-administracao-publica`, `#limite-pib-nominal`, `#limite-pib-defasagem`), com marcadores lidos de `meta.documentacao.fontes.ibge_contas_regionais`. Prévia de compartilhamento própria (`compartilhar.json` → `pib`; `index.php`).
+
+**Consequência:** novas contas em `calculos.js` (`setoresPorAno`, `participacoesNoPais`) com teste; as do PIB batem com `gabarito.json` nos 28 territórios. Os eixos de ano de `Evolucao` e `BarrasEmpilhadas` passam a espaçar os rótulos pela largura (≥ 36 px, contados do último ano), o que também vale para as telas antigas em telas estreitas.
+
+### 2026-10-14 — Tendência das atividades do PIB (regressão log-linear)
+**Contexto:** pedido do usuário: na tela "PIB dos Estados", cada linha da tabela de atividades é clicável e abre cards com a tendência nos últimos 3, 5 e 10 anos e na série completa (padrão: Indústrias de transformação, `04`), pelo método especificado por ele (regressão sobre ln Y, cinco categorias, evidência separada da intensidade).
+**Decisão:**
+1. **Série analisada:** participação % da atividade no VAB da UF, não o VAB em R$ da época (que cresce com a inflação e cairia quase sempre em "crescimento acentuado"). Vale nos dois modos da tabela.
+2. **Janelas:** "últimos N anos" = de ano − N ao ano escolhido (N + 1 observações); série completa = do primeiro ano até o ano escolhido. Variação acumulada pela distância entre os anos inicial e final.
+3. **Inferência:** MQO com t de n − 2 gl. Com n ≥ 8, ρ₁, Durbin–Watson e Ljung–Box Q(1); se p < 0,10, intervalo e valor-p por Newey–West (Bartlett, ⌊4(n/100)^(2/9)⌋ defasagens, correção n/(n − 2)), com aviso. Com n < 8, a independência não é verificável e a leitura é marcada como frágil; com n < 4, só a estimativa pontual.
+4. **Evidência × intensidade:** categoria só pela taxa anual (limites provisórios em `web/src/estatistica/configuracao.json`); evidência pelo intervalo de 95% (positiva, negativa, inconclusiva); manutenção testada à parte por equivalência (TOST, intervalo de 90% dentro de ±1% ao ano). Não rejeitar β = 0 nunca vira "manutenção".
+5. **Dados:** ausentes, não numéricos, ≤ 0 e anos repetidos excluídos com o motivo, nunca preenchidos (ex.: AC, extrativas, VAB ≤ 0 em 2013 e 2022). A taxa é arredondada a 1e-9 p.p. antes de comparar com os limites (uma série de exatamente +1% ao ano dá 1,0000000000002% em ponto flutuante).
+6. **Exceção à regra do espelho em Python:** o módulo fica em `web/src/estatistica/` (chamado por `calculos.tendenciasDaAtividade`), sem espelho em `analytics/` nem no `gabarito.json`. A conferência é contra o statsmodels/scipy: `web/src/testes/referencia_tendencia.py` (rodado com `uv run --no-project --with statsmodels`, sem virar dependência do projeto) grava `referencia_tendencia.json`, e o teste exige erro relativo < 1e-9 em β, erros-padrão (MQO e Newey–West), intervalos, R², Durbin–Watson e Ljung–Box.
+7. **URL:** `ativ` (atividade, padrão `04`) e `jan` (janela da reta no gráfico, padrão série completa), só em `view=pib`.
+
+**Consequência:** com 4 a 6 observações (3 e 5 anos), os intervalos são largos e a maioria dos cards fica "direção incerta". É o resultado honesto: a tela mostra a direção e diz que ela não está confirmada. Os limites das categorias e a margem de equivalência são parâmetros a revisar com o uso.
+
+### 2026-10-14 — "Como fazemos": versão "Fórmulas" para auditoria (`?view=metodo&nivel=formulas`)
+**Contexto:** pedido do usuário: além das explicações simples e técnica, uma versão com as contas aplicadas, para auditoria.
+**Decisão (recomendações aceitas pelo usuário):**
+1. **Terceira versão, só com as seções que têm contas** (hoje, a seção 4); a numeração das seções é a da página inteira. O bloco `## formulas` é opcional nos `.md`. Âncora que não existe nessa versão (ex.: link "entenda" para uma decisão ou limitação) leva à explicação técnica.
+2. **Notação em texto Unicode, em bloco de código** (Σ, Π, ln, e^x), sem biblioteca de fórmulas: pode ser copiada para uma planilha.
+3. **Cada fórmula traz** a fórmula, a origem de cada termo (arquivo publicado e campo, e a conta da fonte) e um exemplo com os números publicados da UF e da área do exemplo da página (`meta.json → documentacao.exemplo`), em R$ com centavos, sem arredondar.
+4. **Os exemplos saem das funções do site** (`web/src/telas/metodo/formulas.js` só escolhe linhas e formata; os passos intermediários da regressão vêm de `analisarTendencia → intermediarios`), e o teste confere cada número exibido contra o `gabarito.json` (despesa, receita, dívida, PIB) e contra o statsmodels (tendência: a série real do exemplo está em `referencia_tendencia.json → exemplo_metodo`).
+5. **DCL/RCL:** o site continua usando o percentual publicado; a fórmula mostra a conta (DCL ÷ RCL ajustada, ou RCL antes de 2019) só como conferência. `calculos.conferenciaDclRcl` foi verificada em todas as UFs e anos com os campos (287 de 297 linhas; o layout de 2015–2016 não traz DC e deduções): diferença máxima de 0,005 ponto, só arredondamento de duas casas; DC − deduções = DCL a menos de R$ 0,01.
+
+**Consequência:** a versão "Fórmulas" carrega `pib.json` e `pib/<UF do exemplo>.json` (para os exemplos do PIB e da tendência); enquanto não chegam, a página avisa. Nova fórmula = novo bloco no `.md` + valores em `formulas.js` + teste contra a referência independente.
+
+### 2026-10-14 — IBID (INPI) e a tela "Pesquisa e Inovação" (`?view=inovacao`)
+**Contexto:** pedido do usuário: nova fonte nacional (IBID, extrator fornecido por ele) e uma página que cruza o índice com a despesa estadual em Ciência e Tecnologia.
+**Decisão:**
+1. **Pipeline no padrão das outras fontes nacionais:** `extractors/nacional/inpi/baixar.py` (bruto intacto + manifesto com SHA-256) e `ibid.py` (lê, confere, grava `ibid_escore` e `ibid_ranking` via `base.gravar`, mais `data/processed/ibid_fonte.json` com nota, SHA-256 e conferência). Siglas, dimensões e agregados vêm de dicionários (`ufs.csv`, `ibid_dimensoes.csv` novo, `regioes.csv` novo + `territorios.csv`); as asserções do extrator viraram `ErroValidacao` (um `assert` some com `python -O`); escores gravados sem arredondar (o arredondamento a 6 casas fica na publicação). Sem banco nem Makefile: o projeto usa parquet e módulos `uv run python -m`.
+2. **`regioes.csv` separado de `territorios.csv`:** o extrator do PIB lê `territorios.csv` e passaria a aceitar regiões. As regiões usam `uf` por extenso (`SUDESTE`), nunca a sigla de duas letras ("SE" é Sergipe).
+3. **JSON do site = saída original:** `publicacao/ibid.py` monta `web/public/data/ibid.json` das tabelas processadas no mesmo formato do extrator original; conferido idêntico (conteúdo e texto) ao `data/nacional/inpi/ibid.json`, exceto `extraido_em`.
+4. **Regra de método (do usuário, até confirmar a comparabilidade):** evolução no tempo só por posição; escores só no mesmo ano; ressalva na tela. Um único ponto de configuração: `config/ibid.yaml → escores_comparaveis_entre_anos`, exportado para `meta.json → ibid`; com `true`, a tela oferece a série de escores e a ressalva sai.
+5. **Agregados do INPI não são médias:** o escore do Brasil e das regiões é o publicado pelo INPI para o território (Brasil 2014: 0,2945 × 0,2428 de média simples das UFs). A tela compara os pilares da UF com esses escores e os chama de "escore da região/do país", não de "média".
+6. **Cruzamento com o orçamento:** função 19 por `indicadoresDaFuncao` (mesmo deflator, população e base de "% do orçamento" das outras telas; conferido contra o `gabarito.json`), só nos anos das duas fontes (2015–2025), lado a lado com a posição no IBID, sem correlação nem causalidade estimadas.
+
+**Consequência:** o ano padrão da tela é o último do IBID (2025); anos só do IBID (2014) mostram o índice e avisam que não há despesa. Ressalvas novas com "entenda": `limite-ibid-escores`, `limite-ibid-funcao-19`, `limite-ibid-causa`.
+
+### 2026-10-14 — "Pesquisa e Inovação": estado típico, Ensino Superior, códigos das regiões e rótulos da dispersão
+**Contexto:** decisões do usuário sobre os quatro pontos levantados na entrega da tela.
+**Decisão:**
+1. **Estado típico:** além dos escores oficiais do INPI para regiões e Brasil (que não são médias), o pipeline publica em `ibid.json → mediana_ufs` a mediana das 27 UFs por dimensão e ano (`publicacao/ibid.py`, `analytics.mediana_entre_ufs`), marcada como calculada pelo projeto. O front não calcula: os pilares mostram a UF contra região, Brasil (INPI) e estado típico, e os quadrantes da dispersão usam essa mesma mediana publicada. Nota na tela: o Brasil oficial fica acima da maioria dos estados (2025: 0,296 × 0,198 do estado típico), então estar abaixo do Brasil não é estar abaixo da maioria.
+2. **Códigos das regiões:** o Brasil **não** ganhou código próprio. Ele não está em `regioes.csv`, e sim em `territorios.csv`, com `1`: o mesmo código do `pib_uf` e o `id_ente` da União no SICONFI; mudá-lo criaria dois códigos para o mesmo território entre tabelas. A colisão com o Norte (região 1) fica documentada, e um teste falha se a publicação ou a tela do IBID usarem `cod_ibge` (o `ibid.json` publicado nem traz o campo). A ligação é sempre pela coluna `uf`.
+3. **Ensino Superior no cruzamento:** ao lado da função 19 (C&T), a subfunção 364 dentro da função 12 (Educação), DCA I-E, com as contas das subáreas (deflator, população, % sobre a despesa total da UF), e a soma "C&T + Ensino Superior" (despesas disjuntas: nos dados, a 364 só aparece sob a 12). Linhas publicadas em `despesa_ensino_superior.json` (27 UFs, R$ nominais); conta no front (`indicadoresDaSubfuncao`) espelhada em `publicacao.exportar.indicadores_da_subfuncao` (gabarito). UF que entregou a DCA sem a linha 12.364 entra com 0 marcado, sem ser tratada como erro: 38 casos de UF/ano em 2015–2025 (AC, MS, RN, RO, RS, SE; ver a lista no relato da entrega).
+4. **Dispersão:** rótulo visível só na UF destacada e nas comparadas; os demais pontos mostram nome e escores em dica (mouse ou toque; alvo de toque de 24 px).
+
+### 2026-10-14 — IDEB (Inep): extrator da edição 2025 (série 2005–2025)
+**Contexto:** pedido do usuário: extrair o IDEB por UF, etapa e rede no padrão do IBID, sem integração na tela por enquanto.
+**Decisão:**
+1. **Fluxo do projeto:** `extractors/nacional/inep/baixar.py` (zips intactos + manifesto com SHA-256, conferência do MD5 publicado pelo Inep) → `ideb.py` (tabela `ideb`, formato longo, e `data/processed/ideb_fonte.json`) → `publicacao/ideb.py` (`data/nacional/inep/ideb.json`, o JSON pedido, no desenho do `ibid.json`). O extrator para antes de gravar se um valor de controle de 2025 não bater ou se algum valor sair da faixa.
+2. **Dois arquivos do Inep:** o de regiões e UFs não tem o Brasil; ele vem de `divulgacao_brasil_ideb_<edicao>.zip`, o único com a rede municipal.
+3. **Colunas pelo texto do cabeçalho** (linhas 7 a 9, desfeitas as mesclagens), com o código técnico da linha 10 só como conferência: a edição 2025 tem um código errado (P de 2025 rotulado 2023, anos iniciais, UFs) e um ausente (IDEB 2023, anos finais, Brasil). O erro conhecido fica numa lista explícita (`CODIGOS_COM_ERRO`); qualquer outra divergência para o extrator.
+4. **Notas de rodapé no rótulo da rede** viram ressalvas por linha, com o texto lido do rodapé da própria aba (a numeração muda entre abas). Avisos gerais no JSON: formulação de 2007, metas só até 2021, pandemia em 2021, quebra do Saeb do médio em 2017 → 2019, escalas Saeb, municipalização; por UF: DF distrital.
+5. **Metas** gravadas com `indicador = meta`, nunca misturadas ao observado; 2023 e 2025 ficam sem meta.
+6. **Certificado TLS do Inep sem o intermediário:** completado com o intermediário do endereço AIA do próprio certificado, só para montar a cadeia até uma raiz do `certifi` (cadeia parcial desligada). Nenhuma dependência nova; a verificação nunca é desligada.
+
+**Consequência:** conferências da edição 2025: 7/7 controles, N × P em 4.000 casos sem nenhum fora de ±0,1, nenhuma amplitude violada, 22 lacunas de cobertura explicadas (privada 2009 no Norte; RR estadual nos anos iniciais desde 2017). Cruzamento com a despesa (função 12 menos 364, por matrícula) depois do Censo Escolar.
+
+### 2026-10-14 — Tela "Educação" (`?view=educacao`): IDEB por estado, etapa e rede
+**Contexto:** pedido do usuário: uma tela para o IDEB, com seleção por estado e ano, série histórica e tendência, no padrão do projeto.
+**Decisão:**
+1. **Padrão da tela: ensino médio, rede estadual** (a responsabilidade principal dos governos estaduais), em `publicacao/ideb.py` (`ETAPA_PADRAO`, `REDE_PADRAO`) e no `meta.json → ideb`. Etapa, rede, ano e janela da tendência na URL (`etapa`, `erede`, `eano`, `ejan`), gravados só quando diferem do padrão.
+2. **Dados divididos como as outras telas:** `ideb.json` (27 UFs, regiões e Brasil; IDEB, N, P, Saeb e aprovação total; **sem metas**; séries como listas alinhadas a `anos`, 75 KB com gzip) e `ideb/<UF>.json` (aprovação por série, ~1,4 KB), ambos carregados só na tela. O `data/nacional/inep/ideb.json` (com metas, no desenho do `ibid.json`) continua sendo a saída completa.
+3. **Contas no front** (`calculos.js`): ranking e variação em pontos por etapa, rede e ano (espelho em `publicacao.ideb.gabarito_ideb` → `gabarito.json → ideb`), tendência com `analisarTendencia` em janelas de anos (6 e 10 anos e série completa; `configuracao.json → janelas_ideb_anos`), conferência N × P. Comparações sempre dentro de uma etapa e uma rede.
+4. **Rede ausente na etapa** (a pública no ensino médio das UFs): a opção fica desativada no filtro, e a URL que a pede mostra um aviso, sem números.
+5. **`Evolucao` posiciona os anos pelo tempo** (do primeiro ao último ano), não pela contagem de pontos: necessário para séries bienais; as anuais não mudam.
+
+**Consequência:** ressalvas do IDEB com "entenda" para `limite-ideb-*` no "Como fazemos" (as quatro notas da planilha apontam para a mesma seção); cálculo em `#calculo-ideb` nas três versões, com o exemplo da versão "Fórmulas" conferido contra o gabarito. A versão "Fórmulas" passa a carregar também o `ideb.json`.
 
 ### 2026-10-15 — FBSP (Anuário Brasileiro de Segurança Pública): extrator genérico no padrão do projeto
 **Contexto:** extrator exploratório do usuário (`extractors/nacional/fbsp/fbsp.py`) gravava num "banco" próprio (`banco/`), fora do fluxo do projeto.

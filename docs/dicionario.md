@@ -92,6 +92,46 @@ Nulos conhecidos: Acre 2002, atividades `09` a `13`, `valor_producao` e `vab` (#
 
 Arquivo: `data/processed/pib_uf_atividade/uf=<UF>/ano=<ano>/ibge_contas_regionais.parquet`.
 
+## Tabela `ibid_escore`
+
+Uma linha por território, ano e dimensão. INPI, Índice Brasil de Inovação e Desenvolvimento (IBID), abas anuais. Território: as 27 UFs, as 5 regiões (`dicionarios/nacional/regioes.csv`, `uf` = `NORTE`…`CENTRO_OESTE`) e o Brasil (`BR`, de `territorios.csv`).
+
+| coluna | tipo | descrição |
+|---|---|---|
+| dimensao | str | `geral`, `contexto`, `resultado` e os sete pilares (nomes e hierarquia em `dicionarios/nacional/ibid_dimensoes.csv`) |
+| escore | float | de 0 a 1 (maior = melhor), sem arredondar. Os das regiões e do Brasil são os do INPI, **não** a média simples das UFs |
+| fonte_dado | str | `inpi_ibid` |
+
+Atenção: o `cod_ibge` das regiões é o código de região do IBGE (1 a 5) e o do Brasil é `1` (o mesmo do `pib_uf` e o `id_ente` da União no SICONFI, por isso não muda): Norte e Brasil dividem o código. Nesta tabela, ligar territórios **sempre pela coluna `uf`**. O teste `tests/test_inpi_ibid.py::test_cod_ibge_do_ibid_e_ambiguo_e_ninguem_usa` falha se a publicação ou a tela do IBID usarem `cod_ibge`; o `ibid.json` publicado não traz o campo.
+
+No `ibid.json` publicado, além dos escores do INPI, vai `mediana_ufs`: o "estado típico", mediana dos escores das 27 UFs em cada dimensão e ano, **calculada pelo projeto** (`publicacao/ibid.py`, com `analytics.mediana_entre_ufs`), não pelo INPI. Não é gravada em tabela (deriva de `ibid_escore`).
+
+Arquivo: `data/processed/ibid_escore/uf=<UF>/ano=<ano>/inpi_ibid.parquet`.
+
+## Tabela `ibid_ranking`
+
+Uma linha por UF, ano e dimensão (`geral`, `contexto`, `resultado`): `posicao` (int, 1 = melhor entre 27), a oficial das abas de série histórica. O extrator confere que ela é igual à ordenação dos escores (divergências em `data/processed/ibid_fonte.json`, com a nota da planilha, o SHA-256 e a data da extração).
+
+Arquivo: `data/processed/ibid_ranking/uf=<UF>/ano=<ano>/inpi_ibid.parquet`.
+
+## Tabela `ideb`
+
+Formato longo, uma linha por território, ano, etapa, rede, indicador e série. Inep, IDEB, edição 2025 (série 2005–2025). Território: 27 UFs, 5 regiões (`regioes.csv`) e Brasil (`BR`); ligar pela coluna `uf`, como no IBID.
+
+| coluna | tipo | descrição |
+|---|---|---|
+| etapa | str | `anos_iniciais`, `anos_finais`, `medio` |
+| rede | str | `estadual` (no DF, a distrital), `municipal` (só no Brasil), `publica`, `privada`, `total` |
+| indicador | str | `ideb` (0 a 10), `meta` (2007–2021, **não exibir**), `rendimento` (P, 0 a 1), `nota_padronizada` (N, 0 a 10), `saeb_matematica` e `saeb_portugues` (escala Saeb da etapa: não comparar entre etapas), `aprovacao` (%) |
+| serie | str | só na aprovação: `total` ou o número do ano (1 a 9) ou da série do médio (1 a 4); nulo nos demais |
+| valor | float | como publicado; "-" na fonte vira nulo (nunca 0) |
+| edicao | int | edição do IDEB (2025) |
+| fonte_dado | str | `inep_ideb` |
+
+Ressalvas por linha (notas de rodapé no rótulo da rede), códigos técnicos com problema e conferências em `data/processed/ideb_fonte.json`.
+
+Arquivo: `data/processed/ideb/uf=<UF>/ano=<ano>/inep_ideb.parquet`. JSON de saída: `data/nacional/inep/ideb.json` (`publicacao/ideb.py`).
+
 ## Tabela `fbsp`
 
 Formato longo e **exploratório**: uma linha por célula numérica das tabelas do Anuário Brasileiro de Segurança Pública (FBSP) em que a UF (ou o Brasil, `BR`) e o ano foram identificados (linhas de capital, região ou município nunca entram, mesmo com a UF ao lado) pelo extrator genérico (`extractors/nacional/fbsp/fbsp.py`). Ainda sem dicionário de indicadores: `titulo` e `coluna` vêm como estão no anuário.
@@ -112,12 +152,23 @@ Formato longo e **exploratório**: uma linha por célula numérica das tabelas d
 
 Arquivo: `data/processed/fbsp/uf=<UF>/ano=<ano>/fbsp.parquet`.
 
+## Arquivos publicados `ideb.json` e `ideb/<UF>.json`
+
+Tela "Educação". `ideb.json`: `fonte`, `anos` (2005–2025, bienal), `etapas`, `redes`, `indicadores`, `ressalvas`, `ressalvas_por_uf`, um resumo da `conferencia`, e `ufs`/`agregados` → `etapas[etapa][rede]` com `ideb`, `nota_padronizada`, `rendimento`, `saeb_matematica`, `saeb_portugues` e `aprovacao.total`, cada um uma **lista alinhada a `anos`** (nulo = sem dado). Sem metas. `ideb/<UF>.json`: `[etapa][rede].aprovacao` com a série `total` e uma por ano/série (listas alinhadas a `anos`). Gerados por `publicacao/ideb.py` (`montar_ideb_site`).
+
+## Arquivo publicado `despesa_ensino_superior.json`
+
+Linhas da tabela `despesa` (formato de `despesa_funcoes.json`) com `nivel = subfuncao`, `funcao_cod = 12` (Educação), `subfuncao_cod = 364` (Ensino Superior), sem intra, DCA, das 27 UFs, em R$ nominais. Usado pela tela "Pesquisa e Inovação" ao lado da função 19; o front calcula por habitante e % do orçamento com as contas das subáreas (`indicadoresDaSubfuncao`), conferidas no `gabarito.json → ensino_superior` (`publicacao.exportar.indicadores_da_subfuncao`). UF que entregou a DCA sem a linha 12.364 entra com 0 e `sem_gasto_declarado`.
+
 ## Dicionários (`dicionarios/`)
 
 | arquivo | origem | colunas |
 |---|---|---|
 | nacional/ufs.csv | manual (IBGE) | uf, cod_ibge, nome, regiao, artigo (`o`, `a` ou vazio: "o RJ", "a BA", "SP"; usado nos textos do front), capital (nome oficial; o extrator do FBSP usa para separar linha de capital de linha de UF) |
 | nacional/territorios.csv | manual (IBGE) | uf, cod_ibge, nome. Territórios que não são UF: hoje só o Brasil (`BR`, `1`). Fica fora do `ufs.csv`, que é a lista das 27 UFs |
+| nacional/regioes.csv | manual (IBGE) | uf (`NORTE`, `NORDESTE`, `SUDESTE`, `SUL`, `CENTRO_OESTE`; nunca a sigla de duas letras, que colide com UF: "SE"), cod_ibge (código de região do IBGE), nome. Usado pelos agregados do IBID |
+| nacional/ideb_territorios.csv | manual (nomes como vêm na planilha do Inep) | nome_planilha (ex.: `R. G. do Sul`), uf (sigla da UF, `uf` da região em `regioes.csv` ou `BR`). Território fora da tabela faz o extrator do IDEB falhar |
+| nacional/ibid_dimensoes.csv | manual (INPI, cabeçalho das abas anuais) | dimensao, nome, pai (vazio = topo), cabecalho_planilha (conferido pelo extrator; vazio = coluna do índice geral). Na ordem das colunas C a L |
 | nacional/atividades_ibge.csv | manual (IBGE, Contas Regionais) | atividade_cod (`01` a `13`, texto), nome (texto oficial), nome_curto (tela), grande_setor (`total`, `agropecuaria`, `industria`, `servicos`) |
 | nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) |
 | nacional/funcoes.csv | SICONFI DCA Anexo I-E em cache (script `extractors/nacional/siconfi/dicionario_funcoes.py`) | funcao_cod, funcao_nome |

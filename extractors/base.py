@@ -96,6 +96,42 @@ ESQUEMAS = {
         "fonte_dado": "str",
         "extraido_em": "str",
     },
+    # IBID (INPI): escores de 0 a 1 por dimensão, das 27 UFs, das regiões (dicionarios/nacional/regioes.csv) e do
+    # Brasil (uf "BR"); ranking oficial (1 = melhor) só das 27 UFs, para geral, contexto e resultado
+    "ibid_escore": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "dimensao": "str",
+        "escore": "float",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
+    "ibid_ranking": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "dimensao": "str",
+        "posicao": "int",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
+    # IDEB (Inep), formato longo: 27 UFs, regiões (regioes.csv) e Brasil ("BR"); indicador: ideb, meta (só 2007–2021,
+    # não exibir), rendimento (P, 0 a 1), nota_padronizada (N, 0 a 10), saeb_matematica, saeb_portugues (escala de cada
+    # etapa), aprovacao (%, por série: "total" ou o número do ano/série); serie nula fora da aprovação
+    "ideb": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "etapa": "str",
+        "rede": "str",
+        "indicador": "str",
+        "serie": "str",
+        "valor": "float",
+        "edicao": "int",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
     # FBSP (Anuário Brasileiro de Segurança Pública), formato longo e exploratório: uma linha por célula numérica das
     # tabelas do anuário em que a UF (ou o Brasil, "BR") e o ano foram identificados (nunca capital, região ou município);
     # `grupo_qualidade` é o grupo de qualidade dos dados que o FBSP dá à UF na tabela. `coluna` e `titulo` como vieram;

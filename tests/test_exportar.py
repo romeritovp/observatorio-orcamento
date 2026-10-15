@@ -349,3 +349,23 @@ def test_divisao_das_estatais_lista_por_uf():
     assert "lista_por_edicao" not in arquivos["estatais.json"] and arquivos["estatais.json"]["por_edicao"] == {"2024": {}}
     assert arquivos["estatais/AA.json"] == {"2023": [{"sigla": "X"}], "2024": []}
     assert arquivos["estatais/BB.json"] == {"2023": [], "2024": [{"sigla": "Y"}]}
+
+
+def test_subfuncao_ensino_superior_contas_das_subareas_e_zero():
+    """12.364 só dentro de Educação; % sobre a despesa TOTAL da UF; UF sem a linha entra com 0 marcado."""
+    d = despesa()
+    comum = {"fonte_dado": "siconfi_dca", "extraido_em": "2026-01-01T00:00:00+00:00", "empenhado": None, "pago": None,
+             "intra": False, "nivel": "subfuncao", "subfuncao_cod": "364"}
+    d = pd.concat([d, pd.DataFrame([
+        {**comum, "uf": "AA", "ano": 2024, "funcao_cod": "12", "liquidado": 11.0},
+        {**comum, "uf": "AA", "ano": 2024, "funcao_cod": "10", "liquidado": 99.0},  # 364 fora de Educação: não entra
+    ])], ignore_index=True)
+    r = exportar.indicadores_da_subfuncao(d, POPULACAO, IPCA, 2024, "12", "364")
+    linha = r[(r["uf"] == "AA") & (r["ano"] == 2024)].iloc[0]
+    assert linha["nominal"] == 11.0 and not linha["sem_gasto_declarado"]
+    assert linha["per_capita_real"] == pytest.approx(11.0 / 100)
+    assert linha["pct_despesa_total"] == pytest.approx(11.0 / (44.0 + 66.0) * 100)
+    zero = r[(r["uf"] == "BB") & (r["ano"] == 2024)].iloc[0]
+    assert zero["nominal"] == 0 and zero["sem_gasto_declarado"] and zero["posicao_per_capita_real"] == 2
+    assert r[(r["uf"] == "AA") & (r["ano"] == 2023)].iloc[0]["per_capita_real"] == 0  # 2023 sem a linha
+    assert "ensino_superior" in exportar.montar_gabarito(d, POPULACAO, IPCA, ano_base=2024, ensino_superior=True)

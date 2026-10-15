@@ -57,6 +57,62 @@ Não há lista de empresas que possamos usar antes de 2019: a de 2018 não ident
 - **Mínimos de saúde e educação:** a Constituição obriga os estados a gastar um mínimo nessas áreas, com regras próprias. Este site não mede se o mínimo foi cumprido.
 - **Prefeituras:** ver [a decisão](#decisao-so-estado).
 
+### PIB: administração pública não é a despesa do estado {#limite-pib-administracao-publica}
+
+A atividade "administração, defesa, educação e saúde públicas e seguridade social" mede o peso do setor público na economia: escolas, hospitais, quartéis e repartições de **todos** os níveis de governo (União, estado e municípios) que funcionam no estado. Não é o que o governo estadual gasta, e não deve ser comparada com as contas das outras telas.
+
+### PIB: pesos a preços da época {#limite-pib-nominal}
+
+O peso de cada atividade é calculado com valores da época. Se o preço do que uma atividade produz sobe mais que o resto, ela ganha peso mesmo sem produzir mais: é o caso do petróleo (indústrias extrativas) quando o barril sobe, e o contrário quando cai. Para saber se a economia produziu mais, use o crescimento em volume.
+
+### PIB: dois anos de atraso {#limite-pib-defasagem}
+
+O IBGE publica o PIB dos estados com cerca de dois anos de atraso: o último ano disponível é {{fontes.pib.ultimo}}. Cada nova edição revisa a série inteira, então os números de anos antigos também podem mudar quando atualizarmos.
+
+### IBID: escores só dentro do mesmo ano {#limite-ibid-escores}
+
+Ainda não está confirmado se o escore do IBID pode ser comparado entre anos. A média do Brasil fica quase parada ano a ano, o que sugere que o índice é recalculado a cada edição. Por isso mostramos a evolução no tempo só pela posição no ranking, e comparamos escores só dentro de um mesmo ano.
+
+### IBID: Ciência e Tecnologia e Ensino Superior {#limite-ibid-ct-ensino-superior}
+
+O gasto do estado em pesquisa aparece em dois lugares das contas. A área "Ciência e Tecnologia" concentra as fundações de amparo à pesquisa; as universidades estaduais aparecem em "Ensino Superior", dentro de Educação. Mostramos as duas separadas e somadas: a soma dá um retrato mais completo, mas o Ensino Superior também inclui o ensino, não só a pesquisa. Em alguns estados e anos, não há Ensino Superior declarado (a universidade pode estar classificada em outro lugar): o valor entra como zero, marcado na tabela.
+
+### IBID: gasto e índice lado a lado não é causa {#limite-ibid-causa}
+
+O gasto do governo estadual e a posição no índice aparecem juntos para comparação. O IBID mede a economia e as instituições do estado inteiro (empresas, universidades federais, mercado de trabalho), não só a ação do governo estadual. Um número não explica o outro sozinho.
+
+### IDEB: última edição na formulação de 2007 {#limite-ideb-formulacao}
+
+O IDEB de 2025 é o último calculado do jeito criado em 2007. O Inep estuda mudanças; a próxima edição (2027) pode não ser comparável com esta série.
+
+### IDEB: metas só até 2021 {#limite-ideb-metas}
+
+As metas oficiais do IDEB iam de 2007 a 2021. Não há metas para 2023 e 2025, e não inventamos nenhuma. Por isso a tela não mostra metas: só o que foi medido.
+
+### IDEB: 2021, ano da pandemia {#limite-ideb-2021}
+
+Em 2021 muitas redes aprovaram quase todos os alunos por causa da pandemia, e menos alunos fizeram a prova do Saeb. O IDEB de 2021 sobe pela aprovação e deve ser comparado com cuidado.
+
+### IDEB do ensino médio: mudança no Saeb em 2019 {#limite-ideb-medio-saeb}
+
+Até 2017, a prova do ensino médio era feita por uma amostra de escolas; a partir de 2019, por todas as escolas públicas. A passagem de 2017 para 2019 pode ter um salto que não é só de aprendizado.
+
+### IDEB: não compare etapas entre si {#limite-ideb-escalas}
+
+Cada etapa tem sua própria escala de notas no Saeb. Uma nota de 250 nos anos iniciais e outra de 250 no ensino médio não querem dizer a mesma coisa, e o IDEB de uma etapa também não se compara com o de outra.
+
+### IDEB: rede estadual nos anos iniciais {#limite-ideb-municipalizacao}
+
+Em vários estados, os anos iniciais do fundamental passaram para as prefeituras. A rede estadual fica com poucas escolas nessa etapa, e o resultado pode faltar ou dizer pouco sobre o estado (em Roraima, por exemplo, não há IDEB da rede estadual nos anos iniciais desde 2017).
+
+### IDEB: Distrito Federal {#limite-ideb-df}
+
+No DF, a rede "estadual" é a rede distrital, e não existe rede municipal.
+
+### IDEB: notas da planilha do Inep {#limite-ideb-notas-planilha}
+
+Em alguns estados e redes, o Inep avisa que o resultado de 2009 foi calculado só com escolas urbanas, ou sem as particulares, ou não foi calculado por falta de amostra, e que o de 2011 foi calculado sem as escolas federais. Esses avisos aparecem na tela junto do estado.
+
 ### A população repete entre anos {#limite-populacao}
 
 Ver [a decisão sobre a população](#decisao-populacao).
@@ -124,6 +180,62 @@ v2019 (exercício 2018): sem CNPJ, sigla em 24 de 258 linhas, dependência "Não
 - RGF Anexo 02, linhas fora da dívida consolidada (não entram em nenhum total): passivo atuarial do RPPS, precatórios anteriores a 05/05/2000, precatórios posteriores não incluídos na DC, RP não processados, depósitos judiciais, dívida de PPP.
 - Mínimos constitucionais (LC 141/2012; art. 212 da CF): regras próprias, não reproduzidas.
 - Execução municipal: fora do universo ([decisão](#decisao-so-estado)).
+
+### PIB: administração pública não é a despesa do estado {#limite-pib-administracao-publica}
+
+Atividade 12 (Administração, defesa, educação e saúde públicas e seguridade social): valor adicionado das três esferas de governo localizadas na UF, medido pelo custo (principalmente remunerações), na ótica da produção. Não corresponde à despesa da DCA nem a nenhum estágio da execução orçamentária estadual; não cruzar.
+
+### PIB: pesos a preços da época {#limite-pib-nominal}
+
+Participações calculadas a preço corrente: refletem volume e preço relativo. Em UFs com indústria extrativa relevante (RJ, ES), o peso da atividade 03 (indústrias extrativas) acompanha o preço do petróleo. O crescimento usa só o índice de volume (tab03), sem deflator implícito nem IPCA.
+
+### PIB: dois anos de atraso {#limite-pib-defasagem}
+
+Edição {{fontes.pib.edicao}}: série {{fontes.pib.primeiro}}–{{fontes.pib.ultimo}}. A edição N sai cerca de dois anos depois de N e revisa toda a série; a coluna `edicao` guarda a edição de cada linha. Os anos do PIB não coincidem com os do orçamento ({{anos.primeiro}}–{{anos.ultimo}}), por isso a tela tem seletor de ano próprio.
+
+### IBID: escores só dentro do mesmo ano {#limite-ibid-escores}
+
+O escore do índice geral do Brasil fica entre 0,29 e 0,30 de 2014 a 2025, o que sugere normalização anual dos indicadores. Até a confirmação da metodologia: evolução temporal só por posição (`ibid_ranking`); escores só em comparações do mesmo ano. A escolha fica em `config/ibid.yaml` (`escores_comparaveis_entre_anos`), exportada para `meta.json → ibid`.
+
+### IBID: Ciência e Tecnologia e Ensino Superior {#limite-ibid-ct-ensino-superior}
+
+DCA Anexo I-E, liquidado, sem intra: função 19 (nível `funcao`) e subfunção 364 dentro da função 12 (nível `subfuncao`, arquivo `despesa_ensino_superior.json`). São despesas disjuntas (a 364 sob a 12 não está na 19), por isso a soma não conta nada duas vezes; nos dados publicados, a 364 só aparece sob a função 12. Por habitante e % do orçamento com as contas das subáreas (denominador: despesa total da UF, soma das funções sem intra). UF que entregou a DCA sem a linha 12.364 entra com 0 e `sem_gasto_declarado` (`indicadoresDaSubfuncao`, espelhada em `publicacao.exportar.indicadores_da_subfuncao` e conferida no `gabarito.json → ensino_superior`). A subfunção 364 inclui ensino de graduação, não só pesquisa.
+
+### IBID: gasto e índice lado a lado não é causa {#limite-ibid-causa}
+
+Posição no IBID e gasto na função 19 por habitante são exibidos lado a lado, sem correlação, regressão nem defasagem estimadas. O índice cobre o território inteiro (setor privado, esfera federal), não a execução orçamentária estadual.
+
+### IDEB: última edição na formulação de 2007 {#limite-ideb-formulacao}
+
+`formulacao: original_2007` no JSON. O Inep criou um grupo técnico para atualizar o índice (nota informativa do IDEB 2025); a série 2005–2025 é internamente comparável, a de 2027 pode não ser.
+
+### IDEB: metas só até 2021 {#limite-ideb-metas}
+
+Metas do 1º ciclo (2007–2021) gravadas como `indicador = meta` na tabela `ideb` e excluídas do `ideb.json` do site. 2023 e 2025 sem parâmetro oficial: nada projetado.
+
+### IDEB: 2021, ano da pandemia {#limite-ideb-2021}
+
+Aprovação inflada por regras de promoção e participação menor no Saeb (nota informativa do IDEB 2021 e relatório do Saeb 2021). O P sobe e o N pode ter viés de participação; a tendência que inclui 2021 herda isso.
+
+### IDEB do ensino médio: mudança no Saeb em 2019 {#limite-ideb-medio-saeb}
+
+Saeb do ensino médio amostral até 2017 e censitário para escolas públicas a partir de 2019: possível quebra de série 2017 → 2019 nas redes públicas.
+
+### IDEB: não compare etapas entre si {#limite-ideb-escalas}
+
+Proficiências do Saeb em escalas próprias de cada etapa (anos iniciais, finais, médio); N é padronizado dentro da etapa. Rankings e séries da tela são sempre dentro de uma etapa e uma rede.
+
+### IDEB: rede estadual nos anos iniciais {#limite-ideb-municipalizacao}
+
+Com a municipalização dos anos iniciais, a rede estadual pode ter poucas escolas e ficar sem Saeb (sem IDEB). Ex.: RR, rede estadual, anos iniciais: aprovação até 2025, mas sem Saeb e IDEB desde 2017 (lacuna da conferência de cobertura).
+
+### IDEB: Distrito Federal {#limite-ideb-df}
+
+`rede = estadual` é a rede distrital; não há linha municipal para o DF.
+
+### IDEB: notas da planilha do Inep {#limite-ideb-notas-planilha}
+
+Notas de rodapé nos rótulos de rede da planilha (numeração diferente em cada aba), lidas com o texto do rodapé e publicadas em `ressalvas_por_uf` com as etapas e redes afetadas: 2009 só escolas urbanas; 2009 sem escolas privadas; 2009 não calculado (perda amostral); 2011 sem escolas federais.
 
 ### A população repete entre anos {#limite-populacao}
 

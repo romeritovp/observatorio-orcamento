@@ -1,0 +1,26 @@
+{
+  "2023/Conta_da_Producao_2002_2023_indice_das_tabelas.txt": {
+    "bytes": 24892,
+    "extraido_em": "2026-10-12T00:38:33+00:00",
+    "sha256": "46fe12b5420525ca6fe5ff006d02e222819e083046adeb7af26185627f9fe6b5",
+    "url": "https://ftp.ibge.gov.br/Contas_Regionais/2023/xls/Conta_da_Producao_2002_2023_indice_das_tabelas.txt"
+  },
+  "2023/Conta_da_Producao_2002_2023_xls.zip": {
+    "bytes": 1681458,
+    "extraido_em": "2026-10-12T00:38:32+00:00",
+    "sha256": "a3ce56ed4f3f0cc3d05d8b14765927428230a1bf5a7c5f8e03b041b2f5ff6713",
+    "url": "https://ftp.ibge.gov.br/Contas_Regionais/2023/xls/Conta_da_Producao_2002_2023_xls.zip"
+  },
+  "2023/Especiais_2002_2023_indice_das_tabelas.txt": {
+    "bytes": 3118,
+    "extraido_em": "2026-10-12T00:38:33+00:00",
+    "sha256": "987600ae8fbb53766fd71a6c1e037d24fc185db4192226bc4dd95a603ecc03a1",
+    "url": "https://ftp.ibge.gov.br/Contas_Regionais/2023/xls/Especiais_2002_2023_indice_das_tabelas.txt"
+  },
+  "2023/Especiais_2002_2023_xls.zip": {
+    "bytes": 388533,
+    "extraido_em": "2026-10-12T00:38:33+00:00",
+    "sha256": "75281f8f40113cf947aa1ccd22892f50b76d937a918c4bfd43aa0ef4fa85d97b",
+    "url": "https://ftp.ibge.gov.br/Contas_Regionais/2023/xls/Especiais_2002_2023_xls.zip"
+  }
+}

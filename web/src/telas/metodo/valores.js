@@ -2,6 +2,7 @@
 // Tudo vem dos JSON publicados e das funções de calculos.js: nenhum número é escrito à mão nos textos.
 
 import { passosPorHabitante } from '../../calculos.js'
+import { CONFIGURACAO as CONFIG_TENDENCIA } from '../../estatistica/tendencia.js'
 import { data, listaDeAnos, numero, reais } from '../../formatacao.js'
 import { doEstado } from '../../textos.js'
 
@@ -68,10 +69,29 @@ export function valoresDoMetodo(dados) {
         commit: f.tesouro_estatais.commit, versao_de: data(`${f.tesouro_estatais.versao_de}T00:00:00Z`),
         edicoes: listaDeAnos(estatais.edicoes),
       },
+      ideb: {
+        pagina: f.inep_ideb.pagina_oficial, edicao: f.inep_ideb.edicao, primeiro: f.inep_ideb.anos[0], ultimo: f.inep_ideb.anos[1],
+        extraido_em: data(`${f.inep_ideb.extraido_em}T12:00:00Z`),
+      },
+      ibid: {
+        pagina: f.inpi_ibid.pagina_oficial, planilha: f.inpi_ibid.planilha, sha256: f.inpi_ibid.arquivo_sha256,
+        primeiro: f.inpi_ibid.anos[0], ultimo: f.inpi_ibid.anos[1], extraido_em: data(`${f.inpi_ibid.extraido_em}T12:00:00Z`),
+      },
+      pib: {
+        pagina: f.ibge_contas_regionais.pagina_oficial, arquivos: f.ibge_contas_regionais.arquivos,
+        edicao: f.ibge_contas_regionais.edicao, primeiro: f.ibge_contas_regionais.anos[0],
+        ultimo: f.ibge_contas_regionais.anos[1], extraido_em: data(f.ibge_contas_regionais.extraido_em),
+      },
       ipca: {
         pagina: f.ibge_ipca.pagina_oficial, documentacao_api: f.ibge_ipca.documentacao_api,
         consulta: f.ibge_ipca.consulta, extraido_em: data(`${f.ibge_ipca.extraido_em}T00:00:00Z`),
       },
+    },
+    tendencia: {
+      confianca: `${Math.round(CONFIG_TENDENCIA.confianca * 100)}%`, margem: numero(CONFIG_TENDENCIA.margem_equivalencia_pct_ano),
+      minimo_inferencia: CONFIG_TENDENCIA.minimo_observacoes_inferencia,
+      minimo_autocorrelacao: CONFIG_TENDENCIA.minimo_observacoes_autocorrelacao,
+      nivel_autocorrelacao: numero(CONFIG_TENDENCIA.nivel_teste_autocorrelacao, 2),
     },
     exemplo: {
       uf: exemplo.uf, nome_uf: uf.nome, do_uf: doEstado(uf.nome, uf.artigo), cod_ibge: uf.cod_ibge,

@@ -2,7 +2,7 @@
 // publicada (nada se perde nem se repete entre o arquivo geral e os das UFs).
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { carregarDados, carregarDadosDaUf } from './dados.js'
+import { carregarDados, carregarDadosDaUf, carregarPib, carregarPibDaUf } from './dados.js'
 import { dadosDaUf, lerArquivo, lerJson } from './testes/publicados.js'
 
 const respostas = (chamadas) => vi.fn(async (url) => {
@@ -20,6 +20,15 @@ describe('carregamento', () => {
     expect(Object.keys(dados).sort()).toEqual(['despesa', 'dicionarios', 'divida', 'estatais', 'ipca', 'meta', 'receita'])
     expect(chamadas.map((u) => u.split('data/')[1]).sort()).toEqual(
       ['despesa_funcoes.json', 'dicionarios.json', 'divida.json', 'estatais.json', 'ipca.json', 'meta.json', 'receita.json'])
+  })
+
+  it('PIB dos Estados: pib.json e pib/<UF>.json só quando pedidos, uma vez só por sessão', async () => {
+    const chamadas = []
+    vi.stubGlobal('fetch', respostas(chamadas))
+    const [a, b] = await Promise.all([carregarPib(), carregarPib()])
+    expect(a).toBe(b)
+    await Promise.all([carregarPibDaUf('ZZ'), carregarPibDaUf('ZZ')])
+    expect(chamadas.map((u) => u.split('data/')[1]).sort()).toEqual(['pib.json', 'pib/ZZ.json'])
   })
 
   it('UF: três arquivos, baixados uma vez só por sessão', async () => {

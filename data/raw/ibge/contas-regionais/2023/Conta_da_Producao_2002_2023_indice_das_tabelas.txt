@@ -1,0 +1,498 @@
+﻿Conta da Produção 2002-2023
+
+Tabela 1 - Conta de produção por atividade econômica - Região Norte - 2002-2023
+Tabela 1.1 Total das Atividades
+Tabela 1.2 Agropecuária
+Tabela 1.3 Indústrias extrativas
+Tabela 1.4 Indústrias de transformação
+Tabela 1.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 1.6 Construção
+Tabela 1.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 1.8 Transporte, armazenagem e correio
+Tabela 1.9 Informação e comunicação
+Tabela 1.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 1.11 Atividades imobiliárias
+Tabela 1.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 1.13 Outros serviços
+
+
+Tabela 2 - Conta de produção por atividade econômica - Rondônia - 2002-2023
+Tabela 2.1 Total das Atividades
+Tabela 2.2 Agropecuária
+Tabela 2.3 Indústrias extrativas
+Tabela 2.4 Indústrias de transformação
+Tabela 2.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 2.6 Construção
+Tabela 2.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 2.8 Transporte, armazenagem e correio
+Tabela 2.9 Informação e comunicação
+Tabela 2.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 2.11 Atividades imobiliárias
+Tabela 2.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 2.13 Outros serviços
+
+
+Tabela 3 - Conta de produção por atividade econômica - Acre - 2002-2023
+Tabela 3.1 Total das Atividades
+Tabela 3.2 Agropecuária
+Tabela 3.3 Indústrias extrativas
+Tabela 3.4 Indústrias de transformação
+Tabela 3.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 3.6 Construção
+Tabela 3.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 3.8 Transporte, armazenagem e correio
+Tabela 3.9 Informação e comunicação
+Tabela 3.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 3.11 Atividades imobiliárias
+Tabela 3.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 3.13 Outros serviços
+
+Tabela 4 - Conta de produção por atividade econômica - Amazônia - 2002-2023
+Tabela 4.1 Total das Atividades
+Tabela 4.2 Agropecuária
+Tabela 4.3 Indústrias extrativas
+Tabela 4.4 Indústrias de transformação
+Tabela 4.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 4.6 Construção
+Tabela 4.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 4.8 Transporte, armazenagem e correio
+Tabela 4.9 Informação e comunicação
+Tabela 4.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 4.11 Atividades imobiliárias
+Tabela 4.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 4.13 Outros serviços
+
+Tabela 5 - Conta de produção por atividade econômica - Roraima - 2002-2023
+Tabela 5.1 Total das Atividades
+Tabela 5.2 Agropecuária
+Tabela 5.3 Indústrias extrativas
+Tabela 5.4 Indústrias de transformação
+Tabela 5.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 5.6 Construção
+Tabela 5.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 5.8 Transporte, armazenagem e correio
+Tabela 5.9 Informação e comunicação
+Tabela 5.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 5.11 Atividades imobiliárias
+Tabela 5.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 5.13 Outros serviços
+
+Tabela 6 - Conta de produção por atividade econômica - Pará - 2002-2023
+Tabela 6.1 Total das Atividades
+Tabela 6.2 Agropecuária
+Tabela 6.3 Indústrias extrativas
+Tabela 6.4 Indústrias de transformação
+Tabela 6.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 6.6 Construção
+Tabela 6.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 6.8 Transporte, armazenagem e correio
+Tabela 6.9 Informação e comunicação
+Tabela 6.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 6.11 Atividades imobiliárias
+Tabela 6.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 6.13 Outros serviços
+
+Tabela 7 - Conta de produção por atividade econômica - Amapá - 2002-2023
+Tabela 7.1 Total das Atividades
+Tabela 7.2 Agropecuária
+Tabela 7.3 Indústrias extrativas
+Tabela 7.4 Indústrias de transformação
+Tabela 7.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 7.6 Construção
+Tabela 7.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 7.8 Transporte, armazenagem e correio
+Tabela 7.9 Informação e comunicação
+Tabela 7.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 7.11 Atividades imobiliárias
+Tabela 7.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 7.13 Outros serviços
+
+Tabela 8 - Conta de produção por atividade econômica - Tocantins - 2002-2023
+Tabela 8.1 Total das Atividades
+Tabela 8.2 Agropecuária
+Tabela 8.3 Indústrias extrativas
+Tabela 8.4 Indústrias de transformação
+Tabela 8.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 8.6 Construção
+Tabela 8.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 8.8 Transporte, armazenagem e correio
+Tabela 8.9 Informação e comunicação
+Tabela 8.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 8.11 Atividades imobiliárias
+Tabela 8.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 8.13 Outros serviços
+
+Tabela 9 - Conta de produção por atividade econômica – Região Nordeste - 2002-2023
+Tabela 9.1 Total das Atividades
+Tabela 9.2 Agropecuária
+Tabela 9.3 Indústrias extrativas
+Tabela 9.4 Indústrias de transformação
+Tabela 9.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 9.6 Construção
+Tabela 9.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 9.8 Transporte, armazenagem e correio
+Tabela 9.9 Informação e comunicação
+Tabela 9.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 9.11 Atividades imobiliárias
+Tabela 9.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 9.13 Outros serviços
+
+Tabela 10 - Conta de produção por atividade econômica – Maranhão - 2002-2023
+Tabela 10.1 Total das Atividades
+Tabela 10.2 Agropecuária
+Tabela 10.3 Indústrias extrativas
+Tabela 10.4 Indústrias de transformação
+Tabela 10.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 10.6 Construção
+Tabela 10.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 10.8 Transporte, armazenagem e correio
+Tabela 10.9 Informação e comunicação
+Tabela 10.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 10.11 Atividades imobiliárias
+Tabela 10.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 10.13 Outros serviços
+
+Tabela 11 - Conta de produção por atividade econômica – Piauí - 2002-2023
+Tabela 11.1 Total das Atividades
+Tabela 11.2 Agropecuária
+Tabela 11.3 Indústrias extrativas
+Tabela 11.4 Indústrias de transformação
+Tabela 11.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 11.6 Construção
+Tabela 11.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 11.8 Transporte, armazenagem e correio
+Tabela 11.9 Informação e comunicação
+Tabela 11.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 11.11 Atividades imobiliárias
+Tabela 11.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 11.13 Outros serviços
+
+Tabela 12 - Conta de produção por atividade econômica – Ceará - 2002-2023
+Tabela 12.1 Total das Atividades
+Tabela 12.2 Agropecuária
+Tabela 12.3 Indústrias extrativas
+Tabela 12.4 Indústrias de transformação
+Tabela 12.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 12.6 Construção
+Tabela 12.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 12.8 Transporte, armazenagem e correio
+Tabela 12.9 Informação e comunicação
+Tabela 12.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 12.11 Atividades imobiliárias
+Tabela 12.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 12.13 Outros serviços
+
+Tabela 13 - Conta de produção por atividade econômica – Rio Grande do Norte - 2002-2023
+Tabela 13.1 Total das Atividades
+Tabela 13.2 Agropecuária
+Tabela 13.3 Indústrias extrativas
+Tabela 13.4 Indústrias de transformação
+Tabela 13.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 13.6 Construção
+Tabela 13.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 13.8 Transporte, armazenagem e correio
+Tabela 13.9 Informação e comunicação
+Tabela 13.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 13.11 Atividades imobiliárias
+Tabela 13.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 13.13 Outros serviços
+
+Tabela 14 - Conta de produção por atividade econômica – Paraíba - 2002-2023
+Tabela 14.1 Total das Atividades
+Tabela 14.2 Agropecuária
+Tabela 14.3 Indústrias extrativas
+Tabela 14.4 Indústrias de transformação
+Tabela 14.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 14.6 Construção
+Tabela 14.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 14.8 Transporte, armazenagem e correio
+Tabela 14.9 Informação e comunicação
+Tabela 14.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 14.11 Atividades imobiliárias
+Tabela 14.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 14.13 Outros serviços
+
+Tabela 15 - Conta de produção por atividade econômica – Pernambuco - 2002-2023
+Tabela 15.1 Total das Atividades
+Tabela 15.2 Agropecuária
+Tabela 15.3 Indústrias extrativas
+Tabela 15.4 Indústrias de transformação
+Tabela 15.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 15.6 Construção
+Tabela 15.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 15.8 Transporte, armazenagem e correio
+Tabela 15.9 Informação e comunicação
+Tabela 15.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 15.11 Atividades imobiliárias
+Tabela 15.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 15.13 Outros serviços
+
+Tabela 16 - Conta de produção por atividade econômica – Alagoas - 2002-2023
+Tabela 16.1 Total das Atividades
+Tabela 16.2 Agropecuária
+Tabela 16.3 Indústrias extrativas
+Tabela 16.4 Indústrias de transformação
+Tabela 16.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 16.6 Construção
+Tabela 16.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 16.8 Transporte, armazenagem e correio
+Tabela 16.9 Informação e comunicação
+Tabela 16.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 16.11 Atividades imobiliárias
+Tabela 16.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 16.13 Outros serviços
+
+Tabela 17 - Conta de produção por atividade econômica – Sergipe - 2002-2023
+Tabela 17.1 Total das Atividades
+Tabela 17.2 Agropecuária
+Tabela 17.3 Indústrias extrativas
+Tabela 17.4 Indústrias de transformação
+Tabela 17.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 17.6 Construção
+Tabela 17.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 17.8 Transporte, armazenagem e correio
+Tabela 17.9 Informação e comunicação
+Tabela 17.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 17.11 Atividades imobiliárias
+Tabela 17.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 17.13 Outros serviços
+
+Tabela 18 - Conta de produção por atividade econômica – Bahia - 2002-2023
+Tabela 18.1 Total das Atividades
+Tabela 18.2 Agropecuária
+Tabela 18.3 Indústrias extrativas
+Tabela 18.4 Indústrias de transformação
+Tabela 18.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 18.6 Construção
+Tabela 18.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 18.8 Transporte, armazenagem e correio
+Tabela 18.9 Informação e comunicação
+Tabela 18.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 18.11 Atividades imobiliárias
+Tabela 18.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 18.13 Outros serviços
+
+Tabela 19 - Conta de produção por atividade econômica – Região Sudeste - 2002-2023
+Tabela 19.1 Total das Atividades
+Tabela 19.2 Agropecuária
+Tabela 19.3 Indústrias extrativas
+Tabela 19.4 Indústrias de transformação
+Tabela 19.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 19.6 Construção
+Tabela 19.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 19.8 Transporte, armazenagem e correio
+Tabela 19.9 Informação e comunicação
+Tabela 19.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 19.11 Atividades imobiliárias
+Tabela 19.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 19.13 Outros serviços
+
+Tabela 20 - Conta de produção por atividade econômica – Minas Gerais - 2002-2023
+Tabela 20.1 Total das Atividades
+Tabela 20.2 Agropecuária
+Tabela 20.3 Indústrias extrativas
+Tabela 20.4 Indústrias de transformação
+Tabela 20.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 20.6 Construção
+Tabela 20.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 20.8 Transporte, armazenagem e correio
+Tabela 20.9 Informação e comunicação
+Tabela 20.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 20.11 Atividades imobiliárias
+Tabela 20.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 20.13 Outros serviços
+
+Tabela 21 - Conta de produção por atividade econômica – Espírito Santo - 2002-2023
+Tabela 21.1 Total das Atividades
+Tabela 21.2 Agropecuária
+Tabela 21.3 Indústrias extrativas
+Tabela 21.4 Indústrias de transformação
+Tabela 21.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 21.6 Construção
+Tabela 21.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 21.8 Transporte, armazenagem e correio
+Tabela 21.9 Informação e comunicação
+Tabela 21.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 21.11 Atividades imobiliárias
+Tabela 21.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 21.13 Outros serviços
+
+Tabela 22 - Conta de produção por atividade econômica – Rio de Janeiro - 2002-2023
+Tabela 22.1 Total das Atividades
+Tabela 22.2 Agropecuária
+Tabela 22.3 Indústrias extrativas
+Tabela 22.4 Indústrias de transformação
+Tabela 22.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 22.6 Construção
+Tabela 22.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 22.8 Transporte, armazenagem e correio
+Tabela 22.9 Informação e comunicação
+Tabela 22.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 22.11 Atividades imobiliárias
+Tabela 22.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 22.13 Outros serviços
+
+Tabela 23 - Conta de produção por atividade econômica – São Paulo - 2002-2023
+Tabela 23.1 Total das Atividades
+Tabela 23.2 Agropecuária
+Tabela 23.3 Indústrias extrativas
+Tabela 23.4 Indústrias de transformação
+Tabela 23.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 23.6 Construção
+Tabela 23.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 23.8 Transporte, armazenagem e correio
+Tabela 23.9 Informação e comunicação
+Tabela 23.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 23.11 Atividades imobiliárias
+Tabela 23.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 23.13 Outros serviços
+
+Tabela 24 - Conta de produção por atividade econômica – Região Sul - 2002-2023
+Tabela 24.1 Total das Atividades
+Tabela 24.2 Agropecuária
+Tabela 24.3 Indústrias extrativas
+Tabela 24.4 Indústrias de transformação
+Tabela 24.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 24.6 Construção
+Tabela 24.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 24.8 Transporte, armazenagem e correio
+Tabela 24.9 Informação e comunicação
+Tabela 24.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 24.11 Atividades imobiliárias
+Tabela 24.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 24.13 Outros serviços
+
+Tabela 25 - Conta de produção por atividade econômica – Paraná - 2002-2023
+Tabela 25.1 Total das Atividades
+Tabela 25.2 Agropecuária
+Tabela 25.3 Indústrias extrativas
+Tabela 25.4 Indústrias de transformação
+Tabela 25.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 25.6 Construção
+Tabela 25.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 25.8 Transporte, armazenagem e correio
+Tabela 25.9 Informação e comunicação
+Tabela 25.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 25.11 Atividades imobiliárias
+Tabela 25.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 25.13 Outros serviços
+
+Tabela 26 - Conta de produção por atividade econômica – Santa Catarina - 2002-2023
+Tabela 26.1 Total das Atividades
+Tabela 26.2 Agropecuária
+Tabela 26.3 Indústrias extrativas
+Tabela 26.4 Indústrias de transformação
+Tabela 26.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 26.6 Construção
+Tabela 26.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 26.8 Transporte, armazenagem e correio
+Tabela 26.9 Informação e comunicação
+Tabela 26.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 26.11 Atividades imobiliárias
+Tabela 26.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 26.13 Outros serviços
+
+Tabela 27 - Conta de produção por atividade econômica – Rio Grande do Sul - 2002-2023
+Tabela 27.1 Total das Atividades
+Tabela 27.2 Agropecuária
+Tabela 27.3 Indústrias extrativas
+Tabela 27.4 Indústrias de transformação
+Tabela 27.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 27.6 Construção
+Tabela 27.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 27.8 Transporte, armazenagem e correio
+Tabela 27.9 Informação e comunicação
+Tabela 27.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 27.11 Atividades imobiliárias
+Tabela 27.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 27.13 Outros serviços
+
+Tabela 28 - Conta de produção por atividade econômica – Região Centro-Oeste - 2002-2023
+Tabela 28.1 Total das Atividades
+Tabela 28.2 Agropecuária
+Tabela 28.3 Indústrias extrativas
+Tabela 28.4 Indústrias de transformação
+Tabela 28.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 28.6 Construção
+Tabela 28.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 28.8 Transporte, armazenagem e correio
+Tabela 28.9 Informação e comunicação
+Tabela 28.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 28.11 Atividades imobiliárias
+Tabela 28.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 28.13 Outros serviços
+
+Tabela 29 - Conta de produção por atividade econômica – Mato Grosso do Sul - 2002-2023
+Tabela 29.1 Total das Atividades
+Tabela 29.2 Agropecuária
+Tabela 29.3 Indústrias extrativas
+Tabela 29.4 Indústrias de transformação
+Tabela 29.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 29.6 Construção
+Tabela 29.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 29.8 Transporte, armazenagem e correio
+Tabela 29.9 Informação e comunicação
+Tabela 29.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 29.11 Atividades imobiliárias
+Tabela 29.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 29.13 Outros serviços
+
+Tabela 30 - Conta de produção por atividade econômica – Mato Grosso - 2002-2023
+Tabela 30.1 Total das Atividades
+Tabela 30.2 Agropecuária
+Tabela 30.3 Indústrias extrativas
+Tabela 30.4 Indústrias de transformação
+Tabela 30.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 30.6 Construção
+Tabela 30.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 30.8 Transporte, armazenagem e correio
+Tabela 30.9 Informação e comunicação
+Tabela 30.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 30.11 Atividades imobiliárias
+Tabela 30.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 30.13 Outros serviços
+
+Tabela 31 - Conta de produção por atividade econômica – Goiás - 2002-2023
+Tabela 31.1 Total das Atividades
+Tabela 31.2 Agropecuária
+Tabela 31.3 Indústrias extrativas
+Tabela 31.4 Indústrias de transformação
+Tabela 31.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 31.6 Construção
+Tabela 31.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 31.8 Transporte, armazenagem e correio
+Tabela 31.9 Informação e comunicação
+Tabela 31.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 31.11 Atividades imobiliárias
+Tabela 31.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 31.13 Outros serviços
+
+Tabela 32 - Conta de produção por atividade econômica – Distrito Federal - 2002-2023
+Tabela 32.1 Total das Atividades
+Tabela 32.2 Agropecuária
+Tabela 32.3 Indústrias extrativas
+Tabela 32.4 Indústrias de transformação
+Tabela 32.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 32.6 Construção
+Tabela 32.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 32.8 Transporte, armazenagem e correio
+Tabela 32.9 Informação e comunicação
+Tabela 32.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 32.11 Atividades imobiliárias
+Tabela 32.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 32.13 Outros serviços
+
+Tabela 33 - Conta de produção por atividade econômica – Brasil - 2002-2023
+Tabela 33.1 Total das Atividades
+Tabela 33.2 Agropecuária
+Tabela 33.3 Indústrias extrativas
+Tabela 33.4 Indústrias de transformação
+Tabela 33.5 Eletricidade e gás, água, esgoto, atividades de gestão de resíduos e descontaminação
+Tabela 33.6 Construção
+Tabela 33.7 Comércio e reparação de veículos automotores e motocicletas
+Tabela 33.8 Transporte, armazenagem e correio
+Tabela 33.9 Informação e comunicação
+Tabela 33.10 Atividades financeiras, de seguros e serviços relacionados
+Tabela 33.11 Atividades imobiliárias
+Tabela 33.12 Administração, defesa, educação e saúde públicas e seguridade social
+Tabela 33.13 Outros serviços

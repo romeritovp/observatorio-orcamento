@@ -3,6 +3,10 @@
 // arquivo, não alteram a entrada e não conhecem componentes.
 //
 // Espelham analytics/ do Python; o teste compara o resultado com public/data/gabarito.json.
+// Exceção: a análise de tendência (estatistica/tendencia.js, chamada aqui) não tem espelho em Python;
+// é conferida contra o statsmodels (src/testes/referencia_tendencia.json).
+
+import { analisarTendencia, CONFIGURACAO as CONFIGURACAO_TENDENCIA } from './estatistica/tendencia.js'
 
 // --- seleção ---------------------------------------------------------------
 
@@ -390,6 +394,37 @@ export function indicadoresDeTodasAsFuncoes(despesa, serieIpca, opcoes) {
 }
 
 /**
+ * Os mesmos indicadores de indicadoresDeTodasAsFuncoes, calculados por partes e só quando pedidos, com
+ * memorização (cada parte é calculada uma vez por instância). Nenhuma conta muda: toda conta de
+ * indicadoresDaFuncao é por ano (participação, zero para ausência, posição) ou por linha (deflação,
+ * por habitante), então calcular um ano, uma função ou uma UF separadamente dá os mesmos números.
+ *   doAno(ano)       Map função → linhas do ano, 27 UFs, com posições (composição do ano, dívida × áreas)
+ *   daFuncao(funcao) linhas da função, todos os anos e UFs (série com a mediana)
+ *   daUf(uf)         Map função → linhas da UF, todos os anos, SEM posição e n_ufs (numa fatia de uma UF
+ *                    elas não significam nada); só valores (tabela áreas × anos). Usa a lista nacional de
+ *                    funções, para manter as linhas zeradas das funções que a UF não declarou.
+ * O teste confere cada parte contra o cálculo completo.
+ */
+export function indicadoresSobDemanda(despesa, serieIpca, opcoes) {
+  const fonte = opcoes.fonte ?? 'siconfi_dca'
+  const funcoes = [...new Set(filtrar(despesa, { fonte_dado: fonte, nivel: 'funcao' }).map((l) => l.funcao_cod))].sort()
+  const memo = { ano: new Map(), funcao: new Map(), uf: new Map() }
+  const lembrar = (mapa, chave, calcular) => {
+    if (!mapa.has(chave)) mapa.set(chave, calcular())
+    return mapa.get(chave)
+  }
+  const todas = (linhas) => new Map(funcoes.map((funcao) => [funcao, indicadoresDaFuncao(linhas, serieIpca, { ...opcoes, funcao })]))
+  const semPosicao = ({ posicao_per_capita_real: _a, posicao_per_capita_nominal: _b, posicao_pct_despesa_total: _c, n_ufs: _d, ...resto }) => resto
+  return {
+    funcoes,
+    doAno: (ano) => lembrar(memo.ano, ano, () => todas(despesa.filter((l) => l.ano === ano))),
+    daFuncao: (funcao) => lembrar(memo.funcao, funcao, () => indicadoresDaFuncao(despesa, serieIpca, { ...opcoes, funcao })),
+    daUf: (uf) => lembrar(memo.uf, uf, () => new Map(
+      [...todas(despesa.filter((l) => l.uf === uf))].map(([funcao, linhas]) => [funcao, linhas.map(semPosicao)]))),
+  }
+}
+
+/**
  * Composição do orçamento da UF no ano: uma linha por função, em ordem de % do orçamento
  * (maior primeiro; as sem gasto declarado no fim, pelo código). porFuncao: indicadoresDeTodasAsFuncoes.
  */
@@ -514,6 +549,21 @@ export function indicadoresDivida(linhas, serieIpca, { anoBase }) {
   return ranking(comValores, 'dcl_rcl_pct', ['ano']).map(({ dcl_rcl_pct_posicao: posicao, dcl_rcl_pct_n_ufs: n, ...l }) => ({
     ...l, posicao_dcl_rcl: posicao, n_ufs: n,
   }))
+}
+
+/**
+ * Conferência do percentual DCL/RCL publicado no RGF (o site usa o publicado, sem recalcular): DCL = DC − deduções e
+ * DCL ÷ RCL ajustada × 100 (RCL quando o relatório não traz a ajustada). Devolve {dcl, diferencaDcl, denominador,
+ * rcl, calculado, publicado}; nulo sem os campos.
+ */
+export function conferenciaDclRcl(linha) {
+  if (!linha || [linha.dc, linha.deducoes, linha.dcl].some(ehNulo)) return null
+  const denominador = ehNulo(linha.rcl_ajustada) ? 'rcl' : 'rcl_ajustada'
+  const rcl = linha[denominador]
+  return {
+    dcl: linha.dc - linha.deducoes, diferencaDcl: linha.dc - linha.deducoes - linha.dcl, denominador, rcl,
+    calculado: ehNulo(rcl) || rcl === 0 ? null : (linha.dcl / rcl) * 100, publicado: linha.dcl_rcl_pct,
+  }
 }
 
 /**
@@ -681,4 +731,348 @@ export function seriePetroleo(porAno, anos, campo, fatorDoAno = () => 1) {
     const fator = fatorDoAno(ano)
     return ehNulo(valor) || ehNulo(fator) ? null : valor * fator
   })
+}
+
+// --- PIB dos estados (pib.json e pib/<UF>.json, IBGE Contas Regionais) --------------------------
+
+/**
+ * Participação % de cada atividade (ou grupo de atividades) no VAB da UF no ano. Espelha
+ * analytics.participacao_no_vab: o denominador é a linha de nivel "total", nunca somada com as atividades.
+ * linhas: pib/<UF>.json; grupos: {atividade_cod: grupo} ou null (uma linha por atividade).
+ * Grupo com alguma atividade nula fica nulo. Devolve [{uf, ano, chave, vab, pct}].
+ */
+export function participacaoNoVab(linhas, grupos = null) {
+  const totais = new Map()
+  for (const l of linhas.filter((x) => x.nivel === 'total')) {
+    const chave = `${l.uf}|${l.ano}`
+    if (totais.has(chave)) throw new Error(`mais de uma linha de total para ${chave}`)
+    totais.set(chave, l.vab)
+  }
+  const somas = new Map()
+  for (const l of linhas.filter((x) => x.nivel === 'atividade')) {
+    const grupo = grupos ? grupos[l.atividade_cod] : l.atividade_cod
+    if (grupo === undefined) throw new Error(`atividade sem grupo: ${l.atividade_cod}`)
+    const chave = `${l.uf}|${l.ano}|${grupo}`
+    const atual = somas.get(chave) ?? { uf: l.uf, ano: l.ano, chave: grupo, vab: 0 }
+    atual.vab = ehNulo(atual.vab) || ehNulo(l.vab) ? null : atual.vab + l.vab
+    somas.set(chave, atual)
+  }
+  return [...somas.values()].map((s) => {
+    const total = totais.get(`${s.uf}|${s.ano}`)
+    if (total === undefined) throw new Error(`sem a linha de total para ${s.uf} ${s.ano}`)
+    return { ...s, pct: s.vab === null ? null : (s.vab / total) * 100 }
+  })
+}
+
+/** PIB corrente do território / o do país no mesmo ano × 100 (analytics.participacao_no_pais). */
+export function participacaoNoPais(linhas, uf, ano, pais) {
+  const valor = (u) => linhas.find((l) => l.uf === u && l.ano === ano)?.pib_corrente
+  const doUf = valor(uf)
+  const doPais = valor(pais)
+  return ehNulo(doUf) || ehNulo(doPais) ? null : (doUf / doPais) * 100
+}
+
+/**
+ * Série de um índice da UF com `anoBase` = 100 (analytics.rebasear): [{ano, valor}] nos `anos` pedidos.
+ * Sem o ano base (ou nulo nele), todos os valores ficam nulos.
+ */
+export function rebasear(linhas, uf, coluna, anoBase, anos) {
+  const porAno = new Map(linhas.filter((l) => l.uf === uf).map((l) => [l.ano, l[coluna]]))
+  const base = porAno.get(anoBase)
+  return anos.map((ano) => {
+    const v = porAno.get(ano)
+    return { ano, valor: ehNulo(base) || ehNulo(v) ? null : (v / base) * 100 }
+  })
+}
+
+/** Variação % de um índice de volume entre `inicio` e `fim` (analytics.crescimento_acumulado). */
+export function crescimentoAcumulado(linhas, uf, coluna, inicio, fim) {
+  const valor = (ano) => linhas.find((l) => l.uf === uf && l.ano === ano)?.[coluna]
+  const a = valor(inicio)
+  const b = valor(fim)
+  return ehNulo(a) || ehNulo(b) ? null : (b / a - 1) * 100
+}
+
+/**
+ * Tabela atividades × anos da UF: [{atividade_cod, nivel, valores: [por ano]}], na ordem de `ordem`.
+ * metrica: 'pct' (participação no VAB) ou 'valor' (VAB em R$ nominais). O total vem na primeira linha.
+ */
+export function tabelaPib(linhas, uf, anos, ordem, metrica) {
+  const daUf = linhas.filter((l) => l.uf === uf)
+  const pct = new Map(participacaoNoVab(daUf).map((p) => [`${p.chave}|${p.ano}`, p.pct]))
+  const vab = new Map(daUf.map((l) => [`${l.atividade_cod}|${l.ano}`, l]))
+  return ordem.map((cod) => {
+    const nivel = daUf.find((l) => l.atividade_cod === cod)?.nivel
+    return {
+      atividade_cod: cod, nivel,
+      valores: anos.map((ano) => {
+        const linha = vab.get(`${cod}|${ano}`)
+        if (metrica === 'valor') return linha?.vab ?? null
+        if (nivel === 'total') return linha && !ehNulo(linha.vab) ? 100 : null
+        return pct.get(`${cod}|${ano}`) ?? null
+      }),
+    }
+  })
+}
+
+/**
+ * Peso de cada grupo (grande setor) no VAB da UF, ano a ano: [{ano, partes: {grupo: pct}}], na ordem de `anos`.
+ * grupos: {atividade_cod: grupo}. Ano em que algum grupo é nulo (atividade sem dado) fica com todas as partes
+ * nulas, para não desenhar uma composição incompleta como se fosse inteira.
+ */
+export function setoresPorAno(linhas, uf, anos, grupos) {
+  const ids = [...new Set(Object.values(grupos))]
+  const porAno = new Map()
+  for (const p of participacaoNoVab(linhas.filter((l) => l.uf === uf), grupos)) {
+    if (!porAno.has(p.ano)) porAno.set(p.ano, {})
+    porAno.get(p.ano)[p.chave] = p.pct
+  }
+  return anos.map((ano) => {
+    const partes = porAno.get(ano) ?? {}
+    const completo = ids.every((id) => !ehNulo(partes[id]))
+    return { ano, partes: Object.fromEntries(ids.map((id) => [id, completo ? partes[id] : null])) }
+  })
+}
+
+/**
+ * Participação de cada UF no PIB do país no ano, da maior para a menor, com a posição (1 = maior):
+ * [{uf, pct, posicao, n_ufs}]. O país (`pais`) não entra na lista.
+ */
+export function participacoesNoPais(linhas, ano, pais) {
+  const ufs = [...new Set(linhas.filter((l) => l.uf !== pais && l.ano === ano).map((l) => l.uf))]
+  const comPct = ufs.map((uf) => ({ uf, ano, pct: participacaoNoPais(linhas, uf, ano, pais) }))
+  return ranking(comPct, 'pct')
+    .map(({ uf, pct, pct_posicao: posicao, pct_n_ufs: n }) => ({ uf, pct, posicao, n_ufs: n }))
+    .sort((a, b) => (b.pct ?? -Infinity) - (a.pct ?? -Infinity) || a.uf.localeCompare(b.uf))
+}
+
+// --- Tendência das atividades (PIB dos Estados) -------------------------------------------------
+
+/** Janelas dos cards de tendência, da configuração: [{id: '3' | '5' | '10' | 'tudo', anos: N | null}]. */
+export const JANELAS_TENDENCIA = CONFIGURACAO_TENDENCIA.janelas_anos.map((anos) => ({ id: anos === null ? 'tudo' : String(anos), anos }))
+
+/** Participação % da atividade no VAB da UF, ano a ano: [{ano, valor}] (nulo onde a atividade não tem dado). */
+export function serieParticipacaoAtividade(linhas, uf, atividade) {
+  return participacaoNoVab(linhas.filter((l) => l.uf === uf))
+    .filter((p) => p.chave === atividade)
+    .map((p) => ({ ano: p.ano, valor: p.pct }))
+    .sort((a, b) => a.ano - b.ano)
+}
+
+/**
+ * Tendência da participação da atividade no VAB em cada janela que termina em `anoFinal`:
+ * [{id, anos, inicio, fim, observacoes, resultado}], resultado de estatistica/tendencia.js (analisarTendencia).
+ * "Últimos N anos" vai de anoFinal − N a anoFinal; a série completa, do primeiro ano com linha até anoFinal.
+ * Anos sem dado ou com participação ≤ 0 entram nas observações e o analisador os exclui, com aviso.
+ */
+export function tendenciasDaAtividade(linhas, uf, atividade, anoFinal, janelas = JANELAS_TENDENCIA) {
+  const serie = serieParticipacaoAtividade(linhas, uf, atividade).filter((o) => o.ano <= anoFinal)
+  const primeiro = serie[0]?.ano ?? anoFinal
+  return janelas.map((j) => {
+    const inicio = j.anos === null ? primeiro : Math.max(anoFinal - j.anos, primeiro)
+    const observacoes = serie.filter((o) => o.ano >= inicio)
+    return { ...j, inicio, fim: anoFinal, observacoes, resultado: analisarTendencia(observacoes) }
+  })
+}
+
+// --- Pesquisa e Inovação: IBID (ibid.json, INPI) e despesa em Ciência e Tecnologia -----------------
+
+/** "Centro-Oeste" → "centro_oeste" (chave de ibid.json → agregados; espelha publicacao.ibid.id_agregado). */
+export const idAgregado = (nome) => nome.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replaceAll('-', '_').replaceAll(' ', '_')
+
+/**
+ * Ranking oficial das 27 UFs no ano, na ordem do índice geral: [{uf, nome, posicao, geral, contexto, resultado,
+ * posicao_contexto, posicao_resultado}]. Escores e posições como publicados pelo INPI (nada recalculado).
+ */
+export function rankingIbid(ibid, ano) {
+  const a = String(ano)
+  return Object.entries(ibid.ufs).map(([uf, d]) => ({
+    uf, nome: d.nome, posicao: d.ranking.geral[a] ?? null,
+    geral: d.escores.geral[a] ?? null, contexto: d.escores.contexto[a] ?? null, resultado: d.escores.resultado[a] ?? null,
+    posicao_contexto: d.ranking.contexto[a] ?? null, posicao_resultado: d.ranking.resultado[a] ?? null,
+  })).sort((x, y) => (x.posicao ?? Infinity) - (y.posicao ?? Infinity) || x.uf.localeCompare(y.uf))
+}
+
+/** Série de uma UF no IBID: [{ano, valor}] da posição (`medida` 'posicao') ou do escore ('escore') na dimensão. */
+export function serieIbid(ibid, uf, dimensao, medida, anos = ibid.anos) {
+  const fonte = medida === 'posicao' ? ibid.ufs[uf]?.ranking[dimensao] : ibid.ufs[uf]?.escores[dimensao]
+  if (!fonte) throw new Error(`sem ${medida} de ${dimensao} para ${uf} no IBID`)
+  return anos.map((ano) => ({ ano, valor: fonte[String(ano)] ?? null }))
+}
+
+/**
+ * Os pilares (dimensões cujo pai é um subíndice) da UF no ano, ao lado dos escores da região e do Brasil publicados
+ * pelo INPI (para o território, não médias) e do estado típico (mediana das 27 UFs, publicada em ibid.json →
+ * mediana_ufs pelo pipeline; não é recalculada aqui): [{dimensao, nome, pai, uf, regiao, brasil, tipico}].
+ * regiao: nome da região da UF (dicionarios.ufs).
+ */
+export function pilaresComparados(ibid, uf, regiao, ano) {
+  const a = String(ano)
+  const subindices = new Set(ibid.dimensoes.filter((d) => d.pai === 'geral').map((d) => d.id))
+  const daRegiao = ibid.agregados[idAgregado(regiao)]
+  if (!daRegiao) throw new Error(`região sem agregado no IBID: ${regiao}`)
+  return ibid.dimensoes.filter((d) => subindices.has(d.pai)).map((d) => ({
+    dimensao: d.id, nome: d.nome, pai: d.pai, uf: ibid.ufs[uf].escores[d.id][a] ?? null,
+    regiao: daRegiao.escores[d.id][a] ?? null, brasil: ibid.agregados.brasil.escores[d.id][a] ?? null,
+    tipico: ibid.mediana_ufs.escores[d.id][a] ?? null,
+  }))
+}
+
+/**
+ * Contexto × Resultado no ano: pontos [{uf, nome, contexto, resultado}] das 27 UFs e as medianas dos dois eixos
+ * (quadrantes), as mesmas do "estado típico" publicado em ibid.json → mediana_ufs. Escores só dentro do mesmo ano.
+ */
+export function dispersaoIbid(ibid, ano) {
+  const a = String(ano)
+  const pontos = Object.entries(ibid.ufs).map(([uf, d]) => ({
+    uf, nome: d.nome, contexto: d.escores.contexto[a] ?? null, resultado: d.escores.resultado[a] ?? null,
+  }))
+  const tipico = ibid.mediana_ufs.escores
+  return { pontos, medianaContexto: tipico.contexto[a] ?? null, medianaResultado: tipico.resultado[a] ?? null }
+}
+
+/**
+ * Uma subfunção dentro de uma função (ex.: 12.364, Ensino Superior em Educação), todas as UFs e anos, com as contas
+ * das subáreas da tela "Por estado" (subareasDaUf: deflator, população e % sobre a despesa TOTAL da UF).
+ * despesa: linhas de função (despesa_funcoes.json); linhasSubfuncao: as linhas da subfunção (despesa_ensino_superior.json).
+ * UF que entregou a DCA no ano sem a linha entra com 0 e sem_gasto_declarado = true (como as áreas). Posição no por
+ * habitante real entre as UFs. Espelha publicacao.exportar.indicadores_da_subfuncao (gabarito.json → ensino_superior).
+ */
+export function indicadoresDaSubfuncao(despesa, linhasSubfuncao, serieIpca, { funcao, subfuncao, anoBase, fonte = 'siconfi_dca' }) {
+  const funcoes = filtrar(despesa, { fonte_dado: fonte, nivel: 'funcao', intra: false })
+  const sub = filtrar(linhasSubfuncao, { fonte_dado: fonte, nivel: 'subfuncao', intra: false, funcao_cod: funcao, subfuncao_cod: subfuncao })
+  const linhas = []
+  for (const daUf of agrupar(funcoes, ['uf']).values()) {
+    const { uf } = daUf[0]
+    const calculadas = new Map(subareasDaUf([...daUf, ...sub.filter((l) => l.uf === uf)], serieIpca, { uf, anoBase, fonte })
+      .filter((l) => l.funcao_cod === funcao && l.subfuncao_cod === subfuncao).map((l) => [l.ano, l]))
+    for (const ano of [...new Set(daUf.map((l) => l.ano))]) {
+      const l = calculadas.get(ano)
+      linhas.push(l
+        ? { uf, ano, nominal: l.nominal, real: l.real, per_capita_real: l.per_capita_real, pct_despesa_total: l.pct_despesa_total, sem_gasto_declarado: false }
+        : { uf, ano, nominal: 0, real: 0, per_capita_real: 0, pct_despesa_total: 0, sem_gasto_declarado: true })
+    }
+  }
+  return ranking(linhas, 'per_capita_real', ['ano'])
+    .map(({ per_capita_real_posicao: posicao, per_capita_real_n_ufs: n, ...l }) => ({ ...l, posicao_per_capita_real: posicao, n_ufs: n }))
+    .sort((a, b) => a.uf.localeCompare(b.uf) || a.ano - b.ano)
+}
+
+/**
+ * Gasto do estado em pesquisa ao lado da posição no IBID, só nos anos das duas fontes. Duas séries separadas e a
+ * soma (mesmo deflator, população e base de "% do orçamento"; as duas são despesas disjuntas: a função 19 e a
+ * subfunção 364 dentro da função 12):
+ * ct: indicadoresDaFuncao da função 19; es: indicadoresDaSubfuncao de 12.364.
+ * [{uf, ano, ct_per_capita_real, ct_pct, ct_sem_gasto, es_per_capita_real, es_pct, es_sem_gasto,
+ *   soma_per_capita_real, soma_pct, posicao_soma, posicao_ct, posicao_es, n_ufs, posicao_ibid}].
+ */
+export function cruzamentoPesquisa(ct, es, ibid) {
+  const anosIbid = new Set(ibid.anos)
+  const doEs = new Map(es.map((l) => [`${l.uf}|${l.ano}`, l]))
+  const linhas = ct.filter((l) => anosIbid.has(l.ano) && ibid.ufs[l.uf]).map((l) => {
+    const e = doEs.get(`${l.uf}|${l.ano}`)
+    if (!e) throw new Error(`sem Ensino Superior para ${l.uf} ${l.ano}`)
+    const soma = (a, b) => (ehNulo(a) || ehNulo(b) ? null : a + b)
+    return {
+      uf: l.uf, ano: l.ano,
+      ct_per_capita_real: l.per_capita_real, ct_pct: l.pct_despesa_total, ct_sem_gasto: l.sem_gasto_declarado, posicao_ct: l.posicao_per_capita_real,
+      es_per_capita_real: e.per_capita_real, es_pct: e.pct_despesa_total, es_sem_gasto: e.sem_gasto_declarado, posicao_es: e.posicao_per_capita_real,
+      soma_per_capita_real: soma(l.per_capita_real, e.per_capita_real), soma_pct: soma(l.pct_despesa_total, e.pct_despesa_total),
+      posicao_ibid: ibid.ufs[l.uf].ranking.geral[String(l.ano)] ?? null,
+    }
+  })
+  return ranking(linhas, 'soma_per_capita_real', ['ano'])
+    .map(({ soma_per_capita_real_posicao: posicao, soma_per_capita_real_n_ufs: n, ...l }) => ({ ...l, posicao_soma: posicao, n_ufs: n }))
+    .sort((a, b) => a.uf.localeCompare(b.uf) || a.ano - b.ano)
+}
+
+// --- Educação: IDEB (ideb.json e ideb/<UF>.json, Inep) --------------------------------------------------
+
+/** Janelas da tendência do IDEB (bienal), da configuração: [{id: '6' | '10' | 'tudo', anos: N | null}]. */
+export const JANELAS_IDEB = CONFIGURACAO_TENDENCIA.janelas_ideb_anos.map((anos) => ({ id: anos === null ? 'tudo' : String(anos), anos }))
+
+/** Bloco de um território (UF em ideb.ufs, agregado em ideb.agregados) numa etapa e rede; null se não houver. */
+function blocoIdeb(ideb, territorio, etapa, rede) {
+  const t = ideb.ufs[territorio] ?? ideb.agregados[territorio]
+  return t?.etapas[etapa]?.[rede] ?? null
+}
+
+/**
+ * Série de um indicador do IDEB: [{ano, valor}] nos anos de ideb.anos (as listas do arquivo são alinhadas a eles).
+ * territorio: sigla da UF ou chave do agregado ('brasil', 'sul'...). indicador: 'ideb', 'nota_padronizada',
+ * 'rendimento', 'saeb_matematica', 'saeb_portugues' ou 'aprovacao' (total). Sem o bloco, todos nulos.
+ */
+export function serieIdeb(ideb, territorio, etapa, rede, indicador) {
+  const bloco = blocoIdeb(ideb, territorio, etapa, rede)
+  const lista = indicador === 'aprovacao' ? bloco?.aprovacao?.total : bloco?.[indicador]
+  return ideb.anos.map((ano, i) => ({ ano, valor: lista?.[i] ?? null }))
+}
+
+/**
+ * As 27 UFs numa etapa, rede e ano, na ordem do IDEB (1 = maior; empate com a mesma posição; sem dado no fim):
+ * [{uf, nome, ideb, nota_padronizada, rendimento, saeb_matematica, saeb_portugues, posicao, n_ufs, variacao_pontos}].
+ * variacao_pontos: IDEB menos o da edição anterior (nulo sem uma das duas). Espelha publicacao.ideb.gabarito_ideb.
+ */
+export function rankingIdeb(ideb, etapa, rede, ano) {
+  const i = ideb.anos.indexOf(ano)
+  if (i < 0) throw new Error(`ano fora da série do IDEB: ${ano}`)
+  const valorEm = (b, ind, k) => (k < 0 ? null : b?.[ind]?.[k] ?? null)
+  const linhas = Object.entries(ideb.ufs).map(([uf, d]) => {
+    const b = d.etapas[etapa]?.[rede]
+    const atual = valorEm(b, 'ideb', i)
+    const anterior = valorEm(b, 'ideb', i - 1)
+    return {
+      uf, ano, nome: d.nome, ideb: atual, nota_padronizada: valorEm(b, 'nota_padronizada', i), rendimento: valorEm(b, 'rendimento', i),
+      saeb_matematica: valorEm(b, 'saeb_matematica', i), saeb_portugues: valorEm(b, 'saeb_portugues', i),
+      variacao_pontos: ehNulo(atual) || ehNulo(anterior) ? null : atual - anterior,
+    }
+  })
+  return ranking(linhas, 'ideb', ['ano'])
+    .map(({ ideb_posicao: posicao, ideb_n_ufs: n, ...l }) => ({ ...l, posicao, n_ufs: n }))
+    .sort((a, b) => (a.posicao ?? Infinity) - (b.posicao ?? Infinity) || a.uf.localeCompare(b.uf))
+}
+
+/**
+ * Tendência do IDEB da UF (etapa, rede) em cada janela que termina em `anoFinal` (estatistica/tendencia.js:
+ * regressão sobre ln IDEB, taxa proporcional por ano): [{id, anos, inicio, fim, observacoes, resultado}].
+ */
+export function tendenciasDoIdeb(ideb, uf, etapa, rede, anoFinal, janelas = JANELAS_IDEB) {
+  const serie = serieIdeb(ideb, uf, etapa, rede, 'ideb').filter((o) => o.ano <= anoFinal)
+  const primeiro = serie[0]?.ano ?? anoFinal
+  return janelas.map((j) => {
+    const inicio = j.anos === null ? primeiro : Math.max(anoFinal - j.anos, primeiro)
+    const observacoes = serie.filter((o) => o.ano >= inicio)
+    return { ...j, inicio, fim: anoFinal, observacoes, resultado: analisarTendencia(observacoes) }
+  })
+}
+
+/**
+ * Aprovação por série da UF no ano (ideb/<UF>.json): [{serie, valor}], sem a total, na ordem das séries.
+ * porUf: o conteúdo de ideb/<UF>.json; anos: ideb.anos.
+ */
+export function aprovacaoPorSerie(porUf, anos, etapa, rede, ano) {
+  const series = porUf?.[etapa]?.[rede]?.aprovacao ?? {}
+  const i = anos.indexOf(ano)
+  return Object.entries(series).filter(([s]) => s !== 'total')
+    .map(([serie, lista]) => ({ serie, valor: lista[i] ?? null }))
+    .sort((a, b) => Number(a.serie) - Number(b.serie))
+}
+
+/**
+ * Ressalvas da tela para a etapa, rede e UF: as gerais que valem para a etapa (sem `etapas` ou com ela) e as da UF
+ * cujas linhas incluem a etapa e a rede (notas de rodapé da planilha) ou que não têm linhas (ex.: DF distrital).
+ */
+export function ressalvasDoIdeb(ideb, uf, etapa, rede) {
+  const gerais = ideb.ressalvas.filter((r) => !r.etapas || r.etapas.includes(etapa))
+  const daUf = (ideb.ressalvas_por_uf[uf] ?? []).filter((r) => !r.linhas || r.linhas.some((l) => l.etapa === etapa && l.rede === rede))
+  return [...daUf, ...gerais]
+}
+
+/** Conferência do IDEB publicado: {n, p, calculado: N × P, publicado} da UF na etapa, rede e ano (nulos sem dado). */
+export function idebRecalculado(ideb, uf, etapa, rede, ano) {
+  const i = ideb.anos.indexOf(ano)
+  const b = blocoIdeb(ideb, uf, etapa, rede)
+  const n = b?.nota_padronizada?.[i] ?? null
+  const p = b?.rendimento?.[i] ?? null
+  return { n, p, calculado: ehNulo(n) || ehNulo(p) ? null : n * p, publicado: b?.ideb?.[i] ?? null }
 }

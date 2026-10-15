@@ -1,0 +1,10 @@
+# IBID (Índice Brasil de Inovação e Desenvolvimento), INPI. Lido por publicacao.ibid.
+nome: "Índice Brasil de Inovação e Desenvolvimento (IBID)"
+orgao: "INPI — Coordenação-Geral de Economia e Inovação"
+pagina_oficial: "https://www.gov.br/inpi/pt-br/inpi-data/indice-brasil-de-inovacao-e-desenvolvimento-ibid"
+
+# ÚNICO ponto de configuração da comparabilidade dos escores entre anos (vai para o meta.json → ibid).
+# false (até o INPI confirmar a metodologia): evolução no tempo só pela posição no ranking; escores só
+#   dentro do mesmo ano; a página mostra a ressalva "ibid_escores_entre_anos".
+# true: libera a série de escores na tela (evolução por escore) e tira a ressalva.
+escores_comparaveis_entre_anos: false

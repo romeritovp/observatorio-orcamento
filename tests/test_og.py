@@ -69,4 +69,7 @@ def test_compartilhar_json_textos_para_o_php(dados):
     assert len(c["ufs"]) == 27 and c["ufs"]["RJ"]["title"].startswith("As contas do Rio de Janeiro")
     assert c["ufs"]["PE"]["image"] == "https://exemplo.com.br/og/estado-pe.png"
     assert c["funcoes"]["10"]["title"].startswith("Comparar estados: Saúde")
-    assert c["views"] == ["estado", "comparar"] and c["padrao"]["image"].endswith("/og/padrao.png")
+    assert c["pib"]["title"].startswith("PIB dos Estados")
+    assert c["inovacao"]["title"].startswith("Pesquisa e Inovação")
+    assert c["educacao"]["title"].startswith("Educação")
+    assert c["views"] == ["estado", "comparar", "pib", "inovacao", "educacao"] and c["padrao"]["image"].endswith("/og/padrao.png")

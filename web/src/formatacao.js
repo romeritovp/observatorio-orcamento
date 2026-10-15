@@ -40,8 +40,14 @@ export const numero = (valor, casas = 0) =>
     minimumFractionDigits: casas, maximumFractionDigits: casas,
   })))
 
-/** Valor da métrica escolhida já formatado. */
-export const valorDaMetrica = (valor, metrica) => (metrica === 'pct_total' ? pct(valor) : reais(valor))
+/** Valor da métrica escolhida já formatado ('indice': número-índice, uma casa; 'posicao': 3º; 'escore': 0,123). */
+export const valorDaMetrica = (valor, metrica) => {
+  if (metrica === 'pct_total') return pct(valor)
+  if (metrica === 'indice') return numero(valor, 1)
+  if (metrica === 'posicao') return valor === null || valor === undefined ? '–' : `${valor}º`
+  if (metrica === 'escore') return numero(valor, 3)
+  return reais(valor)
+}
 
 const MINUSCULAS = new Set(['de', 'da', 'do', 'das', 'dos', 'e'])
 const FORMAS_SOCIETARIAS = new Set(['SA', 'S/A', 'S.A', 'S.A.'])

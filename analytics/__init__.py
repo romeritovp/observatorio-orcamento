@@ -9,7 +9,9 @@ from analytics.estatais import (
 from analytics.hierarquia import mapear_por_prefixo, segmentos, valores_proprios
 from analytics.nomes import nomear
 from analytics.normalizacao import per_capita
+from analytics.pib import crescimento_acumulado, participacao_no_pais, participacao_no_vab, rebasear
 
 __all__ = [
     "agregar", "completar_com_zero", "edicao_para_ano", "estatais_fora_das_contas", "funcao_das_estatais", "mudancas_de_dependencia", "nomes_de_exibicao", "deflacionar", "variacao", "participacao", "ranking", "mediana_entre_ufs", "per_capita", "nomear", "mapear_por_prefixo", "segmentos", "valores_proprios",
+    "participacao_no_vab", "participacao_no_pais", "rebasear", "crescimento_acumulado",
 ]

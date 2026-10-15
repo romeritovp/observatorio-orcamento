@@ -1,0 +1,2164 @@
+{
+ "edicao": 2025,
+ "arquivos": [
+  {
+   "url": "https://download.inep.gov.br/ideb/resultados/divulgacao_regioes_ufs_ideb_2025.zip",
+   "arquivo": "ideb/2025/divulgacao_regioes_ufs_ideb_2025.zip",
+   "sha256": "a8ecdb2cef93416149f98ec7c22207f5ff3607e0bb08f29ed8a03651406b0a87",
+   "planilha": "divulgacao_regioes_ufs_ideb_2025.xlsx",
+   "md5_inep_conferido": "010b33ab29941e728c9fa7b56fc66586",
+   "extraido_em": "2026-10-14T21:11:46+00:00"
+  },
+  {
+   "url": "https://download.inep.gov.br/ideb/resultados/divulgacao_brasil_ideb_2025.zip",
+   "arquivo": "ideb/2025/divulgacao_brasil_ideb_2025.zip",
+   "sha256": "c841dcbe726ade4c6a1c45cd54cff24255d2b3177b65bb55c7de0729491fb348",
+   "planilha": "divulgacao_brasil_ideb_2025.xlsx",
+   "md5_inep_conferido": "94c8e530337c86251de705ddae42afc1",
+   "extraido_em": "2026-10-14T21:13:09+00:00"
+  }
+ ],
+ "nota_original": "Fonte: MEC/Inep.",
+ "anos": [
+  2005,
+  2007,
+  2009,
+  2011,
+  2013,
+  2015,
+  2017,
+  2019,
+  2021,
+  2023,
+  2025
+ ],
+ "ressalvas_por_linha": [
+  {
+   "uf": "NORTE",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "NORDESTE",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "MA",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MA",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PI",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PI",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CE",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CE",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RN",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RN",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PB",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PB",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PE",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PE",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AL",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AL",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SE",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SE",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BA",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BA",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SUDESTE",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "MG",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MG",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "ES",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "ES",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RJ",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RJ",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SP",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SP",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SUL",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PR",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PR",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SC",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SC",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RS",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RS",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CENTRO_OESTE",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "MS",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MS",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MT",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MT",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "GO",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "GO",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "DF",
+   "etapa": "anos_iniciais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "DF",
+   "etapa": "anos_iniciais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "anos_finais",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "MA",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MA",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PI",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PI",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CE",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CE",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RN",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RN",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PB",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PB",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PE",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PE",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AL",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AL",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SE",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SE",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BA",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BA",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MG",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MG",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "ES",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "ES",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RJ",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RJ",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SP",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SP",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PR",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PR",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SC",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SC",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RS",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RS",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MS",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MS",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MT",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MT",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "GO",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "GO",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "DF",
+   "etapa": "anos_finais",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "DF",
+   "etapa": "anos_finais",
+   "rede": "publica",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RO",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AC",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AM",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RR",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PA",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AP",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "3",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados sem as escolas privadas;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "TO",
+   "etapa": "medio",
+   "rede": "privada",
+   "nota": "2",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 não calculados devido à perda amostral;",
+   "anos": [
+    2009
+   ]
+  },
+  {
+   "uf": "MA",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PI",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "CE",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RN",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PB",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PE",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "AL",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SE",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BA",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MG",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "ES",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RJ",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SP",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "PR",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "SC",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "RS",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MS",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "MT",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "GO",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "DF",
+   "etapa": "medio",
+   "rede": "total",
+   "nota": "4",
+   "texto": "Médias do SAEB 2011 e Ideb 2011 calculados sem as escolas federais;",
+   "anos": [
+    2011
+   ]
+  },
+  {
+   "uf": "BR",
+   "etapa": "anos_iniciais",
+   "rede": "privada",
+   "nota": "1",
+   "texto": "Médias do SAEB 2009 e Ideb 2009 calculados somente com as escolas urbanas;",
+   "anos": [
+    2009
+   ]
+  }
+ ],
+ "codigos_ausentes": [
+  {
+   "aba": "UF e Regiões (AI)",
+   "coluna": 79,
+   "indicador": "rendimento",
+   "ano": 2025,
+   "codigo": "VL_INDICADOR_REND_2023",
+   "problema": "código com erro na fonte: coluna CA, no bloco 'Taxa de Aprovação - 2025' (BU:CA); o código deveria ser VL_INDICADOR_REND_2025",
+   "arquivo": "divulgacao_regioes_ufs_ideb_2025.xlsx"
+  },
+  {
+   "aba": "Brasil (Anos Finais)",
+   "coluna": 111,
+   "indicador": "ideb",
+   "ano": 2023,
+   "problema": "código ausente",
+   "arquivo": "divulgacao_brasil_ideb_2025.xlsx"
+  }
+ ],
+ "conferencias": {
+  "cobertura": {
+   "esperado": "27 UFs × 3 etapas × 11 edições, por rede",
+   "redes_por_etapa": {
+    "anos_finais": [
+     "estadual",
+     "privada",
+     "publica",
+     "total"
+    ],
+    "anos_iniciais": [
+     "estadual",
+     "privada",
+     "publica",
+     "total"
+    ],
+    "medio": [
+     "estadual",
+     "privada",
+     "total"
+    ]
+   },
+   "ideb_publicado_ufs": 3241,
+   "lacunas": [
+    {
+     "uf": "RO",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AC",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AM",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "RR",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "PA",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AP",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "TO",
+     "etapa": "anos_finais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "RR",
+     "etapa": "anos_iniciais",
+     "rede": "estadual",
+     "anos_sem_ideb": [
+      2017,
+      2019,
+      2021,
+      2023,
+      2025
+     ]
+    },
+    {
+     "uf": "RO",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AC",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AM",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "RR",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "PA",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AP",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "TO",
+     "etapa": "anos_iniciais",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "RO",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AC",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AM",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "RR",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "PA",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "AP",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    },
+    {
+     "uf": "TO",
+     "etapa": "medio",
+     "rede": "privada",
+     "anos_sem_ideb": [
+      2009
+     ]
+    }
+   ]
+  },
+  "n_x_p": {
+   "tolerancia": 0.1,
+   "conferidos": 4000,
+   "maior_diferenca": 0.05000170695000028,
+   "fora_da_tolerancia": [],
+   "ideb_sem_n_ou_p": []
+  },
+  "controles_2025": [
+   {
+    "uf": "RS",
+    "etapa": "anos_iniciais",
+    "rede": "estadual",
+    "esperado": 6.4,
+    "publicado": 6.4,
+    "ok": 1.0
+   },
+   {
+    "uf": "RS",
+    "etapa": "anos_finais",
+    "rede": "estadual",
+    "esperado": 5.4,
+    "publicado": 5.4,
+    "ok": 1.0
+   },
+   {
+    "uf": "RS",
+    "etapa": "medio",
+    "rede": "estadual",
+    "esperado": 4.7,
+    "publicado": 4.7,
+    "ok": 1.0
+   },
+   {
+    "uf": "PR",
+    "etapa": "medio",
+    "rede": "total",
+    "esperado": 5.1,
+    "publicado": 5.1,
+    "ok": 1.0
+   },
+   {
+    "uf": "PI",
+    "etapa": "medio",
+    "rede": "total",
+    "esperado": 5.0,
+    "publicado": 5.0,
+    "ok": 1.0
+   },
+   {
+    "uf": "ES",
+    "etapa": "medio",
+    "rede": "total",
+    "esperado": 4.9,
+    "publicado": 4.9,
+    "ok": 1.0
+   },
+   {
+    "uf": "RS",
+    "etapa": "medio",
+    "rede": "total",
+    "esperado": 4.9,
+    "publicado": 4.9,
+    "ok": 1.0
+   }
+  ],
+  "amplitude": {
+   "ideb_fora_de_0_10": [],
+   "rendimento_fora_de_0_1": [],
+   "nota_padronizada_fora_de_0_10": [],
+   "aprovacao_fora_de_0_100": []
+  }
+ }
+}

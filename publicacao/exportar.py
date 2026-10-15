@@ -14,6 +14,12 @@ Arquivos gerados:
     divida.json        dívida por UF e ano (estoque do RGF Anexo 02 e pagamento da DCA I-D), em R$ nominais
     estatais.json      estatais ativas e não dependentes por edição, UF e função (só informativo: gera avisos,
                        nunca altera valores de despesa)
+    pib.json           PIB, VAB e volume do PIB por UF e do país (IBGE, Contas Regionais), em R$ nominais
+    pib/<UF>.json      conta da produção da UF por atividade (VBP, CI, VAB), carregada pela tela "PIB dos estados"
+    ibid.json          IBID (INPI): escores e ranking das UFs, regiões e Brasil, carregado pela tela "Pesquisa e Inovação"
+    despesa_ensino_superior.json  subfunção 364 (Ensino Superior) em Educação, 27 UFs, R$ nominais (mesma tela)
+    ideb.json          IDEB (Inep) das UFs, regiões e Brasil, sem metas, aprovação só total (tela "Educação")
+    ideb/<UF>.json     aprovação por série da UF (tela "Educação", sob demanda)
     gabarito.json      só para TESTE do front: per capita real e % da despesa total da saúde,
                        calculados por analytics/. Não é para exibição.
 
@@ -31,7 +37,10 @@ import pandas as pd
 from analyses.carregar import RAIZ, carregar, carregar_dicionario, carregar_ipca
 from publicacao import divida as divida_mod
 from publicacao import compensacoes as compensacoes_mod
+from publicacao import ibid as ibid_mod
+from publicacao import ideb as ideb_mod
 from publicacao import og as og_mod
+from publicacao import pib as pib_mod
 from publicacao import receita as receita_mod
 from analytics import (
     agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao,
@@ -42,6 +51,9 @@ DIR_SAIDA = RAIZ / "web" / "public" / "data"
 CAMINHO_SITE = RAIZ / "config" / "site.yaml"
 CAMINHO_SICONFI = RAIZ / "config" / "siconfi.yaml"
 CAMINHO_IPCA_FONTE = RAIZ / "data" / "reference" / "ipca_fonte.yaml"
+CAMINHO_CONTAS_REGIONAIS = RAIZ / "config" / "ibge_contas_regionais.yaml"
+CAMINHO_IBID = RAIZ / "config" / "ibid.yaml"
+CAMINHO_IBID_FONTE = RAIZ / "data" / "processed" / "ibid_fonte.json"
 VERSAO_ESQUEMA = 1
 
 COLUNAS_DESPESA = {
@@ -176,6 +188,16 @@ FONTES_DOCUMENTACAO = {
     "ibge_ipca": {
         "nome": "IBGE: IPCA (SIDRA, tabela 1737)",
     },
+    "inpi_ibid": {
+        "nome": "INPI: Índice Brasil de Inovação e Desenvolvimento (IBID)",
+    },
+    "inep_ideb": {
+        "nome": "Inep: Índice de Desenvolvimento da Educação Básica (IDEB)",
+    },
+    "ibge_contas_regionais": {
+        "nome": "IBGE: Contas Regionais do Brasil (PIB dos estados)",
+        "pagina_oficial": "https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9054-contas-regionais-do-brasil.html",
+    },
 }
 
 DIR_CONFIG_UFS = RAIZ / "config" / "ufs"
@@ -295,6 +317,33 @@ def indicadores_por_funcao(despesa, populacao, ipca, ano_base):
     })
 
 
+def indicadores_da_subfuncao(despesa, populacao, ipca, ano_base, funcao, subfuncao):
+    """Uma subfunção dentro de uma função, todas as UFs e anos: per capita (real e da época), % da despesa TOTAL da
+    UF (soma das funções, sem intra, como nas subáreas da tela "Por estado") e posição no per capita real.
+
+    UF que entregou a DCA no ano sem a linha da subfunção entra com 0 e `sem_gasto_declarado = True`.
+    Mesmo cálculo que o front faz em calculos.js (indicadoresDaSubfuncao).
+    """
+    e = ESTAGIO_GABARITO
+    base = despesa[(despesa["fonte_dado"] == "siconfi_dca") & ~despesa["intra"].astype(bool)]
+    funcoes = base[base["nivel"] == "funcao"]
+    universo = funcoes[["uf", "ano"]].drop_duplicates()
+    totais = funcoes.groupby(["uf", "ano"])[e].sum(min_count=1).rename("_total").reset_index()
+    df = base[(base["nivel"] == "subfuncao") & (base["funcao_cod"] == funcao) & (base["subfuncao_cod"] == subfuncao)]
+    df = df[["uf", "ano", "nivel", e]].dropna(subset=[e]).merge(totais, on=["uf", "ano"], how="left")
+    df[f"{e}_part_pct"] = df[e] / df["_total"] * 100
+    df = completar_com_zero(df.drop(columns="_total"), universo, ["uf", "ano"], ["nivel"], [e, f"{e}_part_pct"])
+    df = deflacionar(df, [e], ano_base, ipca)
+    df = per_capita(df, [e, f"{e}_real"], populacao)
+    df = ranking(df, f"{e}_real_per_capita", ["ano"])
+    return df.rename(columns={
+        e: "nominal", f"{e}_real_per_capita": "per_capita_real", f"{e}_per_capita": "per_capita_nominal",
+        f"{e}_part_pct": "pct_despesa_total", f"{e}_real_per_capita_posicao": "posicao_per_capita_real",
+        f"{e}_real_per_capita_n_ufs": "n_ufs",
+    })[["uf", "ano", "nominal", "per_capita_real", "per_capita_nominal", "pct_despesa_total", "posicao_per_capita_real",
+        "n_ufs", "sem_gasto_declarado"]].sort_values(["uf", "ano"])
+
+
 def totais_por_uf(despesa, populacao, ipca, ano_base):
     """Despesa total de cada UF e ano (soma das funções, sem intra), corrigida, por habitante e variação.
 
@@ -412,7 +461,8 @@ def montar_divida_json(registros, extraido_em):
     }
 
 
-def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_totais=None):
+def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_totais=None, pib=None, ensino_superior=False,
+                    ideb=None):
     """Gabarito de teste do front: todas as funções, liquidado, sem intra, com a regra do zero."""
     df = indicadores_por_funcao(despesa, populacao, ipca, ano_base)
     medidas = ["per_capita_real", "per_capita_nominal", "pct_despesa_total"]
@@ -463,6 +513,10 @@ def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_tot
             registros(t) for t in receita_gabarito(receita_totais, populacao, ipca, ano_base)]))),
         **({} if divida is None else dict(zip(["divida", "medianas_divida"],
                                               [registros(t) for t in divida_gabarito(divida, ipca, ano_base)]))),
+        **({} if pib is None else {"pib": pib}),
+        **({} if not ensino_superior else {"ensino_superior": registros(indicadores_da_subfuncao(
+            despesa, populacao, ipca, ano_base, ibid_mod.FUNCAO_EDUCACAO, ibid_mod.SUBFUNCAO_ENSINO_SUPERIOR))}),
+        **({} if ideb is None else {"ideb": ideb}),
     }
 
 
@@ -567,12 +621,14 @@ def ler_site(ufs, caminho=CAMINHO_SITE):
     return {"uf_padrao": None if uf is None else validar(uf, "uf_padrao"), "exemplo_metodo": exemplo}
 
 
-def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_fonte, exemplo=None):
+def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_fonte, exemplo=None, pib=None, ibid=None,
+                        ideb=None):
     """Bloco "documentacao" do meta.json: fichas das fontes com a data da última extração de cada uma
     (lida das tabelas processadas) e o exemplo da seção "Refaça a conta".
 
     despesa e demonstrativo: tabelas processadas (coluna extraido_em); anp: compensacoes_anp;
-    ipca_fonte: data/reference/ipca_fonte.yaml; exemplo: {uf, funcao_cod} de config/site.yaml.
+    ipca_fonte: data/reference/ipca_fonte.yaml; exemplo: {uf, funcao_cod} de config/site.yaml;
+    pib: pib.json (montado por publicacao.pib), para a ficha das Contas Regionais; ibid: (ibid.json, meta["ibid"]).
     """
     from extractors.nacional import tesouro_estatais
 
@@ -600,12 +656,24 @@ def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_font
         exemplo = {**exemplo, "endpoint": "dca", "anexo": dca.ANEXO_I_E, "coluna": coluna}
     return {
         "fontes": {"siconfi": siconfi, "anp": {**FONTES_DOCUMENTACAO["anp"], "extraido_em": anp["extraido_em"].max()},
-                   "tesouro_estatais": estatais, "ibge_ipca": ipca},
+                   "tesouro_estatais": estatais, "ibge_ipca": ipca,
+                   **({} if pib is None else {"ibge_contas_regionais": {
+                       **FONTES_DOCUMENTACAO["ibge_contas_regionais"], "arquivos": pib["pagina"],
+                       "edicao": pib["edicao"], "anos": [pib["anos"][0], pib["anos"][-1]], "extraido_em": pib["extraido_em"]}}),
+                   **({} if ibid is None else {"inpi_ibid": {
+                       **FONTES_DOCUMENTACAO["inpi_ibid"], "pagina_oficial": ibid[1]["pagina_oficial"],
+                       "planilha": ibid[0]["fonte"]["url"], "arquivo_sha256": ibid[0]["fonte"]["arquivo_sha256"],
+                       "anos": [ibid[0]["anos"][0], ibid[0]["anos"][-1]], "extraido_em": ibid[0]["fonte"]["extraido_em"]}}),
+                   **({} if ideb is None else {"inep_ideb": {
+                       **FONTES_DOCUMENTACAO["inep_ideb"], "pagina_oficial": ideb["fonte"]["pagina"],
+                       "arquivos": [a["url"] for a in ideb["fonte"]["arquivos"]], "edicao": ideb["fonte"]["edicao"],
+                       "anos": [ideb["anos"][0], ideb["anos"][-1]], "extraido_em": ideb["fonte"]["extraido_em"]}})},
         "exemplo": exemplo,
     }
 
 
-def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None, documentacao=None):
+def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None, documentacao=None, pib=None, ibid=None,
+                ideb=None):
     datas = despesa.groupby("fonte_dado")["extraido_em"].agg(["min", "max"])
     return {
         "gerado_em": gerado_em,
@@ -623,8 +691,23 @@ def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None, d
             "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
             "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
             "estatais/<UF>.json": "lista completa das estatais de uma UF por edição (carregado sob demanda)",
+            "pib.json": "PIB, VAB e volume do PIB por UF e do país, IBGE Contas Regionais, em R$ nominais "
+                        "(carregado pela tela do PIB)",
+            "pib/<UF>.json": "conta da produção da UF por atividade, em R$ nominais (carregado sob demanda)",
+            "ibid.json": "IBID (INPI): escores (0 a 1) e ranking oficial das UFs, regiões e Brasil, e a mediana das UFs "
+                         "(calculada pelo projeto); carregado pela tela Pesquisa e Inovação",
+            "despesa_ensino_superior.json": "subfunção 364 (Ensino Superior) em Educação, 27 UFs, em R$ nominais "
+                                            "(carregado pela tela Pesquisa e Inovação)",
+            "ideb.json": "IDEB (Inep) por UF, região e Brasil, etapa e rede, sem metas (carregado pela tela Educação)",
+            "ideb/<UF>.json": "aprovação por série da UF (carregado sob demanda pela tela Educação)",
             "gabarito.json": "só para teste do front; não exibir",
         },
+        # PIB dos estados (pib.json): anos e território do país, para a URL da tela antes de o arquivo chegar
+        "pib": None if pib is None else {"anos": pib["anos"], "edicao": pib["edicao"], "pais": pib["pais"]},
+        # IBID: anos, comparabilidade dos escores entre anos (config/ibid.yaml) e ressalvas da tela
+        "ibid": ibid,
+        # IDEB: anos, etapas, redes e padrões da tela "Educação" (para a URL antes de o arquivo chegar)
+        "ideb": ideb,
         "ufs": sorted(despesa["uf"].unique().tolist()),
         "anos": sorted(int(a) for a in despesa["ano"].unique()),
         "fontes": [
@@ -739,12 +822,35 @@ def main(dir_saida=DIR_SAIDA):
         url_base = yaml.safe_load(f)["url_base"]
     with open(CAMINHO_IPCA_FONTE, encoding="utf-8") as f:
         ipca_fonte = yaml.safe_load(f)
-    documentacao = montar_documentacao(despesa, demonstrativo, anp, url_base, ipca_fonte, site["exemplo_metodo"])
+    pib_uf, pib_atividades = carregar("pib_uf"), carregar("pib_uf_atividade")
+    dicionario_atividades = carregar_dicionario("nacional/atividades_ibge.csv")
+    territorios = carregar_dicionario("nacional/territorios.csv")
+    with open(CAMINHO_CONTAS_REGIONAIS, encoding="utf-8") as f:
+        contas_regionais = yaml.safe_load(f)
+    pib_arquivos = pib_mod.montar_pib_json(
+        pib_uf, pib_atividades, dicionario_atividades, territorios, carregar_dicionario("nacional/ufs.csv"),
+        contas_regionais["url_base"].format(edicao=contas_regionais["edicao"]))
+    pib_json = pib_arquivos["pib.json"]
+    with open(CAMINHO_IBID, encoding="utf-8") as f:
+        config_ibid = yaml.safe_load(f)
+    ibid_json = ibid_mod.montar_ibid_json(
+        carregar("ibid_escore"), carregar("ibid_ranking"), carregar_dicionario("nacional/ibid_dimensoes.csv").fillna(""),
+        carregar_dicionario("nacional/ufs.csv"),
+        pd.concat([carregar_dicionario("nacional/regioes.csv"), carregar_dicionario("nacional/territorios.csv")]),
+        json.loads(CAMINHO_IBID_FONTE.read_text(encoding="utf-8")), config_ibid)
+    ibid_meta = ibid_mod.bloco_meta(ibid_json, config_ibid)
+    ideb_tabela = carregar("ideb")
+    ideb_json = ideb_mod.montar_ideb_json(
+        ideb_tabela, json.loads(ideb_mod.CAMINHO_FONTE.read_text(encoding="utf-8")), carregar_dicionario("nacional/ufs.csv"),
+        pd.concat([carregar_dicionario("nacional/regioes.csv"), carregar_dicionario("nacional/territorios.csv")]))
+    ideb_site = ideb_mod.montar_ideb_site(ideb_json)
+    documentacao = montar_documentacao(despesa, demonstrativo, anp, url_base, ipca_fonte, site["exemplo_metodo"], pib_json,
+                                       (ibid_json, ibid_meta), ideb_json)
     dir_saida = Path(dir_saida)
     arquivos = [
         gravar_json(montar_meta(tabela, ipca, ano_base, gerado_em,
                                 montar_atribuicoes(carregar_dicionario("nacional/estatais.csv")),
-                                site, documentacao),
+                                site, documentacao, pib_json, ibid_meta, ideb_mod.bloco_meta(ideb_json)),
                     dir_saida / "meta.json"),
         gravar_json(montar_dicionarios(
             carregar_dicionario("nacional/ufs.csv"),
@@ -764,17 +870,25 @@ def main(dir_saida=DIR_SAIDA):
             tabela, montar_receita_json(receita_linhas, receita_totais, i_c["extraido_em"].max(), ressalvas_uf,
                                         petroleo, ufs_nao_separa, ultimo_ano_pe, anp["extraido_em"].max())).items()],
         gravar_json(montar_divida_json(divida, rgf_linhas["extraido_em"].max()), dir_saida / "divida.json"),
-        gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base, divida, receita_totais), dir_saida / "gabarito.json"),
+        *[gravar_json(objeto, dir_saida / caminho, compacto=True) for caminho, objeto in pib_arquivos.items()],
+        gravar_json(ibid_json, dir_saida / "ibid.json", compacto=True),
+        *[gravar_json(objeto, dir_saida / caminho, compacto=True) for caminho, objeto in ideb_site.items()],
+        gravar_json(registros(ibid_mod.linhas_ensino_superior(tabela)), dir_saida / "despesa_ensino_superior.json", compacto=True),
+        gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base, divida, receita_totais,
+                                    pib_mod.gabarito_pib(pib_uf, pib_atividades, dicionario_atividades, pib_json["pais"]),
+                                    ensino_superior=True,
+                                    ideb=ideb_mod.gabarito_ideb(ideb_tabela, carregar_dicionario("nacional/ufs.csv")["uf"])),
+                    dir_saida / "gabarito.json"),
     ]
     antigo = dir_saida / "despesa.json"  # antes da divisão por UF (2026-10-10): não é mais lido
     if antigo.exists():
         antigo.unlink()
     for arquivo in arquivos:
-        if any(f"/{pasta}/" in str(arquivo) for pasta in ["despesa", "receita", "estatais"]):
+        if any(f"/{pasta}/" in str(arquivo) for pasta in ["despesa", "receita", "estatais", "pib", "ideb"]):
             continue
         print(f"{arquivo.relative_to(RAIZ)}  {arquivo.stat().st_size / 1024:,.0f} KB")
-    por_uf = [a for a in arquivos if any(f"/{pasta}/" in str(a) for pasta in ["despesa", "receita", "estatais"])]
-    print(f"{len(por_uf)} arquivos por UF (despesa/, receita/, estatais/), "
+    por_uf = [a for a in arquivos if any(f"/{pasta}/" in str(a) for pasta in ["despesa", "receita", "estatais", "pib", "ideb"])]
+    print(f"{len(por_uf)} arquivos por UF (despesa/, receita/, estatais/, pib/, ideb/), "
           f"{sum(a.stat().st_size for a in por_uf) / 1024:,.0f} KB no total")
     if Path(dir_saida) == DIR_SAIDA:  # prévias de compartilhamento (imagens e textos do index.php)
         og_mod.main()

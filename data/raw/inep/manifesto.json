@@ -1,0 +1,14 @@
+{
+  "ideb/2025/divulgacao_brasil_ideb_2025.zip": {
+    "bytes": 85519,
+    "extraido_em": "2026-10-14T21:13:09+00:00",
+    "sha256": "c841dcbe726ade4c6a1c45cd54cff24255d2b3177b65bb55c7de0729491fb348",
+    "url": "https://download.inep.gov.br/ideb/resultados/divulgacao_brasil_ideb_2025.zip"
+  },
+  "ideb/2025/divulgacao_regioes_ufs_ideb_2025.zip": {
+    "bytes": 757970,
+    "extraido_em": "2026-10-14T21:11:46+00:00",
+    "sha256": "a8ecdb2cef93416149f98ec7c22207f5ff3607e0bb08f29ed8a03651406b0a87",
+    "url": "https://download.inep.gov.br/ideb/resultados/divulgacao_regioes_ufs_ideb_2025.zip"
+  }
+}

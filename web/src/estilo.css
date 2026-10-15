@@ -222,13 +222,15 @@ button, select { font: inherit; color: inherit; }
 @media (max-width: 560px) {
   .nav-tema-texto { display: none; }
   .nav-marca { flex-basis: 100%; }
-  .nav-menu { margin: 0; flex: 1; }
+  .nav-menu { margin: 0; flex: 1; flex-wrap: wrap; gap: 0; }
+  .nav-menu a { padding: 8px 9px; font-size: 0.88rem; }
 }
 
 /* Por estado: filtros */
 @media (min-width: 720px) {
   .filtros.filtros-estado { grid-template-columns: 1.4fr 0.7fr 2fr; }
   .filtros-estado .inflacao { grid-column: auto; }
+  .filtros.filtros-pib { grid-template-columns: 1.4fr 0.7fr 0.9fr; }
 }
 
 /* Resumo do ano */
@@ -413,3 +415,60 @@ body { overflow-x: clip; }
   .secao-metodo h3 { font-size: 1.1rem; }
 }
 .md-tabela th, .md-tabela td { text-align: left; }
+
+/* PIB dos Estados: grandes setores (composição empilhada e amostras da legenda) */
+.barras-empilhadas rect.setor-agropecuaria, .amostra.setor-agropecuaria { fill: var(--barra-par); background: var(--barra-par); }
+.barras-empilhadas rect.setor-industria, .amostra.setor-industria { fill: var(--texto-2); background: var(--texto-2); }
+.barras-empilhadas rect.setor-servicos, .amostra.setor-servicos { fill: var(--barra); background: var(--barra); }
+.barras-empilhadas rect[class^="setor-"] { stroke: var(--fundo); stroke-width: 0.5; }
+.lado-a-lado h4.subtitulo-atividades { margin-top: 20px; }
+
+/* Linhas clicáveis de tabela (PIB dos Estados: atividade da tendência) */
+.escolher-linha { padding: 2px 0; border: 0; background: none; cursor: pointer; text-align: left; font: inherit; color: inherit; text-decoration: underline; text-decoration-color: var(--linha); text-underline-offset: 3px; }
+.escolher-linha:hover { text-decoration-color: var(--texto-3); }
+.escolher-linha[aria-pressed="true"] { text-decoration: none; }
+
+/* Cards de tendência: cada um escolhe a janela da linha de tendência no gráfico */
+.cartoes-tendencia { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cartao-tendencia { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%; height: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; background: var(--superficie); border: 1px solid var(--linha); border-radius: 10px; padding: 12px 14px; }
+.cartao-tendencia:hover { border-color: var(--texto-3); }
+.cartao-tendencia[aria-pressed="true"] { border-color: var(--destaque); box-shadow: inset 0 -3px 0 var(--destaque); }
+.cartao-tendencia .rotulo { display: block; font-size: 0.82rem; color: var(--texto-2); }
+.cartao-tendencia .valor { display: block; margin-top: 2px; font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+.cartao-tendencia .categoria { display: block; margin-top: 2px; font-weight: 600; font-size: 0.92rem; }
+.cartao-tendencia .linha { display: block; margin-top: 4px; font-size: 0.8rem; color: var(--texto-2); }
+.detalhes-tendencia ul { margin: 8px 0 0; padding-left: 1.2em; font-size: 0.85rem; color: var(--texto-2); }
+
+/* Pesquisa e Inovação */
+.tabela-estados tr.par td { background: var(--superficie); }
+.barras-comparadas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.barras-comparadas li { display: grid; grid-template-columns: minmax(8em, 13em) 1fr; gap: 10px; align-items: center; font-size: 0.88rem; }
+.barras-comparadas .grupo { display: grid; gap: 2px; }
+.barras-comparadas .linha-barra { display: grid; grid-template-columns: 1fr 3.6em; gap: 8px; align-items: center; }
+.barras-comparadas .trilho { position: relative; height: 10px; }
+.barras-comparadas .texto { text-align: right; color: var(--texto-2); font-size: 0.8rem; }
+.barras-comparadas .destaque .barra { background: var(--destaque); }
+.barras-comparadas .par .barra { background: var(--barra-par); }
+.barras-comparadas .mediana .barra { background: var(--mediana); }
+.barras-comparadas .destaque .texto { color: var(--texto); font-weight: 700; }
+.amostra.mediana { background: var(--mediana); }
+@media (max-width: 560px) { .barras-comparadas li { grid-template-columns: 1fr; gap: 2px; } }
+.dispersao .ponto circle { fill: var(--barra); stroke: var(--texto-3); stroke-width: 1; }
+.dispersao .ponto text { font-size: 10px; fill: var(--texto-3); }
+.dispersao .ponto.par circle { fill: var(--barra-par); stroke: var(--texto-2); }
+.dispersao .ponto.par text { fill: var(--texto-2); }
+.dispersao .ponto.destaque circle { fill: var(--destaque); stroke: var(--fundo); stroke-width: 2; }
+.dispersao .ponto.destaque text { fill: var(--texto); font-weight: 700; font-size: 12px; }
+.dispersao .mediana-dispersao { stroke: var(--mediana); stroke-width: 1; stroke-dasharray: 4 4; }
+.dispersao .quadrante { font-size: 11px; fill: var(--texto-3); font-style: italic; }
+.dispersao .titulo-eixo { font-size: 12px; fill: var(--texto-2); }
+.barras-comparadas .barra { top: 0; bottom: 0; }
+@media (min-width: 720px) { .filtros.filtros-inovacao { grid-template-columns: 1.4fr 0.7fr; } }
+.rodape code.sha { font-size: 0.75rem; word-break: break-all; }
+
+.barras-comparadas .tipico .barra, .amostra.tipico { background: var(--texto-3); }
+.dispersao { position: relative; }
+/* alvo de toque (24 px), invisível: vence as cores de destaque e de par */
+.dispersao .ponto circle.alvo, .dispersao .ponto.par circle.alvo, .dispersao .ponto.destaque circle.alvo { fill: transparent; stroke: none; cursor: pointer; }
+.dispersao .ponto.ativo circle:not(.alvo) { stroke: var(--texto); stroke-width: 2; }
+@media (min-width: 720px) { .filtros.filtros-educacao { grid-template-columns: 1.3fr 0.6fr 1fr 0.9fr; } }

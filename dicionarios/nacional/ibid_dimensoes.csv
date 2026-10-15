@@ -1,0 +1,11 @@
+dimensao,nome,pai,cabecalho_planilha
+geral,IBID – Geral,,
+contexto,IBID – Contexto,geral,IBID - Contexto
+instituicoes,Instituições,contexto,Instituições
+capital_humano,Capital humano,contexto,Capital humano
+infraestrutura,Infraestrutura,contexto,Infraestrutura
+economia,Economia,contexto,Economia
+negocios,Negócios,contexto,Negócios
+resultado,IBID – Resultado,geral,IBID - Resultado
+conhecimento_tecnologia,Conhecimento e tecnologia,resultado,Conhecimento e tecnologia
+economia_criativa,Economia criativa,resultado,Economia criativa

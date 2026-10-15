@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-10-10T18:45:04+00:00",
+  "gerado_em": "2026-10-14T21:54:48+00:00",
   "versao_esquema": 1,
   "uf_padrao": "SP",
   "arquivos": {
@@ -13,7 +13,104 @@
     "divida.json": "dívida por UF e ano: estoque (RGF Anexo 02) e pagamento (DCA I-D), em R$ nominais",
     "estatais.json": "estatais ativas e não dependentes por edição, UF e função (só para avisos)",
     "estatais/<UF>.json": "lista completa das estatais de uma UF por edição (carregado sob demanda)",
+    "pib.json": "PIB, VAB e volume do PIB por UF e do país, IBGE Contas Regionais, em R$ nominais (carregado pela tela do PIB)",
+    "pib/<UF>.json": "conta da produção da UF por atividade, em R$ nominais (carregado sob demanda)",
+    "ibid.json": "IBID (INPI): escores (0 a 1) e ranking oficial das UFs, regiões e Brasil, e a mediana das UFs (calculada pelo projeto); carregado pela tela Pesquisa e Inovação",
+    "despesa_ensino_superior.json": "subfunção 364 (Ensino Superior) em Educação, 27 UFs, em R$ nominais (carregado pela tela Pesquisa e Inovação)",
+    "ideb.json": "IDEB (Inep) por UF, região e Brasil, etapa e rede, sem metas (carregado pela tela Educação)",
+    "ideb/<UF>.json": "aprovação por série da UF (carregado sob demanda pela tela Educação)",
     "gabarito.json": "só para teste do front; não exibir"
+  },
+  "pib": {
+    "anos": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "edicao": 2023,
+    "pais": "BR"
+  },
+  "ibid": {
+    "anos": [
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "escores_comparaveis_entre_anos": false,
+    "pagina_oficial": "https://www.gov.br/inpi/pt-br/inpi-data/indice-brasil-de-inovacao-e-desenvolvimento-ibid",
+    "ressalvas": [
+      {
+        "id": "ibid_escores_entre_anos",
+        "titulo": "Escores só se comparam dentro do mesmo ano",
+        "texto": "Ainda não está confirmado se o escore do IBID pode ser comparado entre anos: a média do Brasil fica quase parada (entre 0,29 e 0,30), o que sugere que o índice é recalculado a cada ano. Por isso a evolução no tempo aparece só pela posição no ranking, e os escores só são comparados dentro de um mesmo ano."
+      },
+      {
+        "id": "ibid_ct_ensino_superior",
+        "titulo": "Ciência e Tecnologia e Ensino Superior",
+        "texto": "A área Ciência e Tecnologia (função 19) concentra as fundações de amparo à pesquisa; as universidades estaduais aparecem em Ensino Superior (subfunção 364, dentro de Educação). Somar as duas dá um retrato mais completo do apoio do estado à pesquisa, mas o Ensino Superior também inclui o ensino, não só a pesquisa. Onde o estado não declara a subfunção 364 num ano, o Ensino Superior entra como zero, marcado."
+      },
+      {
+        "id": "ibid_lado_a_lado",
+        "titulo": "Lado a lado não quer dizer causa",
+        "texto": "O gasto do governo estadual e a posição no índice aparecem juntos para comparação. O IBID mede a economia e as instituições do estado inteiro, não só a ação do governo estadual: um número não explica o outro sozinho."
+      }
+    ]
+  },
+  "ideb": {
+    "anos": [
+      2005,
+      2007,
+      2009,
+      2011,
+      2013,
+      2015,
+      2017,
+      2019,
+      2021,
+      2023,
+      2025
+    ],
+    "etapas": [
+      "anos_iniciais",
+      "anos_finais",
+      "medio"
+    ],
+    "redes": [
+      "estadual",
+      "publica",
+      "privada",
+      "total"
+    ],
+    "etapa_padrao": "medio",
+    "rede_padrao": "estadual"
   },
   "ufs": [
     "AC",
@@ -216,6 +313,42 @@
         "documentacao_api": "https://apisidra.ibge.gov.br/home/ajuda",
         "consulta": "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2265,2266/p/201512,201612,201712,201812,201912,202012,202112,202212,202312,202412,202512",
         "extraido_em": "2026-10-09"
+      },
+      "ibge_contas_regionais": {
+        "nome": "IBGE: Contas Regionais do Brasil (PIB dos estados)",
+        "pagina_oficial": "https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9054-contas-regionais-do-brasil.html",
+        "arquivos": "https://ftp.ibge.gov.br/Contas_Regionais/2023/xls",
+        "edicao": 2023,
+        "anos": [
+          2002,
+          2023
+        ],
+        "extraido_em": "2026-10-12T00:38:33+00:00"
+      },
+      "inpi_ibid": {
+        "nome": "INPI: Índice Brasil de Inovação e Desenvolvimento (IBID)",
+        "pagina_oficial": "https://www.gov.br/inpi/pt-br/inpi-data/indice-brasil-de-inovacao-e-desenvolvimento-ibid",
+        "planilha": "https://www.gov.br/inpi/pt-br/inpi-data/indice-brasil-de-inovacao-e-desenvolvimento-ibid/ibid-serie-historica.xlsx",
+        "arquivo_sha256": "eec72964c17fa714ea014e549e3e4dea2a322e1efd18a30da67887ae9adc92bc",
+        "anos": [
+          2014,
+          2025
+        ],
+        "extraido_em": "2026-10-14"
+      },
+      "inep_ideb": {
+        "nome": "Inep: Índice de Desenvolvimento da Educação Básica (IDEB)",
+        "pagina_oficial": "https://www.gov.br/inep/pt-br/areas-de-atuacao/pesquisas-estatisticas-e-indicadores/ideb/resultados",
+        "arquivos": [
+          "https://download.inep.gov.br/ideb/resultados/divulgacao_regioes_ufs_ideb_2025.zip",
+          "https://download.inep.gov.br/ideb/resultados/divulgacao_brasil_ideb_2025.zip"
+        ],
+        "edicao": 2025,
+        "anos": [
+          2005,
+          2025
+        ],
+        "extraido_em": "2026-10-14"
       }
     },
     "exemplo": {

@@ -1,19 +1,22 @@
 // Página "Como fazemos": textos (src/conteudo/metodo/), links internos, ligações "entenda" das ressalvas
 // e o exemplo "Refaça a conta", conferido contra a tela e contra o gabarito.json do Python.
 import { renderToString } from 'react-dom/server'
+import { readFileSync } from 'node:fs'
+
 import { describe, expect, it } from 'vitest'
 
-import { dadosDaUf, dadosDoSite, lerJson } from './testes/publicados.js'
+import { dadosDaUf, dadosDoSite, lerArquivo, lerJson } from './testes/publicados.js'
 
-import { indicadoresDaFuncao, passosPorHabitante } from './calculos.js'
+import { conferenciaDclRcl, indicadoresDaFuncao, passosPorHabitante } from './calculos.js'
 import { ENTENDA, linkEntenda } from './conteudo/metodo/ligacoes.js'
 import { INTRODUCAO, SECOES, lerSecao } from './conteudo/metodo/indice.js'
 import { escreverEstado, lerEstado, NIVEIS_METODO, VIEWS } from './estado.js'
-import { reais } from './formatacao.js'
+import { numero, reais } from './formatacao.js'
 import { ancora, ancorasELinks, lerInline, lerMarkdown, preencher } from './markdown.js'
 import Ressalvas from './componentes/Ressalvas.jsx'
 import Comparar from './telas/Comparar.jsx'
 import Metodo from './telas/Metodo.jsx'
+import { valoresDasFormulas } from './telas/metodo/formulas.js'
 import { linkDca, valoresDoMetodo } from './telas/metodo/valores.js'
 
 const dados = dadosDoSite()
@@ -25,14 +28,21 @@ const tela = (Tela, busca) => {
   const estado = lerEstado(busca, contexto)
   return renderToString(<Tela dados={dados} estado={estado} mudar={() => {}} funcoes={funcoes} dadosUf={estado.uf ? dadosDaUf(estado.uf) : undefined} />)
 }
-const valores = valoresDoMetodo(dados)
+const pib = lerArquivo('pib.json')
+const pibExemplo = lerArquivo(`pib/${dados.meta.documentacao.exemplo.uf}.json`)
+const ideb = lerArquivo('ideb.json')
+const valores = { ...valoresDoMetodo(dados), formulas: valoresDasFormulas(dados, pib, pibExemplo, ideb) }
 const NIVEIS = Object.keys(NIVEIS_METODO)
+// Versões completas (todas as seções); "formulas" só tem as seções com contas
+const COMPLETAS = ['simples', 'tecnico']
+/** Seções presentes na versão (a introdução vale a técnica quando não tem a versão). */
+const textosDoNivel = (nivel) => [INTRODUCAO[nivel] ?? INTRODUCAO.tecnico, ...SECOES.filter((s) => s[nivel]).map((s) => s[nivel])]
 
 /** Âncoras e links da página inteira num nível: seções, títulos dos textos e a abertura. */
 function paginaNoNivel(nivel) {
-  const ids = [INTRODUCAO.id, ...SECOES.map((s) => s.id)]
+  const ids = [INTRODUCAO.id, ...SECOES.filter((s) => s[nivel]).map((s) => s.id)]
   const links = []
-  for (const texto of [INTRODUCAO[nivel], ...SECOES.map((s) => s[nivel])]) {
+  for (const texto of textosDoNivel(nivel)) {
     const r = ancorasELinks(lerMarkdown(preencher(texto, valores)))
     ids.push(...r.ids)
     links.push(...r.links)
@@ -40,12 +50,14 @@ function paginaNoNivel(nivel) {
   return { ids, links }
 }
 
-/** Todas as ressalvas publicadas (gerais, por função, da receita, por UF, da dívida). */
+/** Todas as ressalvas publicadas (gerais, por função, da receita, por UF, da dívida, do PIB). */
 function idsDasRessalvas() {
   const { meta, receita, divida } = dados
   return [
     ...meta.ressalvas, ...Object.values(meta.ressalvas_por_funcao).flat(),
     ...receita.ressalvas, ...Object.values(receita.ressalvas_por_uf).flat(), ...divida.ressalvas,
+    ...lerArquivo('pib.json').ressalvas, ...meta.ibid.ressalvas,
+    ...ideb.ressalvas, ...Object.values(ideb.ressalvas_por_uf).flat(),
   ].map((r) => r.id)
 }
 
@@ -85,12 +97,14 @@ describe('textos da página', () => {
     expect(SECOES.length).toBe(8)
     const ids = SECOES.map((s) => s.id)
     expect(new Set(ids).size).toBe(ids.length)
-    for (const s of SECOES) for (const nivel of NIVEIS) expect(s[nivel].length).toBeGreaterThan(200)
+    for (const s of SECOES) for (const nivel of COMPLETAS) expect(s[nivel].length).toBeGreaterThan(200)
+    expect(SECOES.filter((s) => s.formulas).map((s) => s.id)).toEqual(['calculos'])
+    expect(INTRODUCAO.formulas.length).toBeGreaterThan(100)
     expect(() => lerSecao('# Sem versões {#x}\n\n## simples\n\ntexto')).toThrow('duas versões')
   })
 
   it('todos os marcadores {{...}} têm valor, nas duas versões', () => {
-    for (const s of [INTRODUCAO, ...SECOES]) for (const nivel of NIVEIS) expect(() => preencher(s[nivel], valores)).not.toThrow()
+    for (const nivel of NIVEIS) for (const texto of textosDoNivel(nivel)) expect(() => preencher(texto, valores)).not.toThrow()
   })
 
   it('todo link interno aponta para uma âncora que existe; âncoras únicas e iguais nas duas versões', () => {
@@ -109,15 +123,18 @@ describe('textos da página', () => {
     }
     // Trocar de versão mantém o leitor no mesmo lugar: as âncoras são as mesmas
     expect([...porNivel.tecnico.ids].sort()).toEqual([...porNivel.simples.ids].sort())
+    // Na versão "Fórmulas", cada conta da técnica tem a sua fórmula, com a mesma âncora
+    for (const id of porNivel.tecnico.ids.filter((x) => x.startsWith('calculo-'))) expect(porNivel.formulas.ids, id).toContain(id)
   })
 
   it('toda ressalva publicada tem "entenda", e a âncora existe nas duas versões', () => {
     const publicadas = idsDasRessalvas()
-    const avisos = ['aviso_estatal', 'sem_info_estatais', 'quebra_dependencia']
+    // ibid_escores_entre_anos some do meta.json quando config/ibid.yaml liberar os escores; a ligação continua valendo
+    const avisos = ['aviso_estatal', 'sem_info_estatais', 'quebra_dependencia', 'tendencia', 'ibid_escores_entre_anos']
     for (const id of [...publicadas, ...avisos]) expect(ENTENDA, `ressalva sem ligação: ${id}`).toHaveProperty(id)
     // nenhuma ligação sobrando para ressalva que não existe mais
     expect(Object.keys(ENTENDA).sort()).toEqual([...new Set([...publicadas, ...avisos])].sort())
-    for (const nivel of NIVEIS) {
+    for (const nivel of COMPLETAS) {  // na versão "Fórmulas", âncora que falta leva à técnica (Metodo.jsx)
       const { ids } = paginaNoNivel(nivel)
       for (const alvo of Object.values(ENTENDA)) expect(ids, `${nivel}: ${alvo}`).toContain(alvo)
     }
@@ -197,5 +214,104 @@ describe('tela "Como fazemos"', () => {
     expect(lerEstado('?view=metodo&nivel=outro', contexto).nivel).toBe('simples')
     expect(escreverEstado(lerEstado('?view=metodo&nivel=tecnico', contexto))).toContain('nivel=tecnico')
     expect(escreverEstado(lerEstado('?view=metodo', contexto))).not.toContain('nivel=')
+  })
+})
+
+describe('versão "Fórmulas": exemplos iguais ao cálculo independente', () => {
+  const f = valores.formulas
+  const { uf, funcao_cod: funcao } = dados.meta.documentacao.exemplo
+  const ano = Math.max(...dados.meta.anos)
+  const n = (v, casas) => numero(v, casas).replace('-', '−')
+  const pct = (v, casas = 4) => `${n(v, casas)}%`
+  const doGabarito = (lista, criterio) => lista.find((l) => Object.entries(criterio).every(([k, v]) => l[k] === v))
+
+  it('despesa: % do orçamento, posição, mediana e variação = gabarito.json (Python)', () => {
+    const g = doGabarito(gabarito.valores, { uf, ano, funcao_cod: funcao })
+    expect(f.despesa.pct).toBe(pct(g.pct_despesa_total))
+    expect(f.despesa.per_capita_real).toBe(reais(g.per_capita_real, true))
+    expect(f.despesa.posicao).toBe(g.posicao_per_capita_real)
+    expect(f.despesa.maiores_quantos).toBe(g.posicao_per_capita_real - 1)
+    expect(f.despesa.mediana).toBe(reais(doGabarito(gabarito.medianas, { ano, funcao_cod: funcao }).per_capita_real, true))
+    expect(f.despesa.variacao).toBe(pct(doGabarito(gabarito.totais, { uf, ano }).var_real_pct, 2))
+  })
+
+  it('receita e dívida = gabarito.json; DCL/RCL recalculado bate com o publicado (duas casas)', () => {
+    const rec = doGabarito(gabarito.receita, { uf, ano })
+    expect(f.receita.per_capita_real).toBe(reais(rec.per_capita_real, true))
+    expect(f.receita.pct_impostos).toBe(pct(rec.pct_impostos_proprios))
+    expect(f.receita.pct_transferencias).toBe(pct(rec.pct_transferencias_uniao))
+    expect(f.divida.pago_real).toBe(reais(doGabarito(gabarito.divida, { uf, ano }).pago_real, true))
+    // Todas as UFs e anos com os campos (o layout de 2015–2016 não traz DC e deduções): diferença só de arredondamento
+    const conferidas = dados.divida.linhas.map(conferenciaDclRcl).filter((c) => c && c.publicado !== null && c.calculado !== null)
+    expect(conferidas.length).toBeGreaterThan(250)
+    for (const c of conferidas) {
+      expect(Math.abs(c.calculado - c.publicado)).toBeLessThanOrEqual(0.005 + 1e-9)
+      expect(Math.abs(c.diferencaDcl)).toBeLessThan(0.01)
+    }
+  })
+
+  it('PIB: participações, volume e crescimento = gabarito.json', () => {
+    const g = gabarito.pib
+    const anoPib = f.pib.ano
+    expect(f.pib.pct_atividade).toBe(pct(doGabarito(g.atividades, { uf, ano: anoPib, chave: '04' }).pct))
+    expect(f.pib.pct_setor).toBe(pct(doGabarito(g.setores, { uf, ano: anoPib, chave: 'industria' }).pct))
+    expect(f.pib.pct_pais).toBe(pct(doGabarito(g.pct_pais, { uf, ano: anoPib }).pct))
+    expect(f.pib.rebase).toBe(n(doGabarito(g.rebase, { uf, ano: anoPib, base: f.pib.desde }).valor, 4))
+    expect(f.pib.crescimento).toBe(pct(doGabarito(g.crescimento, { uf, inicio: f.pib.desde, fim: anoPib }).crescimento_pct))
+  })
+
+  it('IDEB: posição e variação = gabarito.json (Python); N × P confere com o publicado', () => {
+    const g = gabarito.ideb.find((l) => l.uf === uf && l.etapa === dados.meta.ideb.etapa_padrao && l.rede === dados.meta.ideb.rede_padrao
+      && l.ano === f.ideb.ano)
+    expect(f.ideb.posicao).toBe(g.posicao)
+    expect(f.ideb.variacao).toBe(n(g.variacao_pontos, 1))
+    expect(f.ideb.ideb).toBe(n(g.ideb, 1))
+    const calculado = Number(f.ideb.nxp.replace(',', '.'))
+    expect(Math.abs(calculado - g.ideb)).toBeLessThanOrEqual(0.1)
+  })
+
+  it('tendência = statsmodels (mesma série: src/testes/referencia_tendencia.json → exemplo_metodo)', () => {
+    const referencia = JSON.parse(readFileSync(new URL('./testes/referencia_tendencia.json', import.meta.url), 'utf-8')).exemplo_metodo
+    const e = referencia.esperado
+    expect(referencia.uf).toBe(uf)
+    expect(f.tendencia.n).toBe(e.n)
+    expect(f.tendencia.beta).toBe(n(e.beta, 8))
+    expect(f.tendencia.r2).toBe(n(e.r2, 6))
+    expect(f.tendencia.ep_mqo).toBe(n(e.erro_padrao_mqo, 8))
+    expect(f.tendencia.ep_nw).toBe(n(e.erro_padrao_newey_west, 8))
+    expect(f.tendencia.defasagens).toBe(e.defasagens)
+    expect(f.tendencia.rho1).toBe(n(e.rho1, 6))
+    expect(f.tendencia.dw).toBe(n(e.durbin_watson, 6))
+    expect(f.tendencia.q).toBe(n(e.ljung_box_q, 6))
+    expect(f.tendencia.p_lb).toBe(n(e.ljung_box_p, 6))
+    const nw = f.tendencia.metodo.startsWith('Newey')
+    const [ic, p] = nw ? [e.ic_beta_newey_west, e.valor_p_newey_west] : [e.ic_beta, e.valor_p]
+    expect(f.tendencia.ic_beta_baixo).toBe(n(ic[0], 8))
+    expect(f.tendencia.ic_beta_alto).toBe(n(ic[1], 8))
+    expect(f.tendencia.valor_p).toBe(n(p, 6))
+  })
+})
+
+describe('tela "Como fazemos", versão "Fórmulas"', () => {
+  const telaFormulas = (comPib = true) => renderToString(<Metodo dados={dados} estado={lerEstado('?view=metodo&nivel=formulas', contexto)}
+    mudar={() => {}} pib={comPib ? pib : null} pibUf={comPib ? pibExemplo : undefined} ideb={comPib ? ideb : null} />).replaceAll('<!-- -->', '')
+
+  it('só as seções com fórmulas, com a numeração da página inteira e os números do exemplo', () => {
+    const html = telaFormulas()
+    expect(html).toContain('aria-pressed="true">Fórmulas')
+    expect(html).toContain('id="calculos"')
+    expect(html).not.toContain('id="fontes"')
+    expect(html).toContain('Seção 4')
+    expect(html).toContain(valores.formulas.despesa.pct)
+    expect(html).toContain('Newey–West')
+  })
+
+  it('sem os dados do PIB, avisa que está carregando', () => {
+    expect(telaFormulas(false)).toContain('Carregando os dados dos exemplos')
+  })
+
+  it('nível na URL', () => {
+    expect(lerEstado('?view=metodo&nivel=formulas', contexto).nivel).toBe('formulas')
+    expect(escreverEstado(lerEstado('?view=metodo&nivel=formulas', contexto))).toContain('nivel=formulas')
   })
 })

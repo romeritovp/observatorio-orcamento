@@ -11,9 +11,27 @@
   "description": "Quanto cada governo estadual gasta em cada área, por habitante e em % do orçamento. Dados entregues ao Tesouro Nacional.",
   "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
  },
+ "pib": {
+  "title": "PIB dos Estados · Observatório dos Orçamentos",
+  "description": "O tamanho da economia de cada estado, o peso de cada setor ano a ano e o crescimento desde 2002, segundo o IBGE.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
+ "inovacao": {
+  "title": "Pesquisa e Inovação · Observatório dos Orçamentos",
+  "description": "O índice de inovação do INPI (IBID) dos 27 estados, com o gasto estadual em ciência e tecnologia ao lado.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
+ "educacao": {
+  "title": "Educação · Observatório dos Orçamentos",
+  "description": "O IDEB de cada estado, por etapa e rede, de 2005 a 2025: série histórica, tendência e ranking, com os dados do Inep.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
  "views": [
   "estado",
-  "comparar"
+  "comparar",
+  "pib",
+  "inovacao",
+  "educacao"
  ],
  "ufs": {
   "RO": {
