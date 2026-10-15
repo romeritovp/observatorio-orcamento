@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+
+# cópias de segurança locais (não versionadas)
+backups/
