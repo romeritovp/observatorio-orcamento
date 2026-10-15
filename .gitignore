@@ -3,3 +3,7 @@ __pycache__/
 
 # cópias de segurança locais (não versionadas)
 backups/
+
+# dados brutos e material de conferência (gerados ou baixados; os brutos já rastreados continuam no git)
+data/raw/
+data/interim/
