@@ -152,6 +152,23 @@ Formato longo e **exploratório**: uma linha por célula numérica das tabelas d
 
 Arquivo: `data/processed/fbsp/uf=<UF>/ano=<ano>/fbsp.parquet`.
 
+## Tabela `fbsp_mvi`
+
+Mortes violentas intencionais (MVI) por UF e Brasil (`BR`) e ano, 2016–2025, consolidadas das tabelas de MVI das planilhas do Anuário (mapeamento em `docs/fbsp_temas.csv`; gerada por `extractors/nacional/fbsp/mvi.py`). Uma linha por território e ano.
+
+| coluna | tipo | descrição |
+|---|---|---|
+| mvi_numero | int | número de vítimas, da edição mais recente que traz o ano |
+| mvi_taxa | float | taxa por 100 mil habitantes, da mesma edição (a base de população muda entre edições: ver `docs/decisoes.md`) |
+| edicao_fonte, tabela_fonte | int, str | edição e aba de onde vêm os valores finais (ex.: 2026, `T01`) |
+| edicao_primeira_publicacao | int | edição em que o ano saiu pela primeira vez |
+| mvi_numero_primeira_publicacao, mvi_taxa_primeira_publicacao | int, float | valores da primeira publicação |
+| revisao_numero, revisao_taxa | int, float | final menos primeira publicação (0 se o ano saiu numa edição só) |
+| populacao_implicita | float | número ÷ taxa × 100.000 (conferência da base de população da taxa) |
+| fonte_dado | str | `fbsp_anuario` |
+
+Soma das 27 UFs = Brasil no número, em todos os anos (conferido na geração). Arquivo: `data/processed/fbsp_mvi/uf=<UF>/ano=<ano>/fbsp.parquet`; CSV único em `data/interim/fbsp/fbsp_mvi.csv`.
+
 ## Arquivos publicados `ideb.json` e `ideb/<UF>.json`
 
 Tela "Educação". `ideb.json`: `fonte`, `anos` (2005–2025, bienal), `etapas`, `redes`, `indicadores`, `ressalvas`, `ressalvas_por_uf`, um resumo da `conferencia`, e `ufs`/`agregados` → `etapas[etapa][rede]` com `ideb`, `nota_padronizada`, `rendimento`, `saeb_matematica`, `saeb_portugues` e `aprovacao.total`, cada um uma **lista alinhada a `anos`** (nulo = sem dado). Sem metas. `ideb/<UF>.json`: `[etapa][rede].aprovacao` com a série `total` e uma por ano/série (listas alinhadas a `anos`). Gerados por `publicacao/ideb.py` (`montar_ideb_site`).

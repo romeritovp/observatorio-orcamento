@@ -2,6 +2,7 @@
 
 > Tabela gerada por script a partir desta fonte:
 > - `fbsp`: gerada em 2026-10-15 por `uv run python -m extractors.nacional.fbsp.fbsp`. 9 planilhas (edições 2018–2026), 1.283 abas, 258.258 valores; 185.867 de linhas de UF (ou BR) com ano inequívoco, sem colunas de variação → `data/processed/fbsp/` (672 arquivos, 28 territórios, 806 tabelas). Diagnóstico: `uv run python scripts/diagnostico_fbsp.py`.
+> - `fbsp_mvi`: gerada em 2026-10-15 por `uv run python -m extractors.nacional.fbsp.mvi` (depois do `fbsp`). 280 linhas: 27 UFs e Brasil, 2016–2025; mapeamento das colunas em `docs/fbsp_temas.csv`.
 
 ## Origem
 
@@ -24,3 +25,4 @@ O extrator lê **todas** as abas das planilhas e as transforma em formato longo 
 - **Fora de `processed/`:** 72.391 valores, por motivo, em `data/interim/fbsp/fora_de_processed.csv` (variação, capital, região, município, total das capitais, sem território identificado, sem ano inequívoco). Por grupo, antes e depois de cada mudança: `scripts/diagnostico_fbsp.py` → `data/interim/fbsp/diagnostico/resumo_grupos.csv`.
 - **Aceitação (MVI por UF, 27 UFs e soma das UFs = Brasil):** passa em todas as edições 2018–2026.
 - **Sem as edições até 2017:** a série de cada indicador começa nos anos cobertos pelas planilhas (2003 é o mais antigo, em séries históricas das edições recentes).
+- **MVI consolidada (`fbsp_mvi`):** a taxa de cada ano vem da edição mais recente, com a população que ela usou: 2021–2022 sobre o Censo 2022 (edição 2023), 2023 em diante sobre estimativas novas (edição 2025). A população implícita do Brasil vai de 211,8 mi (2020) a 202,0 mi (2021) e 211,7 mi (2023); a lista das UFs com variação acima de 5% fica em `data/interim/fbsp/fbsp_mvi_populacao_implicita.csv`.

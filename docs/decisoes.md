@@ -448,6 +448,16 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 
 **Consequência:** `processed/fbsp`: 185.867 valores (9 edições, 806 tabelas, 28 territórios, 672 arquivos), contra 185.498 das planilhas e 46.285 dos PDFs antes. A aceitação de MVI por UF (27 UFs, soma das UFs = Brasil nas colunas absolutas) passa em 2018–2026. Não reaplicadas, de propostas anteriores: a exclusão de ano posterior à edição (os casos eram dos PDFs) e as colunas `formato_origem` e `n_ufs_tabela`. Cópia das mudanças descartadas em `backups/` (fora do git).
 
+### 2026-10-15 — FBSP: tabela consolidada de mortes violentas intencionais (`fbsp_mvi`)
+**Contexto:** cada edição do Anuário (planilhas, 2018–2026) traz a tabela de MVI por UF com dois anos: o anterior, revisado, e o mais recente. A tabela `fbsp` guarda todas as células, sem dizer qual coluna é o quê.
+**Decisão (do usuário):**
+1. **Mapeamento em `docs/fbsp_temas.csv`:** por edição e medida, a aba e um padrão no cabeçalho da coluna: "Mortes Violentas Intencionais - MVI" com "Número Absoluto"/"Ns. Absolutos" (`mvi_numero`) ou "Taxa" (`mvi_taxa`, por 100 mil). O número da nota no cabeçalho ("Taxa (2)", "Taxa (3)") e as partes que o extrator repete de células mescladas não contam. Cada ano tem de achar exatamente uma coluna, com as 27 UFs e o Brasil, senão a geração para.
+2. **Para cada UF e ano vale a edição mais recente;** a primeira publicação e a revisão (final menos primeira) ficam ao lado, para número e taxa (`analytics.consolidar_edicoes`). Ano publicado uma vez só (2016 e 2025) tem revisão 0.
+3. **Checagens que param a geração:** 27 UFs e o Brasil em todos os anos (número e taxa) e soma das UFs igual ao Brasil no número. **Conferência sem parar:** `populacao_implicita` (número ÷ taxa × 100.000) e a lista das UFs em que ela varia mais de 5% de um ano para o outro (`data/interim/fbsp/fbsp_mvi_populacao_implicita.csv`).
+4. Tabela no padrão do projeto (`data/processed/fbsp_mvi/uf=<UF>/ano=<ano>/fbsp.parquet`, com `cod_ibge`) e um CSV único em `data/interim/fbsp/fbsp_mvi.csv`. Gerada por `extractors/nacional/fbsp/mvi.py`, a partir de `data/processed/fbsp/`.
+
+**Consequência:** série 2016–2025, 28 territórios; soma das UFs = Brasil em todos os anos. 173 das 280 linhas têm o número revisado (Brasil 2021: 47.503 → 48.288). **A taxa mistura bases de população:** a população implícita do Brasil cai de 211,8 mi (2020) para 202,0 mi (2021) e volta a 211,7 mi (2023); as taxas de 2021–2022 vêm da edição 2023 (Censo 2022) e as de 2023 em diante de estimativas novas do IBGE (edição 2025). Por isso 27 casos passam de 5%, quase todos em 2021 e 2023 (Roraima 2018–2019 é crescimento real). Comparar taxas através de 2020→2021 e 2022→2023 exige recalcular com uma série de população única.
+
 ### 2026-10-15 — Navegação por estado e por indicador, com rotas em caminho
 **Contexto:** o menu tinha uma aba por tela ("Por estado | Comparar | PIB dos Estados | Pesquisa e Inovação | Educação | Como fazemos") e o botão de tema quebrava para uma segunda linha; cada indicador novo virava uma aba.
 **Decisão (do usuário, escolhida entre caminhos, parâmetros de busca e hash):**

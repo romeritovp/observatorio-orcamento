@@ -154,6 +154,26 @@ ESQUEMAS = {
         "fonte_dado": "str",
         "extraido_em": "str",
     },
+    # FBSP, mortes violentas intencionais (MVI) por UF e Brasil ("BR") e ano, consolidadas das tabelas de MVI das
+    # planilhas (mapeamento em docs/fbsp_temas.csv): vale a edição mais recente; a primeira publicação e a revisão
+    # (final menos primeira) ficam ao lado. populacao_implicita = número / taxa × 100.000 (conferência)
+    "fbsp_mvi": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "mvi_numero": "int",
+        "mvi_taxa": "float",
+        "edicao_fonte": "int",
+        "tabela_fonte": "str",
+        "edicao_primeira_publicacao": "int",
+        "mvi_numero_primeira_publicacao": "int",
+        "revisao_numero": "int",
+        "mvi_taxa_primeira_publicacao": "float",
+        "revisao_taxa": "float",
+        "populacao_implicita": "float",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
 }
 
 # Colunas que não podem ser nulas em nenhuma tabela
