@@ -6,7 +6,7 @@ Como o projeto funciona, do download dos dados públicos até a tela no navegado
 
 ## 1. Em uma frase
 
-Um site estático que compara as contas dos 27 governos estaduais (receita, despesa, dívida, empresas) e o contexto de cada estado (PIB, inovação, educação), a partir de dados públicos oficiais, com cada número rastreável até a fonte e conferido por testes automáticos.
+Um site estático que compara as contas dos 27 governos estaduais (receita, despesa, dívida, empresas) e o contexto de cada estado (PIB, inovação, educação, violência), a partir de dados públicos oficiais, com cada número rastreável até a fonte e conferido por testes automáticos.
 
 ## 2. O fluxo em cinco camadas
 
@@ -21,7 +21,8 @@ Os dados andam **numa direção só**. Nenhuma camada volta para editar a anteri
  Tesouro (estatais) ─┤     vieram, com          gravam parquet        (parquet, uma         (web/public/data/)       faz as contas
  IBGE (IPCA, PIB) ───┤     data e hash          (só códigos)          pasta por UF/ano)                              e desenha as telas
  INPI (IBID) ────────┤                                                                                                
- Inep (IDEB) ────────┘                          ↑                     ↓                                               
+ Inep (IDEB) ────────┤                          ↑                     ↓                                               
+ FBSP (Anuário) ─────┘                                                                                                
                                                 dicionarios/          analytics/  (funções puras de conta)            
                                                 config/               analyses/   (relatórios em outputs/)            
 ```
@@ -42,13 +43,14 @@ Os dados andam **numa direção só**. Nenhuma camada volta para editar a anteri
 
 | Fonte | O que traz | Extrator | Tabela gerada | Tela que usa |
 |---|---|---|---|---|
-| **SICONFI** (Tesouro Nacional), API | Contas anuais dos estados (DCA): despesa por área, receita, juros e amortização, população; dívida (RGF); conferência (RREO) | `extractors/nacional/siconfi/` | `despesa`, `demonstrativo`, `populacao` | Por estado, Comparar, Pesquisa e Inovação |
-| **ANP**, planilhas | Royalties e participação especial do petróleo repassados aos estados | `extractors/nacional/anp/compensacoes.py` | `compensacoes_anp` | Por estado (receitas) |
-| **Tesouro**, Raio X das estatais | Cadastro das empresas estaduais (dependentes ou não) | `extractors/nacional/tesouro_estatais.py` | dicionário `estatais.csv` | Por estado (estatais, avisos) |
+| **SICONFI** (Tesouro Nacional), API | Contas anuais dos estados (DCA): despesa por área, receita, juros e amortização, população; dívida (RGF); conferência (RREO) | `extractors/nacional/siconfi/` | `despesa`, `demonstrativo`, `populacao` | Orçamento, Comparar, Pesquisa e Inovação |
+| **ANP**, planilhas | Royalties e participação especial do petróleo repassados aos estados | `extractors/nacional/anp/compensacoes.py` | `compensacoes_anp` | Orçamento (receitas) |
+| **Tesouro**, Raio X das estatais | Cadastro das empresas estaduais (dependentes ou não) | `extractors/nacional/tesouro_estatais.py` | dicionário `estatais.csv` | Orçamento (estatais, avisos) |
 | **IBGE**, SIDRA | Inflação (IPCA) | (série de referência) | `data/reference/` | Todas as telas com R$ corrigido |
 | **IBGE**, Contas Regionais | PIB por estado e por atividade | `extractors/nacional/ibge_contas_regionais/` | `pib_uf`, `pib_uf_atividade` | PIB dos Estados |
 | **INPI**, IBID | Índice de inovação por estado | `extractors/nacional/inpi/` | `ibid_escore`, `ibid_ranking` | Pesquisa e Inovação |
 | **Inep**, IDEB | Qualidade da educação básica por estado, etapa e rede | `extractors/nacional/inep/` | `ideb` | Educação |
+| **FBSP**, Anuário Brasileiro de Segurança Pública (planilhas 2018–2026, baixadas à mão) | Mortes violentas intencionais e letalidade policial | `extractors/nacional/fbsp/` (`fbsp.py` lê todas as abas; `mvi.py` consolida, com o mapeamento de `docs/fbsp_temas.csv`) | `fbsp`, `fbsp_mvi`, `fbsp_mdip` | Violência |
 
 Todas são **nacionais**: o mesmo código serve às 27 UFs. Fontes estaduais (portais de transparência, TCEs) têm lugar reservado em `extractors/ufs/<uf>/`, mas ainda não foram implementadas.
 
@@ -56,7 +58,8 @@ Todas são **nacionais**: o mesmo código serve às 27 UFs. Fontes estaduais (po
 
 ## 4. Camada 1 — Dados brutos (`data/raw/`)
 
-- Cada fonte tem sua pasta (`siconfi/`, `anp/`, `ibge/`, `inpi/`, `inep/`).
+- Cada fonte tem sua pasta (`siconfi/`, `anp/`, `ibge/`, `inpi/`, `inep/`, `fbsp/`).
+- `data/raw/` fica fora do git (`.gitignore`): os brutos que já estavam versionados continuam; um bruto novo só entra com `git add -f`. O material de conferência (ex.: todas as células do Anuário do FBSP, CSV por aba, diagnósticos) fica em `data/interim/`, também fora do git.
 - As respostas da API do SICONFI são guardadas em JSON, uma por consulta: `data/raw/siconfi/<endpoint>/<código IBGE>/<ano>_...json`. Isso funciona como cache: rodar de novo não baixa o que já existe.
 - Planilhas e zips ficam intactos, com um `manifesto.json` (URL, data, tamanho e SHA-256). Quando a fonte publica um MD5 (Inep), ele também é conferido.
 - **Regra:** nunca editar. Se a fonte corrigir algo, baixa-se de novo (`--atualizar`).
@@ -72,7 +75,8 @@ Todas são **nacionais**: o mesmo código serve às 27 UFs. Fontes estaduais (po
 - SICONFI: as funções somam o total da despesa;
 - IBGE: as atividades somam o total, e as UFs somam o Brasil;
 - INPI: o ranking oficial bate com a ordenação dos escores;
-- Inep: valores de controle e IDEB = N × P.
+- Inep: valores de controle e IDEB = N × P;
+- FBSP: as 27 UFs em cada ano, as UFs somam o Brasil e as mortes por intervenção policial não passam das mortes violentas.
 
 Se algo não bate, o extrator **para** em vez de gravar dado duvidoso.
 
@@ -102,6 +106,8 @@ Se algo não bate, o extrator **para** em vez de gravar dado duvidoso.
 | `pib_uf`, `pib_uf_atividade` | largo | PIB, valor adicionado e volume; conta da produção por atividade |
 | `ibid_escore`, `ibid_ranking` | longo | Escores (0 a 1) e posições do índice de inovação |
 | `ideb` | longo | IDEB, notas do Saeb, aprovação, metas, por etapa e rede |
+| `fbsp` | longo | Todas as células de UF e Brasil das planilhas do Anuário do FBSP (exploratória) |
+| `fbsp_mvi`, `fbsp_mdip` | uma linha por UF e ano | Mortes violentas intencionais e mortes por intervenção policial: número, taxa, edição de origem e revisão |
 
 Lidas com `analyses.carregar.carregar("<tabela>")`. Descrição de cada coluna em `docs/dicionario.md`.
 
@@ -114,6 +120,7 @@ Lidas com `analyses.carregar.carregar("<tabela>")`. Descrição de cada coluna e
   - `completude`: UF sem gasto declarado entra com zero, marcada;
   - `hierarquia`: códigos da receita;
   - `pib`: participações, volume e crescimento;
+  - `edicoes`: séries publicadas em várias edições (vale a mais recente; primeira publicação e revisão ao lado);
   - `estatais`, `nomes`: avisos de estatais e junção de nomes.
 - **`analyses/`**: relatórios avulsos por tema, para uso interno (hoje, `saude.py`), que gravam em `outputs/<uf>/<tema>/`. Não alimentam o site.
 
@@ -130,10 +137,11 @@ O comando central é **`uv run python -m publicacao.exportar`**. Ele lê as tabe
 | `pib.json`, `pib/<UF>.json` | só na tela PIB | PIB e atividades |
 | `ibid.json`, `despesa_ensino_superior.json` | só na tela Inovação | IBID e a subfunção Ensino Superior |
 | `ideb.json`, `ideb/<UF>.json` | só na tela Educação | IDEB (sem metas) e aprovação por série |
+| `violencia.json` | só na tela Violência (e no painel do estado) | Mortes violentas intencionais e por intervenção policial: número, taxa, edição e revisão |
 | `gabarito.json` | **nunca** (só testes) | As mesmas contas do site, feitas em Python, para conferência |
 | `compartilhar.json` + imagens `og/` | pelo `index.php` | Textos e imagens das prévias no WhatsApp e redes sociais |
 
-Os módulos ao lado (`receita.py`, `divida.py`, `compensacoes.py`, `pib.py`, `ibid.py`, `ideb.py`, `og.py`) montam cada arquivo. **Princípio:** a publicação entrega números em R$ da época; quem corrige pela inflação, divide pela população e ordena é o site.
+Os módulos ao lado (`receita.py`, `divida.py`, `compensacoes.py`, `pib.py`, `ibid.py`, `ideb.py`, `violencia.py`, `og.py`) montam cada arquivo. **Princípio:** a publicação entrega números em R$ da época; quem corrige pela inflação, divide pela população e ordena é o site.
 
 **Por que dividir em arquivos:** o celular baixa só o necessário. A abertura leva o essencial das 27 UFs; o detalhe de um estado e as telas temáticas vêm quando o leitor pede.
 
@@ -152,10 +160,12 @@ Os módulos ao lado (`receita.py`, `divida.py`, `compensacoes.py`, `pib.py`, `ib
 ### React: como o site está organizado (`web/src/`)
 
 ```
-main.jsx ──► App.jsx ──► Navegacao (menu)
+main.jsx ──► App.jsx ──► componentes/navegacao/ (cabeçalho, subcabeçalho do estado, gaveta do celular)
                │
+               ├── rotas.js ......... caminho da URL ↔ página (/sp/pib, /indicadores/pib, /comparar, /metodologia)
+               ├── navegacao.config.js  eixos e indicadores (fonte única dos menus e títulos)
                ├── dados.js ......... busca os JSON (gerais na abertura; o resto sob demanda, uma vez por sessão)
-               ├── estado.js ........ lê e escreve o estado da tela na URL (?view=..&uf=..&ano=..)
+               ├── estado.js ........ lê e escreve o detalhe da tela nos parâmetros da URL (?ano=..&area=..)
                │
                └── telas/ ........... uma tela por item do menu
                      │                 (só escolhem colunas e textos; não fazem conta)
@@ -176,7 +186,7 @@ main.jsx ──► App.jsx ──► Navegacao (menu)
 | `dados.js` | Leitura dos JSON, com cache por sessão |
 | `calculos.js` | **Única** casa das contas. Espelha `analytics/` do Python e é testado contra o `gabarito.json` |
 | `estatistica/` | Regressão log-linear, intervalos, Newey–West, testes. Parâmetros em `configuracao.json` |
-| `telas/` | `PorEstado` (com `ParteReceitas` e `ParteDividas`), `Comparar`, `PibEstados`, `PesquisaInovacao`, `Educacao`, `Metodo` |
+| `telas/` | `Inicio`, `PainelUF` (visão geral do estado), `PorEstado` (orçamento, com `ParteReceitas` e `ParteDividas`), `Comparar` (visão nacional do orçamento), `CompararUFs`, `PibEstados`, `PesquisaInovacao`, `Educacao`, `Violencia`, `Metodo`, `NaoEncontrada` |
 | `componentes/` | Gráfico de linhas (`Evolucao`), barras, dispersão, tabelas com "Baixar CSV", cards, filtros, ressalvas |
 | `conteudo/metodo/*.md` | O texto da página "Como fazemos", em três versões (simples, técnica e fórmulas). Os números entram por marcadores `{{...}}` preenchidos com os dados reais |
 | `estilo.css`, `tema.js` | Visual e tema claro/escuro |
@@ -191,7 +201,7 @@ O conteúdo é uma matriz **estado × indicador**, com duas entradas no cabeçal
 | Visão geral do estado | `/sp` | Um cartão por indicador, com o número principal e o link |
 | Orçamento num estado | `/sp/orcamento` | As contas do estado em quatro partes: receitas, despesas, dívidas e estatais |
 | PIB num estado | `/sp/pib` | Tamanho da economia, peso dos setores, crescimento, tendência por atividade |
-| Violência num estado | `/sp/violencia` | Mortes violentas intencionais: série do número, comparação com região e Brasil, ranking pela taxa |
+| Violência num estado | `/sp/violencia` | Mortes violentas intencionais (série do número, comparação com região e Brasil, ranking pela taxa) e letalidade policial (número, % das mortes violentas, ranking) |
 | Educação num estado | `/sp/educacao` | IDEB por etapa e rede: série histórica, tendência, ranking, aprovação por série |
 | Pesquisa e Inovação num estado | `/sp/pesquisa-e-inovacao` | Índice de inovação do INPI ao lado do gasto em ciência, tecnologia e ensino superior |
 | Visão nacional | `/indicadores/pib` (e os outros) | O indicador nas 27 UFs (no orçamento: uma área do orçamento, com ranking e mediana) |
@@ -238,6 +248,9 @@ uv run python -m extractors.nacional.tesouro_estatais
 uv run python -m extractors.nacional.ibge_contas_regionais.pib
 uv run python -m extractors.nacional.inpi.ibid
 uv run python -m extractors.nacional.inep.ideb
+uv run python -m extractors.nacional.fbsp.fbsp                 # planilhas do Anuário (data/raw/fbsp/anuario-<edição>.xlsx)
+uv run python -m extractors.nacional.fbsp.mvi                  # fbsp_mvi e fbsp_mdip (depois do anterior)
+uv run python scripts/diagnostico_fbsp.py                      # o que ficou fora de processed/ e a aceitação das tabelas de MVI
 
 # Publicar e testar
 uv run python -m publicacao.exportar
@@ -264,17 +277,19 @@ cd web && npm test && npm run build
 ├── config/             parâmetros (site, fontes, ressalvas por UF)
 ├── dicionarios/        código → nome (versionado)
 ├── data/
-│   ├── raw/            brutos, intocados (≈ 436 MB)
+│   ├── raw/            brutos, intocados (≈ 540 MB; fora do git)
+│   ├── interim/        material de conferência (≈ 30 MB; fora do git)
 │   ├── reference/      IPCA
-│   └── processed/      tabelas canônicas em parquet (≈ 42 MB)
+│   └── processed/      tabelas canônicas em parquet (≈ 65 MB)
 ├── extractors/         base.py + um extrator por fonte (nacional/ e ufs/)
 ├── analytics/          funções de conta em Python
 ├── analyses/           relatórios avulsos (outputs/)
 ├── publicacao/         gera web/public/data/ e as prévias de compartilhamento
+├── scripts/            diagnósticos (ex.: diagnostico_fbsp.py)
 ├── tests/              testes Python
-├── docs/               decisões, dicionário de dados, fichas das fontes, esta página
+├── docs/               decisões, dicionário de dados, fichas das fontes, esta página, fbsp_temas.csv
 └── web/
-    ├── public/data/    JSON publicados (≈ 20 MB, gerados; nunca editar à mão)
+    ├── public/data/    JSON publicados (≈ 21 MB, gerados; nunca editar à mão)
     ├── public/index.php  prévias de compartilhamento
     ├── src/            React: App, telas, componentes, calculos, estatistica, conteúdo
     └── dist/           site pronto para o FTP (gerado pelo build)
@@ -293,13 +308,16 @@ cd web && npm test && npm run build
 | R$ da época × corrigido | Valor como foi registrado × valor atualizado pela inflação (IPCA) até dezembro do último ano |
 | Parquet | Formato de tabela compacto usado nas tabelas intermediárias |
 | Gabarito | O mesmo cálculo feito em Python, usado para testar se o site calcula certo |
+| MVI | Mortes violentas intencionais: homicídio doloso, latrocínio, lesão corporal seguida de morte e morte por intervenção policial (FBSP) |
+| MDIP | Mortes decorrentes de intervenção policial (letalidade policial), uma das parcelas das MVI |
+| Edição mais recente prevalece | O Anuário do FBSP repete e revisa o ano anterior; para cada estado e ano vale a edição mais nova, com a primeira publicação ao lado |
 
 ---
 
 ## Roteiro sugerido para apresentar (10 a 15 minutos)
 
 1. **O problema** (1 min): as contas dos estados são públicas, mas espalhadas, em formatos técnicos e difíceis de comparar.
-2. **O que o site faz** (2 min): mostrar uma tela ao vivo (Por estado → Comparar → Educação) e a página "Como fazemos".
+2. **O que o site faz** (2 min): mostrar ao vivo o painel de um estado (`/sp`), uma tela (Orçamento → Educação → Violência), a visão nacional e a página "Como fazemos".
 3. **O caminho do dado** (3 min): o diagrama da seção 2. Destacar que o bruto é guardado como veio e que tudo é rastreável.
 4. **As fontes** (2 min): a tabela da seção 3.
 5. **Confiabilidade** (3 min): conferências na extração, gabarito Python × site, testes; mostrar um "entenda" e a versão "Fórmulas".

@@ -1,213 +1,109 @@
-# Guia de desenvolvimento — orcamento-estados
+# Guia de desenvolvimento — orcamento-estados (Observatório dos Orçamentos)
 
-Repositório Python para análises rápidas de orçamentos estaduais brasileiros.
-Começa pelo Rio de Janeiro, mas é **agnóstico de UF** desde o primeiro commit.
-Desenvolvido por vibecoding: cada fase vira uma ou poucas sessões com a IA, sempre com o `CLAUDE.md` como contexto.
+Pipeline Python de dados públicos dos estados brasileiros e site estático que os mostra. Começou pelo Rio de Janeiro, mas é **agnóstico de UF** desde o primeiro commit. Desenvolvido por vibecoding: cada passo vira uma ou poucas sessões com a IA, sempre com o `CLAUDE.md` como contexto.
+
+Este guia diz **como trabalhar** e **onde o projeto está**. Como ele funciona (camadas, telas, comandos, mapa de pastas) está em `docs/arquitetura.md`; o porquê de cada escolha de dados, em `docs/decisoes.md`.
 
 ---
 
 ## Princípios (não negociáveis)
 
-1. **Fluxo numa direção só:** `data/raw` → `extractors` → `data/processed` → `analytics` → `analyses` → `outputs`.
+1. **Fluxo numa direção só:** `data/raw` → `extractors` → `data/processed` → `publicacao` → `web/public/data` → site. Em paralelo, `data/processed` → `analytics` → `analyses` → `outputs` para relatórios avulsos.
 2. **Raw é sagrado:** arquivo baixado ou resposta da API nunca é editado. Toda limpeza é código.
 3. **Tabelas canônicas nacionais:** toda UF, fonte e ano viram as mesmas colunas, com `uf` e `cod_ibge` obrigatórios.
-4. **Nacional primeiro, estadual depois:** o SICONFI cobre todos os estados com o mesmo formato. Fontes estaduais entram só para o que ele não tem.
+4. **Nacional primeiro, estadual depois:** fontes nacionais cobrem todos os estados com o mesmo formato. Fontes estaduais entram só para o que elas não têm.
 5. **O que é específico de UF fica em quatro lugares:** `extractors/ufs/<uf>/`, `config/ufs/<uf>.yaml`, `dicionarios/ufs/<uf>/` e `docs/fontes/<uf>.md`.
 6. **Códigos nos dados, nomes nos dicionários.**
-7. **Funções puras em `analytics`.**
-8. **Validar antes de analisar.**
-9. **Um passo, um commit.**
+7. **Funções puras em `analytics/`; contas do site em `web/src/calculos.js`,** conferidas contra o mesmo cálculo em Python (`gabarito.json`).
+8. **Validar antes de gravar:** o extrator confere totais e layout e para em vez de gravar dado duvidoso.
+9. **Comparar estados só normalizado** (per capita, por 100 mil, % de um total); número absoluto só para a série de um território ou como índice.
+10. **Um passo, um commit,** com os testes passando.
 
 ---
 
 ## Estrutura
 
-```
-orcamento-estados/
-├── config/
-│   ├── siconfi.yaml            # URL base, pausa entre chamadas, anexos de interesse
-│   └── ufs/
-│       └── rj.yaml             # fontes estaduais e totais oficiais
-├── dicionarios/                # VERSIONADO: código → nome
-│   ├── nacional/
-│   │   ├── ufs.csv             # sigla, cod_ibge, nome, região
-│   │   ├── entes.csv           # gerado do endpoint /entes do SICONFI
-│   │   ├── funcoes.csv
-│   │   ├── subfuncoes.csv
-│   │   └── natureza_despesa.csv
-│   └── ufs/
-│       └── rj/
-│           ├── orgaos.csv
-│           └── correspondencias.csv
-├── data/                       # NÃO versionado
-│   ├── raw/
-│   │   ├── siconfi/<endpoint>/<cod_ibge>/...json
-│   │   └── ufs/<uf>/<fonte>/<ano>.csv
-│   ├── reference/              # IPCA, população, RCL
-│   └── processed/<tabela>/uf=<UF>/ano=<ano>/<fonte>.parquet
-├── extractors/
-│   ├── base.py                 # contrato comum + validação + gravação
-│   ├── nacional/
-│   │   └── siconfi/
-│   │       ├── cliente.py      # HTTP, paginação, cache, pausa
-│   │       ├── entes.py
-│   │       ├── rreo.py
-│   │       ├── rgf.py
-│   │       └── dca.py
-│   └── ufs/
-│       └── rj/
-│           └── tce.py
-├── analytics/
-├── analyses/
-├── outputs/<uf>/<tema>/
-├── tests/
-│   └── fixtures/               # JSON/CSV de exemplo para testes sem rede
-├── docs/
-│   ├── guia-desenvolvimento.md
-│   ├── dicionario.md
-│   ├── decisoes.md
-│   └── fontes/
-│       ├── siconfi.md
-│       └── rj.md
-├── CLAUDE.md
-├── README.md
-└── pyproject.toml
-```
+O mapa de pastas está em `docs/arquitetura.md` (seção 15). Em resumo: `extractors/` (um por fonte, em `nacional/` e `ufs/`), `analytics/`, `analyses/`, `publicacao/`, `scripts/` (diagnósticos), `config/`, `dicionarios/`, `data/` (`raw/` e `interim/` fora do git; `processed/` e `reference/` versionados), `docs/`, `tests/` e `web/` (site).
 
 ---
 
 ## O que é comparável entre UFs (e o que não é)
 
-- **Comparável:** função e subfunção (padrão nacional), natureza da despesa (padrão STN), estágios da despesa e todos os demonstrativos do SICONFI.
+- **Comparável:** função e subfunção (padrão nacional), natureza da despesa (padrão STN), estágios da despesa, todos os demonstrativos do SICONFI e os indicadores das fontes nacionais (PIB, IBID, IDEB, Anuário do FBSP).
 - **Não comparável:** programa, ação e órgão. Cada estado define os seus. Servem para análise *dentro* de uma UF.
-- **Para comparar estados com justiça:** per capita ou % da Receita Corrente Líquida (a RCL sai do próprio RREO).
+- **Para comparar estados com justiça:** per capita, por 100 mil habitantes, % da Receita Corrente Líquida ou % de um total.
 
 ---
 
-## Fase 0 — Setup (1 sessão)
+## Onde o projeto está
 
-- [ ] Repositório com a estrutura acima (o esqueleto já vem pronto)
-- [ ] `uv sync` para instalar as dependências do `pyproject.toml`
-- [ ] `git init` e primeiro commit
+Legenda: [x] feito · [ ] a fazer · (–) substituído por outro caminho
 
-**Pronto quando:** `uv run pytest` roda e a estrutura está no git.
+### Fase 0 — Setup
+- [x] Estrutura, `uv sync`, git, `uv run pytest`
 
----
+### Fase 1 — Dicionários de base e exploração do SICONFI
+- [x] `dicionarios/nacional/ufs.csv` (com região, artigo e capital) e `territorios.csv` (Brasil)
+- [x] Exploração da API e ficha em `docs/fontes/siconfi.md`
+- [x] `config/siconfi.yaml`
+- [ ] `dicionarios/nacional/entes.csv` (gerado do endpoint `/entes`)
 
-## Fase 1 — Dicionários de base e exploração do SICONFI (1–2 sessões)
+### Fase 2 — Tabelas canônicas
+- [x] `despesa` (largo) e `demonstrativo` (longo), documentadas em `docs/dicionario.md`
 
-- [ ] Conferir `dicionarios/nacional/ufs.csv` (já vem preenchido)
-- [ ] Explorar a API no navegador ou com um script descartável: endpoints `/entes`, `/anexos-relatorios`, `/extrato_entregas`, `/rreo`, `/dca`
-- [ ] Para o RJ (`id_ente=33`) e um ano: ver quais anexos existem, o formato das linhas (`cod_conta`, `conta`, `coluna`, `valor`) e se há paginação
-- [ ] Registrar em `docs/fontes/siconfi.md` o que encontrou: parâmetros obrigatórios de cada endpoint, nomes exatos dos anexos, limite por página, comportamento de erro
-- [ ] Listar em `config/siconfi.yaml` os anexos de interesse (ponto de partida: RREO Anexo 02 por função/subfunção, RREO Anexo 03 para a RCL, DCA para natureza e função anuais)
+### Fase 3 — Cliente SICONFI e extractors
+- [x] `cliente.py` (paginação, pausa, retentativa, cache em `data/raw/`), `base.py`, `rreo.py`, `rgf.py`, `dca.py`
+- [x] Testes com JSON em `tests/fixtures/` (sem rede)
+- (–) Ponto de entrada único `python -m extractors ...`: no lugar dele, os lotes (`lote_dca`, `lote_receita`, `lote_divida`, `lote_rreo`), que rodam as 27 UFs
+- [ ] `entes.py`
 
-**Pronto quando:** você sabe responder "que pergunta cada anexo responde".
+### Fase 4 — Analytics básicos
+- [x] `deflacionar`, `variacao`, `participacao`, `agregar`, `nomear`, `per_capita`, `ranking`, `mediana_entre_ufs`, `completar_com_zero`
+- [ ] `taxa_execucao` (pago/dotação, liquidado/empenhado) e `pct_rcl`
 
----
+### Fase 5 — Primeira análise ponta a ponta
+- [x] `analyses/carregar.py` e `analyses/saude.py` (uma ou mais UFs, com pares)
+- [ ] % da RCL na análise de saúde
 
-## Fase 2 — Tabelas canônicas (1 sessão)
+### Fase 6 — Fonte estadual do RJ
+- [x] Candidatas mapeadas em `docs/fontes/rj.md`
+- [ ] Extrator (`extractors/ufs/rj/`), `config/ufs/rj.yaml` com a fonte, `dicionarios/ufs/rj/orgaos.csv`, validação cruzada com o SICONFI
 
-Duas tabelas, documentadas em `docs/dicionario.md`:
+### Fase 7 — Escalar
+- [x] Série 2015–2025 das 27 UFs (DCA, receita, dívida, RREO)
+- [x] RGF (dívida) e DCA I-C (receita) e I-D (juros e amortização)
+- [ ] MSC, correspondências entre anos por UF
 
-- **`despesa`** (largo): uma linha por combinação de classificações, colunas de estágio (dotação, empenhado, liquidado, pago). Recebe dados da DCA, MSC e fontes estaduais.
-- **`demonstrativo`** (longo): uma linha por conta × coluna de cada anexo do RREO/RGF/DCA. É quase o formato nativo do SICONFI, só padronizado.
+### Fase 8 — Conforto
+- [ ] `Makefile` com os comandos de atualização
+- [x] `visualizar-parquet.py` para olhar uma tabela pelo terminal
 
-Por que duas: os demonstrativos têm estrutura de relatório (linhas de conta, colunas variáveis por anexo) e forçar isso num formato largo perde informação. A tabela `despesa` é para análise orçamentária granular, a `demonstrativo` para indicadores fiscais.
+### Além do plano original (feito)
+- [x] **Site** (`web/`): Vite + React, estático, contas em `calculos.js` testadas contra o gabarito do Python; telas Orçamento, PIB, Educação, Pesquisa e Inovação, Violência; painel do estado; navegação estado × indicador com rotas em caminho; página "Como fazemos" em três níveis (simples, técnica, fórmulas); prévias de compartilhamento (`index.php`)
+- [x] **Fontes nacionais de contexto:** ANP (royalties), Tesouro (estatais), IBGE (IPCA, Contas Regionais), INPI (IBID), Inep (IDEB), FBSP (Anuário: mortes violentas e letalidade policial, só as planilhas 2018–2026)
+- [x] **Tendência** por regressão log-linear (`web/src/estatistica/`), testada contra o statsmodels
 
-**Pronto quando:** esquemas escritos e você concorda com eles.
-
----
-
-## Fase 3 — Cliente SICONFI e primeiros extractors (2–3 sessões)
-
-- [x] `extractors/nacional/siconfi/cliente.py`: chamada HTTP com paginação, pausa entre requisições (ver `config/siconfi.yaml`), retentativa simples e **cache**: se o JSON já existe em `data/raw/siconfi/`, não chama de novo
-- [ ] `extractors/nacional/siconfi/entes.py`: gera `dicionarios/nacional/entes.csv`
-- [x] `extractors/base.py`: valida esquema canônico, adiciona `uf`/`cod_ibge` via `dicionarios/nacional/ufs.csv`, grava parquet particionado
-- [x] `extractors/nacional/siconfi/rreo.py`: baixa e transforma um anexo em `demonstrativo`
-- [ ] Ponto de entrada único: `python -m extractors siconfi rreo --uf RJ --ano 2025 --periodo 6`
-- [ ] Testes com JSON salvo em `tests/fixtures/` (sem rede)
-
-**Validação:** total da despesa no RREO Anexo 01 do 6º bimestre deve bater com o total da DCA do mesmo ano (com pequena tolerância). Divergência grande vira registro em `docs/decisoes.md`.
-
-**Teste de agnosticismo:** rodar o mesmo comando com `--uf SP`. Se funcionar sem mexer em código, a arquitetura está certa.
-
-**Pronto quando:** um ano do RJ está em parquet e confere.
-
----
-
-## Fase 4 — Analytics básicos (1–2 sessões)
-
-Em `analytics/`, todas agnósticas:
-- [x] `deflacionar(df, colunas, ano_base, ipca)` — IPCA em `data/reference/ipca.csv`
-- [x] `variacao(df, coluna, por)` — nominal e real
-- [ ] `taxa_execucao(df)` — pago/dotação atualizada, liquidado/empenhado
-- [x] `participacao(df, coluna, por)`
-- [x] `agregar(df, colunas, por)` (soma por grupo + uf; recusa níveis misturados)
-- [x] `nomear(df, dicionario)` — join de códigos com nomes
-- [ ] `per_capita(df, colunas, populacao)` (feito) e `pct_rcl(df, colunas, rcl)` (falta)
-
-Testes com DataFrames pequenos feitos à mão e **duas UFs fictícias**.
-
-**Pronto quando:** testes passam e nenhuma função lê arquivo (os dados de referência entram como argumento).
-
----
-
-## Fase 5 — Primeira análise ponta a ponta (1 sessão)
-
-- [x] `analyses/carregar.py`: `carregar(tabela, ufs=None, anos=None)` lendo os parquets particionados
-- [x] `analyses/saude.py`: `python -m analyses.saude --uf RJ`
-- [ ] Evolução real da despesa em Saúde (função 10) e % da RCL, com saída em `outputs/RJ/saude/` (feito: real per capita, variação e ranking; falta % da RCL)
-- [ ] Rodar também com `--uf RJ,SP,MG` para a primeira comparação
-- [x] Conferir um número manualmente (DCA × RREO Anexo 02, ver `docs/fontes/siconfi.md`)
-
-**Pronto quando:** um comando gera uma resposta confiável.
-
----
-
-## Fase 6 — Fonte estadual do RJ (2 sessões)
-
-Só agora, para o detalhe que o SICONFI não traz.
-
-- [ ] Mapear TCE-RJ e Portal da Transparência do RJ; baixar um ano
-- [ ] Registrar em `docs/fontes/rj.md` e `config/ufs/rj.yaml` (encoding, separador, decimal)
-- [ ] `extractors/ufs/rj/tce.py` grava na tabela `despesa` com programa e ação
-- [ ] `dicionarios/ufs/rj/orgaos.csv`
-- [ ] **Validação cruzada:** total por função da fonte estadual vs. SICONFI no mesmo ano
-
-**Armadilhas comuns:** `latin-1`, separador `;`, decimal com vírgula, códigos com zero à esquerda, classificações que mudam entre anos, intraorçamentárias, restos a pagar.
-
----
-
-## Fase 7 — Escalar (contínuo)
-
-- [ ] Mais anos (um por vez, validando)
-- [ ] Correspondências entre anos em `dicionarios/ufs/<uf>/correspondencias.csv`
-- [ ] RGF (pessoal, dívida) e MSC quando precisar de mais granularidade mensal
-- [ ] Fonte estadual de uma segunda UF, se precisar de programa/ação dela
-
----
-
-## Fase 8 — Conforto (quando doer)
-
-- [ ] DuckDB para SQL direto: `SELECT * FROM 'data/processed/demonstrativo/**/*.parquet'`
-- [ ] `Makefile`: `make siconfi UF=RJ ANO=2025`, `make analise UF=RJ TEMA=saude`
-- [ ] Notebook de exploração (sem lógica nova)
+### Próximos passos possíveis
+- [ ] Fonte estadual (Fase 6), começando pelo RJ
+- [ ] Policiais vítimas e aberturas da letalidade policial (por corporação e situação): exige distinguir "-" (zero) de "..." (não disponível) no extrator do FBSP
+- [ ] Taxa das MVI com uma série de população única (hoje muda de base em 2021 e 2023)
+- [ ] Cruzar a educação com o gasto por aluno (Censo Escolar)
+- [ ] `Makefile` e `entes.csv`
 
 ---
 
 ## Fluxo de trabalho no vibecoding
 
-1. Abrir a sessão com o `CLAUDE.md` (e `docs/dicionario.md` quando mexer em dados).
-2. Pedir **um passo por vez**, citando a fase.
-3. Exigir teste ou validação junto com o código.
-4. Rodar, conferir um número na mão, commitar.
-5. Decisões relevantes vão para `docs/decisoes.md`.
+1. Abrir a sessão com o `CLAUDE.md` (e `docs/dicionario.md` quando mexer em dados; `docs/arquitetura.md` para ter o todo).
+2. Pedir **um passo por vez**.
+3. Exigir teste ou validação junto com o código; para fonte nova, uma conferência que faça o extrator parar se o dado não fechar.
+4. Rodar `uv run pytest` e `cd web && npm test`; mudança visual: `npm run build` e conferir a tela. Conferir um número na mão.
+5. Decisões relevantes vão para `docs/decisoes.md`. Commitar.
 
 **Prompts-modelo:**
 
-> Leia o CLAUDE.md e docs/fontes/siconfi.md. Fase 3. Crie `extractors/nacional/siconfi/cliente.py` com uma função `consultar(endpoint, params)` que pagina, pausa entre chamadas conforme `config/siconfi.yaml`, tenta de novo até 3 vezes em erro de rede e usa cache em `data/raw/siconfi/`. Teste sem rede usando um JSON em `tests/fixtures/`.
+> Leia o CLAUDE.md e docs/fontes/<fonte>.md. Crie o extrator em `extractors/nacional/<fonte>/` que baixa o bruto para `data/raw/<fonte>/` (com manifesto: URL, data, SHA-256), confere os totais e grava a tabela canônica pelo `base.py`. Teste sem rede com um recorte real em `tests/fixtures/`.
 
-> Leia o CLAUDE.md. Fase 3. Crie `extractors/nacional/siconfi/rreo.py` com `extrair(uf, ano, periodo, anexo)` que usa o cliente, transforma a resposta na tabela canônica `demonstrativo` e delega validação e gravação ao `base.py`. A UF entra como sigla e é convertida para cod_ibge pelo dicionário.
+> Leia o CLAUDE.md e a seção 14 do docs/arquitetura.md. Crie o indicador "<nome>" no site, com PIB como modelo: `publicacao/<tema>.py` gerando o JSON e o gabarito, as contas em `calculos.js` conferidas no gabarito, a entrada em `INDICADORES`, a tela em `web/src/telas/` e o bloco na metodologia.
 
-> Leia o CLAUDE.md. Fase 5. Crie `analyses/saude.py` que recebe uma ou mais UFs por argumento e mostra a evolução real da despesa liquidada em Saúde (função 10) e seu % da RCL. Use só funções de `analytics/`. Saída em `outputs/<uf>/saude/`.
+> Leia o CLAUDE.md. Antes de mudar o extrator X, rode o diagnóstico e guarde o "antes"; depois da mudança, mostre o antes e o depois.

@@ -63,7 +63,7 @@ Todas as contas estão em `web/src/calculos.js` (funções puras) e espelham `an
 
 ### Despesa por área {#calculo-despesa-area}
 
-`despesa.json`, `fonte_dado = siconfi_dca`, `nivel = funcao`, `intra = false`, estágio `liquidado` (padrão). Linhas de níveis diferentes (`total`, `funcao`, `subfuncao`, `demais`, `demais_calculado`) nunca são somadas juntas. Validação na extração: Σ funções = total (exceto intra); subfunções + demais = função. UF que entregou a DCA no ano sem a linha da função (ou com a linha sem liquidado) entra com 0 e `sem_gasto_declarado = true` (`completarComZero`; [decisão](#decisao-zero)).
+`despesa_funcoes.json` (total e funções das 27 UFs; subfunções em `despesa/<UF>.json`), `fonte_dado = siconfi_dca`, `nivel = funcao`, `intra = false`, estágio `liquidado` (padrão). Linhas de níveis diferentes (`total`, `funcao`, `subfuncao`, `demais`, `demais_calculado`) nunca são somadas juntas. Validação na extração: Σ funções = total (exceto intra); subfunções + demais = função. UF que entregou a DCA no ano sem a linha da função (ou com a linha sem liquidado) entra com 0 e `sem_gasto_declarado = true` (`completarComZero`; [decisão](#decisao-zero)).
 
 ### Por habitante {#calculo-por-habitante}
 

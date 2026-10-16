@@ -195,7 +195,7 @@ Linhas da tabela `despesa` (formato de `despesa_funcoes.json`) com `nivel = subf
 | nacional/ideb_territorios.csv | manual (nomes como vêm na planilha do Inep) | nome_planilha (ex.: `R. G. do Sul`), uf (sigla da UF, `uf` da região em `regioes.csv` ou `BR`). Território fora da tabela faz o extrator do IDEB falhar |
 | nacional/ibid_dimensoes.csv | manual (INPI, cabeçalho das abas anuais) | dimensao, nome, pai (vazio = topo), cabecalho_planilha (conferido pelo extrator; vazio = coluna do índice geral). Na ordem das colunas C a L |
 | nacional/atividades_ibge.csv | manual (IBGE, Contas Regionais) | atividade_cod (`01` a `13`, texto), nome (texto oficial), nome_curto (tela), grande_setor (`total`, `agropecuaria`, `industria`, `servicos`) |
-| nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) |
+| nacional/entes.csv | SICONFI `/entes` | conforme a API (registrar em `fontes/siconfi.md`) (**previsto**, ainda não existe) |
 | nacional/funcoes.csv | SICONFI DCA Anexo I-E em cache (script `extractors/nacional/siconfi/dicionario_funcoes.py`) | funcao_cod, funcao_nome |
 | nacional/subfuncoes.csv | idem | subfuncao_cod, subfuncao_nome |
 | nacional/estatais.csv | Tesouro Nacional, Raio X das Empresas dos Estados (script `extractors/nacional/tesouro_estatais.py`; ver `fontes/tesouro_estatais.md`) | uf, cod_ibge, empresa (como veio), empresa_normalizada, sigla, cnpj (14 dígitos), setor, dependente (`true`/`false`), situacao (`ATIVA`/`EM LIQUIDAÇÃO`), ano_referencia (exercício), fonte. Uma linha por empresa, UF e exercício |
@@ -203,9 +203,9 @@ Linhas da tabela `despesa` (formato de `despesa_funcoes.json`) com `nivel = subf
 | nacional/estatais_ajustes.csv | manual | cnpj (14 dígitos), funcao_cod, justificativa. Exceções por empresa; têm prioridade sobre `setor_funcao.csv` |
 | nacional/estatais_nomes_exibicao.csv | manual | cnpj (14 dígitos), sigla_exibicao, nome_exibicao. Só exibição no front; prioridade sobre a escolha automática. O nome original continua em `estatais.csv` |
 | nacional/receita_itens.csv | manual (a partir da DCA I-C, 27 UFs, 2019–2025) | item, codigo (prefixo da natureza da receita, sem os zeros finais), ano_inicio, ano_fim (vazios = sem limite). Prefixo mais longo vigente no ano decide o item; os itens "outros/outras" cobrem os grupos inteiros |
-| nacional/natureza_despesa.csv | STN (MCASP) | natureza_cod, nivel, descricao |
-| ufs/<uf>/orgaos.csv | fonte estadual | orgao_cod, orgao_nome, ano_inicio, ano_fim |
-| ufs/<uf>/correspondencias.csv | manual | campo, cod_antigo, cod_novo, ano_mudanca, observacao |
+| nacional/natureza_despesa.csv | STN (MCASP) | natureza_cod, nivel, descricao (**previsto**, ainda não existe) |
+| ufs/<uf>/orgaos.csv | fonte estadual | orgao_cod, orgao_nome, ano_inicio, ano_fim (**previsto**, ainda não existe) |
+| ufs/<uf>/correspondencias.csv | manual | campo, cod_antigo, cod_novo, ano_mudanca, observacao (**previsto**, ainda não existe) |
 
 ## Séries de referência (`data/reference/`)
 

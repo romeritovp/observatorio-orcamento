@@ -46,7 +46,7 @@ Arredondado, é o **{{exemplo.resultado_tela}}** que aparece na tela.
 
 ## tecnico
 
-Reprodução do indicador **despesa liquidada por habitante, a preços de dezembro de {{anos.ano_base}}**, para {{exemplo.uf}} (código IBGE {{exemplo.cod_ibge}}), função {{exemplo.funcao_cod}} ({{exemplo.area}}), exercício {{exemplo.ano}}. Os valores desta seção são gerados no navegador a partir de `despesa.json` e `ipca.json`, com `passosPorHabitante` (`calculos.js`), que usa as mesmas funções da tela; um teste confere que o resultado é igual ao de `indicadoresDaFuncao` (o número da tela) e ao `gabarito.json` (calculado em Python por `analytics/`). Valor exibido na tela: **{{exemplo.resultado_tela}}**.
+Reprodução do indicador **despesa liquidada por habitante, a preços de dezembro de {{anos.ano_base}}**, para {{exemplo.uf}} (código IBGE {{exemplo.cod_ibge}}), função {{exemplo.funcao_cod}} ({{exemplo.area}}), exercício {{exemplo.ano}}. Os valores desta seção são gerados no navegador a partir de `despesa_funcoes.json` e `ipca.json`, com `passosPorHabitante` (`calculos.js`), que usa as mesmas funções da tela; um teste confere que o resultado é igual ao de `indicadoresDaFuncao` (o número da tela) e ao `gabarito.json` (calculado em Python por `analytics/`). Valor exibido na tela: **{{exemplo.resultado_tela}}**.
 
 ### Passo 1: o gasto, direto da fonte {#conta-passo-gasto}
 
