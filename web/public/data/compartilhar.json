@@ -26,18 +26,25 @@
   "description": "O IDEB de cada estado, por etapa e rede, de 2005 a 2025: série histórica, tendência e ranking, com os dados do Inep.",
   "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
  },
+ "violencia": {
+  "title": "Violência · Observatório dos Orçamentos",
+  "description": "As mortes violentas intencionais em cada estado desde 2016, a comparação com a região e o Brasil e o ranking pela taxa, com os dados do Anuário Brasileiro de Segurança Pública.",
+  "image": "https://apps.romeritopontes.com.br/orcamento/og/padrao.png"
+ },
  "views": [
   "estado",
   "comparar",
   "pib",
   "inovacao",
-  "educacao"
+  "educacao",
+  "violencia"
  ],
  "indicadores": {
   "orcamento": "comparar",
   "pib": "pib",
   "educacao": "educacao",
-  "pesquisa-e-inovacao": "inovacao"
+  "pesquisa-e-inovacao": "inovacao",
+  "violencia": "violencia"
  },
  "ufs": {
   "RO": {

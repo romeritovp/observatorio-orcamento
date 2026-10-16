@@ -1076,3 +1076,65 @@ export function idebRecalculado(ideb, uf, etapa, rede, ano) {
   const p = b?.rendimento?.[i] ?? null
   return { n, p, calculado: ehNulo(n) || ehNulo(p) ? null : n * p, publicado: b?.ideb?.[i] ?? null }
 }
+
+// --- Violência (FBSP: mortes violentas intencionais) ---------------------------------------------
+// linhas: violencia.json → linhas ({uf, ano, mvi_numero, mvi_taxa, ...}). Espelho de publicacao/violencia.py
+// (gabarito_violencia), conferido no gabarito.json → violencia.
+
+/** Número ou taxa (`campo`) de um território no ano; null se não houver. */
+export function valorMvi(linhas, uf, ano, campo = 'mvi_numero') {
+  const v = linhas.find((l) => l.uf === uf && l.ano === ano)?.[campo]
+  return ehNulo(v) ? null : v
+}
+
+/** Série de um território: [{ano, valor}] em `anos` (null onde não houver). */
+export function serieMvi(linhas, uf, anos, campo = 'mvi_numero') {
+  return anos.map((ano) => ({ ano, valor: valorMvi(linhas, uf, ano, campo) }))
+}
+
+/**
+ * Ranking das UFs pela taxa por 100 mil no ano (1 = maior taxa; empate fica com a melhor posição). O país fica de
+ * fora. [{uf, taxa, numero, posicao, n_ufs}], da maior taxa para a menor. A taxa compara estados no mesmo ano: todas
+ * vêm da mesma edição do Anuário, com a mesma base de população. tema: 'mvi' (mortes violentas intencionais) ou 'mdip'
+ * (mortes por intervenção policial).
+ */
+export function rankingMvi(linhas, ano, pais, tema = 'mvi') {
+  const doAno = linhas.filter((l) => l.ano === ano && l.uf !== pais).map((l) => ({
+    uf: l.uf, ano, taxa: ehNulo(l[`${tema}_taxa`]) ? null : l[`${tema}_taxa`], numero: l[`${tema}_numero`] ?? null,
+  }))
+  return ranking(doAno, 'taxa')
+    .map(({ uf, taxa, numero, taxa_posicao: posicao, taxa_n_ufs: n }) => ({ uf, taxa, numero, posicao, n_ufs: n }))
+    .sort((a, b) => (b.taxa ?? -Infinity) - (a.taxa ?? -Infinity) || a.uf.localeCompare(b.uf))
+}
+
+/**
+ * Índice do número de mortes de um grupo de territórios (soma dos membros: uma UF, as UFs de uma região ou o país),
+ * com `base` = 100: [{ano, valor}]. Ano em que falta algum membro (ou a base) fica nulo: nunca se inventa a soma.
+ * Compara a evolução de territórios de tamanhos diferentes sem depender da população (a taxa muda de base).
+ */
+export function indiceMvi(linhas, membros, base, anos) {
+  const soma = (ano) => {
+    const v = membros.map((uf) => valorMvi(linhas, uf, ano))
+    return v.some((x) => x === null) ? null : v.reduce((a, b) => a + b, 0)
+  }
+  const naBase = soma(base)
+  return anos.map((ano) => {
+    const s = soma(ano)
+    return { ano, valor: s === null || !naBase ? null : (s / naBase) * 100 }
+  })
+}
+
+/**
+ * % das mortes violentas intencionais que foram mortes por intervenção policial, num grupo de territórios (uma UF, as
+ * UFs de uma região ou o país): soma das MDIP / soma das MVI × 100, ano a ano: [{ano, valor}]. Falta de membro deixa o
+ * ano nulo. Não depende da população: compara estados e anos sem a quebra de base da taxa.
+ */
+export function pctMdipNasMvi(linhas, membros, anos) {
+  return anos.map((ano) => {
+    const mdip = membros.map((uf) => valorMvi(linhas, uf, ano, 'mdip_numero'))
+    const mvi = membros.map((uf) => valorMvi(linhas, uf, ano, 'mvi_numero'))
+    if ([...mdip, ...mvi].some((v) => v === null)) return { ano, valor: null }
+    const total = mvi.reduce((a, b) => a + b, 0)
+    return { ano, valor: total ? (mdip.reduce((a, b) => a + b, 0) / total) * 100 : null }
+  })
+}

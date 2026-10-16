@@ -7,12 +7,15 @@ import { dadosDaUf, dadosDoSite, lerArquivo } from './testes/publicados.js'
 
 import { JANELAS_IDEB, JANELAS_TENDENCIA } from './calculos.js'
 import { lerEstado } from './estado.js'
+import { FiltrosEducacao, FiltrosEstado, FiltrosInovacao, FiltrosPib } from './componentes/Filtros.jsx'
 import { BASE } from './rotas.js'
 import Comparar from './telas/Comparar.jsx'
 import Educacao from './telas/Educacao.jsx'
 import PesquisaInovacao from './telas/PesquisaInovacao.jsx'
 import PibEstados from './telas/PibEstados.jsx'
+import PainelUF from './telas/PainelUF.jsx'
 import PorEstado from './telas/PorEstado.jsx'
+import Violencia from './telas/Violencia.jsx'
 
 const dados = dadosDoSite()
 const presentes = new Set(dados.despesa.filter((l) => l.nivel === 'funcao').map((l) => l.funcao_cod))
@@ -366,5 +369,77 @@ describe('Educação (IDEB)', () => {
       }
       expect(telaIdeb(`?view=educacao&uf=${uf}`, { comUf: false }), uf).toContain('Carregando a aprovação por série')
     }
+  })
+})
+
+describe('filtros nas páginas de um estado (UF no caminho, /ce/orcamento)', () => {
+  // O campo Estado some (está no subcabeçalho) e a grade troca para a variante "sem-estado": antes, os campos
+  // restantes caíam nas colunas erradas (Ano na coluna larga do Estado, Valores espremido na do Ano).
+  const blocos = (ufNoCaminho) => {
+    const estado = { ...lerEstado('?uf=CE', contexto), ufNoCaminho }
+    const comuns = { estado, ufs: dados.dicionarios.ufs, anos: dados.meta.anos, regioes: [], paresPadrao: [], onMudar: () => {} }
+    return [
+      renderToString(<FiltrosEstado {...comuns} anoBase={dados.meta.anos.at(-1)} />),
+      renderToString(<FiltrosPib {...comuns} anos={dados.meta.pib.anos} />),
+      renderToString(<FiltrosInovacao {...comuns} anos={dados.meta.ibid.anos} />),
+      renderToString(<FiltrosEducacao {...comuns} anos={dados.meta.ideb.anos} etapas={[]} redes={[]} redesDisponiveis={[]} />),
+    ]
+  }
+  it('com a UF no caminho: sem o campo Estado e com a grade sem a coluna dele', () => {
+    for (const html of blocos(true)) {
+      expect(html).toMatch(/class="filtros filtros-[a-z]+ sem-estado"/)
+      expect(html).not.toContain('<span>Estado</span>')
+    }
+  })
+  it('sem a UF no caminho: o campo Estado aparece e a grade é a de sempre', () => {
+    for (const html of blocos(false)) {
+      expect(html).not.toContain('sem-estado')
+      expect(html).toContain('<span>Estado</span>')
+    }
+  })
+})
+
+describe('Violência', () => {
+  const violencia = lerArquivo('violencia.json')
+  const telaViolencia = (busca, { comDados = true, ufNoCaminho = false } = {}) => renderToString(
+    <Violencia dados={dados} estado={{ ...lerEstado(busca, contexto), ufNoCaminho }} mudar={() => {}}
+      violencia={comDados ? violencia : null} />).replaceAll('<!-- -->', '')
+
+  it('página do estado: número em destaque, comparação, ranking pela taxa, taxa com a quebra e o ano sujeito a revisão', () => {
+    const ce = telaViolencia('?view=violencia&uf=CE', { ufNoCaminho: true })
+    expect(ce).toContain('A Violência do Ceará')
+    expect(ce).toContain(`Mortes violentas intencionais em ${violencia.ultimo_ano}`)
+    expect(ce).toContain('sujeito a revisão')
+    expect(ce).toContain('Comparação com a região Nordeste e o Brasil')
+    expect(ce).toContain('Todos os estados pela taxa')
+    expect(ce).toContain('mudança de base')
+    expect(ce).toContain('entre 2020 e 2021 e entre 2022 e 2023')
+    expect(ce).toContain('Ver as revisões entre edições')
+    for (const r of violencia.ressalvas) expect(ce).toContain(r.titulo)
+    expect(ce).not.toContain('<span>Estado</span>')  // o estado está no caminho (subcabeçalho)
+    expect(ce).toContain('Letalidade policial do CE')
+    expect(ce).toContain(`Mortes por intervenção policial em ${violencia.ultimo_ano}`)
+    expect(ce).toContain('% das mortes violentas intencionais')
+    expect(ce).toContain('Todos os estados pela taxa de mortes por intervenção policial')
+  })
+
+  it('visão nacional: total do Brasil na série e o ranking das 27 UFs', () => {
+    const html = telaViolencia('?view=violencia&uf=')
+    expect(html).toContain('A violência nos estados')
+    expect(html).toContain('Mortes violentas intencionais no Brasil')
+    expect(html).toContain('Os estados pela taxa de mortes violentas intencionais')
+    expect(html).toContain('Letalidade policial no Brasil')
+    for (const t of violencia.territorios.filter((x) => x.regiao)) expect(html).toContain(`${t.uf} · ${t.nome}`)
+  })
+
+  it('sem o arquivo ainda, avisa que está carregando', () => {
+    expect(telaViolencia('?view=violencia&uf=CE', { comDados: false })).toContain('Carregando os dados de violência')
+  })
+
+  it('o cartão do painel do estado mostra o número do último ano e a posição pela taxa', () => {
+    const uf = { sigla: 'CE', nome: 'Ceará', slug: 'ce', artigo: 'o' }
+    const html = renderToString(<PainelUF dados={dados} uf={uf} violencia={violencia} />).replaceAll('<!-- -->', '')
+    expect(html).toContain(`mortes violentas intencionais em ${violencia.ultimo_ano} (sujeito a revisão)`)
+    expect(html).toMatch(/º de 27 estados pela taxa/)
   })
 })

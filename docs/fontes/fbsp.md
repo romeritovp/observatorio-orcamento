@@ -3,6 +3,7 @@
 > Tabela gerada por script a partir desta fonte:
 > - `fbsp`: gerada em 2026-10-15 por `uv run python -m extractors.nacional.fbsp.fbsp`. 9 planilhas (edições 2018–2026), 1.283 abas, 258.258 valores; 185.867 de linhas de UF (ou BR) com ano inequívoco, sem colunas de variação → `data/processed/fbsp/` (672 arquivos, 28 territórios, 806 tabelas). Diagnóstico: `uv run python scripts/diagnostico_fbsp.py`.
 > - `fbsp_mvi`: gerada em 2026-10-15 por `uv run python -m extractors.nacional.fbsp.mvi` (depois do `fbsp`). 280 linhas: 27 UFs e Brasil, 2016–2025; mapeamento das colunas em `docs/fbsp_temas.csv`.
+> - `fbsp_mdip` (letalidade policial): gerada pelo mesmo comando. 280 linhas, 2016–2025; coluna Total das tabelas de mortes decorrentes de intervenções policiais por corporação e situação.
 
 ## Origem
 

@@ -191,6 +191,7 @@ O conteúdo é uma matriz **estado × indicador**, com duas entradas no cabeçal
 | Visão geral do estado | `/sp` | Um cartão por indicador, com o número principal e o link |
 | Orçamento num estado | `/sp/orcamento` | As contas do estado em quatro partes: receitas, despesas, dívidas e estatais |
 | PIB num estado | `/sp/pib` | Tamanho da economia, peso dos setores, crescimento, tendência por atividade |
+| Violência num estado | `/sp/violencia` | Mortes violentas intencionais: série do número, comparação com região e Brasil, ranking pela taxa |
 | Educação num estado | `/sp/educacao` | IDEB por etapa e rede: série histórica, tendência, ranking, aprovação por série |
 | Pesquisa e Inovação num estado | `/sp/pesquisa-e-inovacao` | Índice de inovação do INPI ao lado do gasto em ciência, tecnologia e ensino superior |
 | Visão nacional | `/indicadores/pib` (e os outros) | O indicador nas 27 UFs (no orçamento: uma área do orçamento, com ranking e mediana) |

@@ -64,6 +64,20 @@ Todos os números vêm de fontes públicas e oficiais. Abaixo, uma ficha para ca
 
 **Onde conferir:** [página de resultados]({{fontes.ideb.pagina}}). Não há API: são planilhas. Última extração: {{fontes.ideb.extraido_em}}.
 
+### FBSP: Anuário Brasileiro de Segurança Pública {#fonte-fbsp}
+
+**O que é:** a publicação anual do Fórum Brasileiro de Segurança Pública, que reúne os registros das secretarias de segurança de cada estado. Usamos as mortes violentas intencionais (MVI): homicídios dolosos, latrocínios, lesões corporais seguidas de morte e mortes por intervenção policial.
+
+**O que usamos:** o número de mortes e a taxa por 100 mil habitantes de cada estado e do Brasil, de {{fontes.fbsp.primeiro}} a {{fontes.fbsp.ultimo}}, das edições {{fontes.fbsp.primeira_edicao}} a {{fontes.fbsp.ultima_edicao}} do Anuário, na tela [Violência](/indicadores/violencia).
+
+**Cada ano sai em duas edições.** Cada edição traz o ano mais recente e repete o anterior, quase sempre revisado para cima (mortes registradas depois entram na conta). Vale a **edição mais recente**; o valor da primeira publicação e a diferença (a revisão) aparecem na tela. O último ano ({{fontes.fbsp.ultimo}}) saiu numa edição só e está **sujeito a revisão**.
+
+**A taxa muda de base.** A taxa de cada ano usa a população da edição de onde vem: entre {{fontes.fbsp.quebras}} a base muda (Censo 2022 e, depois, estimativas novas do IBGE), e a taxa sobe ou cai também por isso. Por isso o destaque é o número de mortes; a taxa serve para comparar estados **no mesmo ano** (todas vêm da mesma edição).
+
+**Letalidade policial.** As mortes decorrentes de intervenção policial (pessoas mortas por policiais civis e militares, em serviço e fora de serviço) vêm de uma tabela própria de cada edição, com as mesmas regras: vale a edição mais recente, o último ano está sujeito a revisão e a taxa muda de base nos mesmos anos. Elas já estão **dentro** das mortes violentas intencionais. Para comparar estados e anos, use o **% das mortes violentas** que foi causado por intervenção policial: não depende da população.
+
+**Onde conferir:** [página do Anuário]({{fontes.fbsp.pagina}}). Não há API: são planilhas, uma por edição (as anteriores a 2018, só em PDF, não são lidas).
+
 ### E a população? {#fonte-populacao}
 
 A população **não** vem direto do IBGE: usamos a que o próprio Tesouro registra nas contas anuais de cada estado (dentro do SICONFI). Ela às vezes se repete de um ano para o outro, o que pode fazer o valor por habitante dar um pequeno salto. [Entenda a decisão](#decisao-populacao).
@@ -109,6 +123,10 @@ Planilha `ibid-serie-historica.xlsx` ([arquivo]({{fontes.ibid.planilha}})), guar
 ### Inep: Índice de Desenvolvimento da Educação Básica (IDEB) {#fonte-ideb}
 
 Edição {{fontes.ideb.edicao}} (série {{fontes.ideb.primeiro}}–{{fontes.ideb.ultimo}}, formulação original de 2007), dois zips do Inep: regiões e UFs, e Brasil (o único com a rede municipal), guardados intactos com SHA-256; o MD5 publicado pelo Inep é conferido. Tabela `ideb` (formato longo: território × ano × etapa × rede × indicador × série). Colunas localizadas pelo texto do cabeçalho (linhas 7 a 9), com o código técnico da linha 10 só como conferência (na edição 2025, um código errado e um ausente, documentados em `docs/fontes/inep_ideb.md`). Notas de rodapé nos rótulos de rede viram ressalvas por linha. Conferências a cada extração: valores de controle, IDEB = N × P (±0,1) em todos os casos, amplitude. Metas extraídas e nunca publicadas no site. [Página do Inep]({{fontes.ideb.pagina}}). Última extração: {{fontes.ideb.extraido_em}}.
+
+### FBSP: Anuário Brasileiro de Segurança Pública {#fonte-fbsp}
+
+Planilhas `anuario-<edição>.xlsx`, edições {{fontes.fbsp.primeira_edicao}} a {{fontes.fbsp.ultima_edicao}} (os PDFs das edições até 2017 não são lidos), baixadas à mão, com SHA-256 no catálogo. Extrator genérico (`extractors/nacional/fbsp/fbsp.py`): todas as abas em formato longo (tabela `fbsp`), território pelas colunas de identificação e ano pelo cabeçalho. A tabela de MVI por UF de cada edição é localizada por um mapeamento (`docs/fbsp_temas.csv`: aba e padrão do cabeçalho da coluna de número e de taxa) e consolidada em `fbsp_mvi` (`extractors/nacional/fbsp/mvi.py`): para cada UF e ano **prevalece a edição mais recente**; a primeira publicação e a revisão (final − primeira) ficam ao lado, para número e taxa. A geração para se faltar alguma das 27 UFs ou se a soma das UFs não bater com o Brasil (bate em todos os anos, {{fontes.fbsp.primeiro}}–{{fontes.fbsp.ultimo}}). **Quebra da taxa:** a população implícita (número ÷ taxa × 100 mil) do Brasil salta entre {{fontes.fbsp.quebras}}: as taxas de 2021–2022 vêm da edição 2023 (Censo 2022) e as de 2023 em diante de estimativas novas do IBGE. A taxa só compara estados no mesmo ano; a evolução usa o número, e a comparação com a região e o Brasil usa o índice do número (primeiro ano = 100; região = soma das UFs). **Letalidade policial:** coluna Total da tabela "Mortes decorrentes de intervenções policiais, segundo corporação e situação" de cada edição (número e taxa), consolidada em `fbsp_mdip` com as mesmas regras e conferências (27 UFs e o Brasil; soma das UFs = Brasil; MDIP ≤ MVI em todas as UFs e anos). O % das MVI é calculado no site (soma das MDIP / soma das MVI × 100 do território; região = soma das UFs), não lido da tabela de proporção do Anuário. As aberturas por corporação e situação não são usadas: "-" (fenômeno inexistente) e "..." (não disponível) não se distinguem na extração. [Página do Anuário]({{fontes.fbsp.pagina}}).
 
 ### E a população? {#fonte-populacao}
 

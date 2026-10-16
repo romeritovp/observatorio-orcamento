@@ -1,6 +1,6 @@
 // Textos gerados a partir dos dados: factuais, sem adjetivos.
 
-import { pct, pctComSinal, reaisCompacto, valorDaMetrica } from './formatacao.js'
+import { numero, pct, pctComSinal, reaisCompacto, valorDaMetrica } from './formatacao.js'
 
 /** "o RJ", "a BA", "SP" (artigo vem de dicionarios.json). */
 export function sujeito(uf, artigo) {
@@ -233,4 +233,19 @@ export function fraseIdeb({ uf, artigo, etapa, rede, ano, ideb, posicao, nUfs, b
     frase += ` Em ${anoAnterior}, era ${um(anterior)}: ${d > 0 ? `subiu ${pontosComSinal(d).slice(1)}` : d < 0 ? `caiu ${pontosComSinal(d).slice(1)}` : 'ficou igual'}.`
   }
   return frase
+}
+
+/**
+ * Frase da tela "Violência": o número de mortes no último ano, a variação desde o primeiro e a posição pela taxa.
+ * variacaoUf e variacaoBrasil em % (índice − 100); posicao 1 = maior taxa.
+ */
+export function fraseViolencia({ uf, artigo, ano, mortes, primeiroAno, variacaoUf, variacaoBrasil, posicao, nUfs, taxa }) {
+  if (mortes === null || mortes === undefined) return null
+  const variou = (v) => (v === null || v === undefined ? null : v >= 0 ? `aumentou ${pct(v)}` : `caiu ${pct(-v)}`)
+  const partes = [`Em ${ano}, ${sujeito(uf, artigo)} registrou ${numero(mortes)} mortes violentas intencionais.`]
+  if (variou(variacaoUf)) {
+    partes.push(`Desde ${primeiroAno}, o número ${variou(variacaoUf)}${variou(variacaoBrasil) ? `; no Brasil, ${variou(variacaoBrasil)}` : ''}.`)
+  }
+  if (posicao) partes.push(`Pela taxa (${numero(taxa, 1)} por 100 mil habitantes), é o ${posicao}º de ${nUfs} estados (1º = maior taxa).`)
+  return partes.join(' ')
 }

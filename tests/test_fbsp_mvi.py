@@ -37,7 +37,7 @@ FBSP = pd.DataFrame(
 
 
 def test_edicao_mais_recente_prevalece_com_primeira_publicacao_e_revisao():
-    c = mvi.consolidar(mvi.selecionar(FBSP, MAPEAMENTO, ["XA", "XB", "BR"]), {"XA": "91", "XB": "92", "BR": "1"})
+    c = mvi.consolidar(mvi.selecionar(FBSP, MAPEAMENTO, ["XA", "XB", "BR"]), {"XA": "91", "XB": "92", "BR": "1"}, "mvi")
     xa = c.set_index(["uf", "ano"]).loc[("XA", 2020)]
     assert (xa["mvi_numero"], xa["edicao_fonte"], xa["mvi_numero_primeira_publicacao"], xa["revisao_numero"]) == (13, 2022, 12, 1)
     assert (xa["mvi_taxa"], xa["revisao_taxa"], xa["tabela_fonte"]) == (13.0, 1.0, "T02")
@@ -78,3 +78,21 @@ def test_mapeamento_real_acha_numero_e_taxa_da_tabela_02_de_2024():
     assert longo.groupby(["medida", "ano"])["uf"].nunique().eq(28).all()
     brasil = longo[(longo["uf"] == "BR") & (longo["medida"] == "mvi_numero")].set_index("ano")["valor"]
     assert brasil.to_dict() == {2022: 47963, 2023: 46328}
+
+
+def test_mdip_acima_das_mvi_e_apontado():
+    """As mortes por intervenção policial estão dentro das MVI: MDIP > MVI na mesma UF e ano é erro de leitura."""
+    mvi_ = pd.DataFrame({"uf": ["XA", "XB"], "ano": [2024, 2024], "mvi_numero": [100, 50]})
+    mdip = pd.DataFrame({"uf": ["XA", "XB"], "ano": [2024, 2024], "mdip_numero": [30, 60]})
+    assert mvi.conferir_mdip_dentro_da_mvi(mvi_, mdip)["uf"].tolist() == ["XB"]
+
+
+def test_consolida_o_tema_mdip_com_as_mesmas_regras():
+    mdip = FBSP.assign(coluna=FBSP["coluna"].str.replace("Mortes Violentas Intencionais - MVI", "Total", regex=False))
+    mapeamento = MAPEAMENTO.assign(
+        medida=MAPEAMENTO["medida"].str.replace("mvi", "mdip"),
+        padrao_coluna=MAPEAMENTO["padrao_coluna"].str.replace("Mortes Violentas Intencionais - MVI ", "", regex=False))
+    c = mvi.consolidar(mvi.selecionar(mdip, mapeamento, ["XA", "XB", "BR"]), {"XA": "91", "XB": "92", "BR": "1"}, "mdip")
+    xa = c.set_index(["uf", "ano"]).loc[("XA", 2020)]
+    assert (xa["mdip_numero"], xa["mdip_numero_primeira_publicacao"], xa["revisao_numero"]) == (13, 12, 1)
+    base.validar_esquema(c, "fbsp_mdip")

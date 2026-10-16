@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { JANELAS_IDEB, JANELAS_TENDENCIA } from './calculos.js'
 import {
   carregarDados, carregarDadosDaUf, carregarEnsinoSuperior, carregarIbid, carregarIdeb, carregarIdebDaUf, carregarPib, carregarPibDaUf,
+  carregarViolencia,
 } from './dados.js'
 import { escreverEstado, lerEstado, paresPadrao } from './estado.js'
 import { indicadorPorSlug, tituloDoIndicador } from './navegacao.config.js'
@@ -19,12 +20,13 @@ import PainelUF from './telas/PainelUF.jsx'
 import PesquisaInovacao from './telas/PesquisaInovacao.jsx'
 import PibEstados from './telas/PibEstados.jsx'
 import PorEstado from './telas/PorEstado.jsx'
+import Violencia from './telas/Violencia.jsx'
 
 const AREA_PADRAO = '10'
 const NOME_SITE = 'Observatório dos Orçamentos'
 const TELAS = {
   inicio: Inicio, painel: PainelUF, estado: PorEstado, comparar: Comparar, pib: PibEstados, inovacao: PesquisaInovacao,
-  educacao: Educacao, metodo: Metodo, naoEncontrada: NaoEncontrada,
+  educacao: Educacao, violencia: Violencia, metodo: Metodo, naoEncontrada: NaoEncontrada,
 }
 
 /** URL atual, com URLs antigas (?view=...) trocadas pela nova sem recarregar (o index.php faz o 301 no servidor). */
@@ -98,6 +100,7 @@ export default function App() {
     if (view === 'inovacao' || view === 'painel') Promise.all([carregarIbid(), carregarEnsinoSuperior()]).catch(() => {})
     if (view === 'educacao' || view === 'painel') carregarIdeb().catch(() => {})
     if (view === 'pib' || view === 'painel') carregarPib().catch(() => {})
+    if (view === 'violencia' || view === 'painel') carregarViolencia().catch(() => {})
     carregarDados().then(setDados).catch((e) => setErro(e.message))
   }, [])
 
@@ -201,6 +204,14 @@ function Site({ dados, rota, url, navegar }) {
     }
   }, [estado.view, formulas, ufIdeb, idebGeral, idebUf])
 
+  // Violência: violencia.json (todas as UFs e o Brasil), também no painel
+  const [violencia, setViolencia] = useState(null)
+  const [erroViolencia, setErroViolencia] = useState(null)
+  useEffect(() => {
+    if ((estado.view !== 'violencia' && estado.view !== 'painel') || violencia) return
+    carregarViolencia().then(setViolencia).catch((e) => setErroViolencia(e.message))
+  }, [estado.view, violencia])
+
   // Nova página começa do topo, salvo quando a URL aponta uma âncora (a tela rola até ela)
   useEffect(() => { if (!window.location.hash) window.scrollTo(0, 0) }, [url.pathname])
 
@@ -209,7 +220,8 @@ function Site({ dados, rota, url, navegar }) {
     <Tela dados={dados} estado={estado} mudar={mudar} funcoes={funcoes} dadosUf={porUf[estado.uf]} erroUf={erroUf}
       pib={pib} pibUf={pibUf[ufPib]} erroPib={erroPib}
       ibid={inovacao?.ibid} ensinoSuperior={inovacao?.ensinoSuperior} erroIbid={erroIbid}
-      ideb={idebGeral} idebUf={idebUf[ufIdeb]} erroIdeb={erroIdeb} uf={rota.uf} />
+      ideb={idebGeral} idebUf={idebUf[ufIdeb]} erroIdeb={erroIdeb}
+      violencia={violencia} erroViolencia={erroViolencia} uf={rota.uf} />
   )
   if (rota.tipo !== 'comparar') return tela
   const trocarIndicador = (slug) => {

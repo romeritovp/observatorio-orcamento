@@ -72,4 +72,5 @@ def test_compartilhar_json_textos_para_o_php(dados):
     assert c["pib"]["title"].startswith("PIB dos Estados")
     assert c["inovacao"]["title"].startswith("Pesquisa e Inovação")
     assert c["educacao"]["title"].startswith("Educação")
-    assert c["views"] == ["estado", "comparar", "pib", "inovacao", "educacao"] and c["padrao"]["image"].endswith("/og/padrao.png")
+    assert c["violencia"]["title"].startswith("Violência")
+    assert c["views"] == ["estado", "comparar", "pib", "inovacao", "educacao", "violencia"] and c["padrao"]["image"].endswith("/og/padrao.png")

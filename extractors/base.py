@@ -174,6 +174,26 @@ ESQUEMAS = {
         "fonte_dado": "str",
         "extraido_em": "str",
     },
+    # FBSP, mortes decorrentes de intervenção policial (MDIP, em serviço e fora de serviço, polícias civil e militar) por
+    # UF e Brasil e ano, das tabelas "Mortes decorrentes de intervenções policiais, segundo corporação e situação"
+    # (coluna Total; mapeamento em docs/fbsp_temas.csv). Mesmas regras de `fbsp_mvi`. As MDIP estão dentro das MVI.
+    "fbsp_mdip": {
+        "uf": "str",
+        "cod_ibge": "str",
+        "ano": "int",
+        "mdip_numero": "int",
+        "mdip_taxa": "float",
+        "edicao_fonte": "int",
+        "tabela_fonte": "str",
+        "edicao_primeira_publicacao": "int",
+        "mdip_numero_primeira_publicacao": "int",
+        "revisao_numero": "int",
+        "mdip_taxa_primeira_publicacao": "float",
+        "revisao_taxa": "float",
+        "populacao_implicita": "float",
+        "fonte_dado": "str",
+        "extraido_em": "str",
+    },
 }
 
 # Colunas que não podem ser nulas em nenhuma tabela

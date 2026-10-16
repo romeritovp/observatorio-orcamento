@@ -169,9 +169,17 @@ Mortes violentas intencionais (MVI) por UF e Brasil (`BR`) e ano, 2016–2025, c
 
 Soma das 27 UFs = Brasil no número, em todos os anos (conferido na geração). Arquivo: `data/processed/fbsp_mvi/uf=<UF>/ano=<ano>/fbsp.parquet`; CSV único em `data/interim/fbsp/fbsp_mvi.csv`.
 
+## Tabela `fbsp_mdip`
+
+Mortes decorrentes de intervenção policial (MDIP: pessoas mortas por policiais civis e militares, em serviço e fora de serviço; a letalidade policial) por UF e Brasil e ano, 2016–2025. Coluna Total das tabelas "Mortes decorrentes de intervenções policiais, segundo corporação e situação" de cada edição (mapeamento em `docs/fbsp_temas.csv`, tema `mdip`), com as mesmas colunas e regras de `fbsp_mvi` (`mdip_numero`, `mdip_taxa`, edição mais recente, primeira publicação e revisão, `populacao_implicita`). As MDIP estão dentro das MVI (conferido na geração: MDIP ≤ MVI em todas as UFs e anos). Arquivo: `data/processed/fbsp_mdip/uf=<UF>/ano=<ano>/fbsp.parquet`; CSV em `data/interim/fbsp/fbsp_mdip.csv`.
+
 ## Arquivos publicados `ideb.json` e `ideb/<UF>.json`
 
 Tela "Educação". `ideb.json`: `fonte`, `anos` (2005–2025, bienal), `etapas`, `redes`, `indicadores`, `ressalvas`, `ressalvas_por_uf`, um resumo da `conferencia`, e `ufs`/`agregados` → `etapas[etapa][rede]` com `ideb`, `nota_padronizada`, `rendimento`, `saeb_matematica`, `saeb_portugues` e `aprovacao.total`, cada um uma **lista alinhada a `anos`** (nulo = sem dado). Sem metas. `ideb/<UF>.json`: `[etapa][rede].aprovacao` com a série `total` e uma por ano/série (listas alinhadas a `anos`). Gerados por `publicacao/ideb.py` (`montar_ideb_site`).
+
+## Arquivo publicado `violencia.json`
+
+Tela "Violência" (e o cartão do painel do estado). `fonte`, `pagina`, `edicoes` (2018–2026), `anos` (2016–2025), `pais` (`BR`), `ultimo_ano` e `ano_sujeito_a_revisao`, `quebras_taxa` (primeiro ano de cada base nova de população da taxa: 2021 e 2023), `territorios` (com `regiao`), `ressalvas` e `linhas`: as colunas da tabela `fbsp_mvi` (sem `cod_ibge` e `populacao_implicita`) e as da letalidade policial (`mdip_numero`, `mdip_taxa`, `mdip_edicao_fonte`, `mdip_tabela_fonte`, `mdip_edicao_primeira_publicacao`, `mdip_numero_primeira_publicacao`, `mdip_revisao_numero`, de `fbsp_mdip`). O front calcula o ranking pela taxa (MVI e MDIP), o índice do número (primeiro ano = 100) e o % das MDIP nas MVI, conferidos no `gabarito.json → violencia` (`publicacao/violencia.py`).
 
 ## Arquivo publicado `despesa_ensino_superior.json`
 

@@ -230433,5 +230433,7101 @@
       "n_ufs": 27,
       "variacao_pontos": 0.09999999999999964
     }
-  ]
+  ],
+  "violencia": {
+    "metodo": {
+      "posicao": "1 = maior taxa entre as 27 UFs no ano; empate fica com a melhor posição",
+      "pct_mdip_nas_mvi": "soma das mortes por intervenção policial / soma das MVI do território × 100",
+      "indice": "soma do número de MVI do território (UF, região = soma das UFs dela, ou país) no ano / no primeiro ano da série (2016) × 100"
+    },
+    "ranking": [
+      {
+        "uf": "AC",
+        "ano": 2016,
+        "mvi_taxa": 45.06010258520094,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2016,
+        "mvi_taxa": 55.91011273419802,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2016,
+        "mvi_taxa": 29.71261726675408,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2016,
+        "mvi_taxa": 51.00377734742009,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2016,
+        "mvi_taxa": 46.4174998491153,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2016,
+        "mvi_taxa": 39.78284324165244,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2016,
+        "mvi_taxa": 22.134772888497174,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2016,
+        "mvi_taxa": 32.91645034837835,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2016,
+        "mvi_taxa": 45.0129221734939,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2016,
+        "mvi_taxa": 33.678284092863485,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2016,
+        "mvi_taxa": 20.811941958970472,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2016,
+        "mvi_taxa": 23.188310705468936,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2016,
+        "mvi_taxa": 35.4557255702639,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2016,
+        "mvi_taxa": 50.85386627185918,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2016,
+        "mvi_taxa": 33.10484158308152,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2016,
+        "mvi_taxa": 47.60722677702475,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2016,
+        "mvi_taxa": 21.88544851160271,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2016,
+        "mvi_taxa": 26.150255454196138,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2016,
+        "mvi_taxa": 37.64126896880716,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2016,
+        "mvi_taxa": 56.978450059539604,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2016,
+        "mvi_taxa": 32.78727048211275,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2016,
+        "mvi_taxa": 41.226768618650446,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2016,
+        "mvi_taxa": 27.032295219953042,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2016,
+        "mvi_taxa": 15.006034972888566,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2016,
+        "mvi_taxa": 63.99565006119308,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2016,
+        "mvi_taxa": 11.007895270982717,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2016,
+        "mvi_taxa": 30.07367724746918,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2017,
+        "mvi_taxa": 63.88474709475072,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2017,
+        "mvi_taxa": 57.052754246890316,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2017,
+        "mvi_taxa": 31.62209796501341,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2017,
+        "mvi_taxa": 54.40491800401643,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2017,
+        "mvi_taxa": 45.48225165755403,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2017,
+        "mvi_taxa": 59.07680983009735,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2017,
+        "mvi_taxa": 18.325720098807544,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2017,
+        "mvi_taxa": 37.546472474053594,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2017,
+        "mvi_taxa": 39.47617651102589,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2017,
+        "mvi_taxa": 29.399038231463575,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2017,
+        "mvi_taxa": 19.58376358268477,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2017,
+        "mvi_taxa": 20.787668342334566,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2017,
+        "mvi_taxa": 31.48411263239473,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2017,
+        "mvi_taxa": 54.10781978115915,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2017,
+        "mvi_taxa": 31.945881788313567,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2017,
+        "mvi_taxa": 57.28752892613804,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2017,
+        "mvi_taxa": 20.2841835864611,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2017,
+        "mvi_taxa": 22.586559433655935,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2017,
+        "mvi_taxa": 40.36735308113737,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2017,
+        "mvi_taxa": 67.15135401937209,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2017,
+        "mvi_taxa": 28.0210080031543,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2017,
+        "mvi_taxa": 40.37226674014036,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2017,
+        "mvi_taxa": 27.660770500830395,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2017,
+        "mvi_taxa": 16.497263810959353,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2017,
+        "mvi_taxa": 55.722699373633155,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2017,
+        "mvi_taxa": 10.71297118390373,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2017,
+        "mvi_taxa": 24.448552890799473,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2018,
+        "mvi_taxa": 47.97156218184328,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2018,
+        "mvi_taxa": 45.11228414419078,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2018,
+        "mvi_taxa": 30.240569365715086,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2018,
+        "mvi_taxa": 58.34882470518171,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2018,
+        "mvi_taxa": 42.85535769945311,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2018,
+        "mvi_taxa": 52.756557685296116,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2018,
+        "mvi_taxa": 16.976484711246805,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2018,
+        "mvi_taxa": 29.881270409637732,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2018,
+        "mvi_taxa": 39.083038235926026,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2018,
+        "mvi_taxa": 25.287648781708175,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2018,
+        "mvi_taxa": 15.284690187029288,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2018,
+        "mvi_taxa": 21.469980418650064,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2018,
+        "mvi_taxa": 28.41372946759411,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2018,
+        "mvi_taxa": 55.44137737994152,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2018,
+        "mvi_taxa": 30.276522233476527,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2018,
+        "mvi_taxa": 43.94345836386279,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2018,
+        "mvi_taxa": 19.02264061820825,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2018,
+        "mvi_taxa": 21.22665761559871,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2018,
+        "mvi_taxa": 39.12596532859051,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2018,
+        "mvi_taxa": 55.36057671578984,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2018,
+        "mvi_taxa": 24.522229030791614,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2018,
+        "mvi_taxa": 66.6009906897365,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2018,
+        "mvi_taxa": 21.933686125862287,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2018,
+        "mvi_taxa": 13.285291458094658,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2018,
+        "mvi_taxa": 49.598210601902814,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2018,
+        "mvi_taxa": 9.475408033248735,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2018,
+        "mvi_taxa": 25.97688186112785,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2019,
+        "mvi_taxa": 33.56256413454506,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2019,
+        "mvi_taxa": 32.810394572711274,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2019,
+        "mvi_taxa": 28.277779480127982,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2019,
+        "mvi_taxa": 54.509057844633816,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2019,
+        "mvi_taxa": 40.35483206419336,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2019,
+        "mvi_taxa": 25.832017641548838,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2019,
+        "mvi_taxa": 15.28885657924934,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2019,
+        "mvi_taxa": 26.47655307130504,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2019,
+        "mvi_taxa": 32.07304732705133,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2019,
+        "mvi_taxa": 22.077173714707794,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2019,
+        "mvi_taxa": 13.364013088891095,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2019,
+        "mvi_taxa": 17.3444558554811,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2019,
+        "mvi_taxa": 26.001114661471803,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2019,
+        "mvi_taxa": 40.64924882582721,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2019,
+        "mvi_taxa": 23.443758746301448,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2019,
+        "mvi_taxa": 35.7013147647433,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2019,
+        "mvi_taxa": 17.933372784716735,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2019,
+        "mvi_taxa": 19.407104644525077,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2019,
+        "mvi_taxa": 34.63666228147987,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2019,
+        "mvi_taxa": 36.04371212594312,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2019,
+        "mvi_taxa": 22.61953326112338,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2019,
+        "mvi_taxa": 36.15287217235841,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2019,
+        "mvi_taxa": 17.68443116998773,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2019,
+        "mvi_taxa": 11.41694632137057,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2019,
+        "mvi_taxa": 42.06732860717555,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2019,
+        "mvi_taxa": 8.876490451707744,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2019,
+        "mvi_taxa": 25.87633021503421,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2020,
+        "mvi_taxa": 35.99897145795835,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2020,
+        "mvi_taxa": 37.26641728899197,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2020,
+        "mvi_taxa": 26.641544553645993,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2020,
+        "mvi_taxa": 41.31018261189431,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2020,
+        "mvi_taxa": 44.84739228086363,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2020,
+        "mvi_taxa": 45.531219144925224,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2020,
+        "mvi_taxa": 13.910941823132031,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2020,
+        "mvi_taxa": 29.674817152930128,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2020,
+        "mvi_taxa": 31.053455804001945,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2020,
+        "mvi_taxa": 28.687495765748114,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2020,
+        "mvi_taxa": 12.717994073640192,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2020,
+        "mvi_taxa": 21.606083020039197,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2020,
+        "mvi_taxa": 28.075389510580735,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2020,
+        "mvi_taxa": 33.092675023832825,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2020,
+        "mvi_taxa": 28.866552108211444,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2020,
+        "mvi_taxa": 39.098972497720354,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2020,
+        "mvi_taxa": 21.545156453795236,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2020,
+        "mvi_taxa": 21.620513960426646,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2020,
+        "mvi_taxa": 28.256055488052098,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2020,
+        "mvi_taxa": 38.3966226817367,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2020,
+        "mvi_taxa": 22.989657437404674,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2020,
+        "mvi_taxa": 33.58782979842549,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2020,
+        "mvi_taxa": 17.797468312321143,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2020,
+        "mvi_taxa": 11.182347829755855,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2020,
+        "mvi_taxa": 42.60784139532918,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2020,
+        "mvi_taxa": 8.980470727456797,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2020,
+        "mvi_taxa": 28.800539286953985,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2021,
+        "mvi_taxa": 23.601344100601754,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2021,
+        "mvi_taxa": 36.39356700529793,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2021,
+        "mvi_taxa": 42.8380095954238,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2021,
+        "mvi_taxa": 67.42873805491662,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2021,
+        "mvi_taxa": 50.04085330591811,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2021,
+        "mvi_taxa": 39.014482457741956,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2021,
+        "mvi_taxa": 12.551437950184505,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2021,
+        "mvi_taxa": 30.733332781709414,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2021,
+        "mvi_taxa": 26.738013964046196,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2021,
+        "mvi_taxa": 29.947672582618438,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2021,
+        "mvi_taxa": 12.331216173159797,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2021,
+        "mvi_taxa": 18.710681480123544,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2021,
+        "mvi_taxa": 24.647622519858977,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2021,
+        "mvi_taxa": 36.72160822060198,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2021,
+        "mvi_taxa": 26.81212828891596,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2021,
+        "mvi_taxa": 37.29383501828954,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2021,
+        "mvi_taxa": 23.951139675062873,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2021,
+        "mvi_taxa": 21.162000705194625,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2021,
+        "mvi_taxa": 29.671369796513474,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2021,
+        "mvi_taxa": 39.74224963465159,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2021,
+        "mvi_taxa": 30.0734663125736,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2021,
+        "mvi_taxa": 37.37007054674667,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2021,
+        "mvi_taxa": 18.196112816666446,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2021,
+        "mvi_taxa": 9.951747918578912,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2021,
+        "mvi_taxa": 36.1731465196333,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2021,
+        "mvi_taxa": 8.302143553377222,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2021,
+        "mvi_taxa": 28.918080652349275,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2022,
+        "mvi_taxa": 28.553597632822424,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2022,
+        "mvi_taxa": 37.95141643190822,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2022,
+        "mvi_taxa": 38.841966474131276,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2022,
+        "mvi_taxa": 50.016422285791386,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2022,
+        "mvi_taxa": 47.11622270310359,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2022,
+        "mvi_taxa": 35.50898543335687,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2022,
+        "mvi_taxa": 11.393560189409952,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2022,
+        "mvi_taxa": 29.37101169832267,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2022,
+        "mvi_taxa": 25.281673125255526,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2022,
+        "mvi_taxa": 28.03724940417156,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2022,
+        "mvi_taxa": 14.294068025060772,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2022,
+        "mvi_taxa": 20.602006591916687,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2022,
+        "mvi_taxa": 29.300433028694474,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2022,
+        "mvi_taxa": 37.166888071140725,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2022,
+        "mvi_taxa": 27.423543036218952,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2022,
+        "mvi_taxa": 37.83007067831734,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2022,
+        "mvi_taxa": 25.311819916795034,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2022,
+        "mvi_taxa": 22.67488496537165,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2022,
+        "mvi_taxa": 27.93491992051908,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2022,
+        "mvi_taxa": 36.69692548192722,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2022,
+        "mvi_taxa": 34.847039835668696,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2022,
+        "mvi_taxa": 31.254564501411167,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2022,
+        "mvi_taxa": 18.992985826932276,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2022,
+        "mvi_taxa": 9.014027061265557,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2022,
+        "mvi_taxa": 34.75106832385824,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2022,
+        "mvi_taxa": 8.414536879156577,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2022,
+        "mvi_taxa": 32.08817964087703,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2023,
+        "mvi_taxa": 24.413004145647527,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2023,
+        "mvi_taxa": 37.593903200981046,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2023,
+        "mvi_taxa": 33.15591225804261,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2023,
+        "mvi_taxa": 64.94611599701673,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2023,
+        "mvi_taxa": 44.36635019704216,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2023,
+        "mvi_taxa": 33.860074600899104,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2023,
+        "mvi_taxa": 10.48005033119992,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2023,
+        "mvi_taxa": 26.88865838352059,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2023,
+        "mvi_taxa": 22.489632568067226,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2023,
+        "mvi_taxa": 27.087485581661273,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2023,
+        "mvi_taxa": 14.354696840333553,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2023,
+        "mvi_taxa": 20.882492028343208,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2023,
+        "mvi_taxa": 30.674448819324848,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2023,
+        "mvi_taxa": 31.85888775922341,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2023,
+        "mvi_taxa": 25.79726645957733,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2023,
+        "mvi_taxa": 38.26797525414676,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2023,
+        "mvi_taxa": 21.896198944644805,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2023,
+        "mvi_taxa": 19.25324629470722,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2023,
+        "mvi_taxa": 24.805660430957392,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2023,
+        "mvi_taxa": 30.323507003798877,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2023,
+        "mvi_taxa": 26.14559360553482,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2023,
+        "mvi_taxa": 25.45773584362909,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2023,
+        "mvi_taxa": 17.661276323945234,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2023,
+        "mvi_taxa": 8.502358710729572,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2023,
+        "mvi_taxa": 30.192892706992215,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2023,
+        "mvi_taxa": 7.589872928515392,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2023,
+        "mvi_taxa": 27.437625662730323,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2024,
+        "mvi_taxa": 20.3263341853739,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2024,
+        "mvi_taxa": 35.43363816820823,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2024,
+        "mvi_taxa": 27.398802534517703,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2024,
+        "mvi_taxa": 45.21465752076698,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2024,
+        "mvi_taxa": 40.719132059613024,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2024,
+        "mvi_taxa": 37.547424335496146,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2024,
+        "mvi_taxa": 9.051842921693511,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2024,
+        "mvi_taxa": 23.987544028966422,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2024,
+        "mvi_taxa": 18.855903754896108,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2024,
+        "mvi_taxa": 30.32394992982416,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2024,
+        "mvi_taxa": 15.096593577236568,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2024,
+        "mvi_taxa": 19.263274515445943,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2024,
+        "mvi_taxa": 29.76749811476856,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2024,
+        "mvi_taxa": 29.534967947807935,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2024,
+        "mvi_taxa": 25.57273271186768,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2024,
+        "mvi_taxa": 36.418801116969036,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2024,
+        "mvi_taxa": 20.292412178291208,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2024,
+        "mvi_taxa": 18.351471267896386,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2024,
+        "mvi_taxa": 22.120040681362294,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2024,
+        "mvi_taxa": 24.375585993440065,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2024,
+        "mvi_taxa": 26.170709764538056,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2024,
+        "mvi_taxa": 18.415358408913033,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2024,
+        "mvi_taxa": 15.17375688061753,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2024,
+        "mvi_taxa": 8.550040882597516,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2024,
+        "mvi_taxa": 22.784044359923303,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2024,
+        "mvi_taxa": 8.159102454356336,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2024,
+        "mvi_taxa": 19.780111098290668,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2025,
+        "mvi_taxa": 21.59724640762032,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2025,
+        "mvi_taxa": 33.096873866758074,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2025,
+        "mvi_taxa": 18.488454318939954,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2025,
+        "mvi_taxa": 42.52855178502127,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2025,
+        "mvi_taxa": 36.80340412323203,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2025,
+        "mvi_taxa": 34.74006876375847,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2025,
+        "mvi_taxa": 9.576565643353346,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2025,
+        "mvi_taxa": 21.978000675575146,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2025,
+        "mvi_taxa": 16.460951914488184,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2025,
+        "mvi_taxa": 29.665679757989608,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2025,
+        "mvi_taxa": 12.947893702560517,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2025,
+        "mvi_taxa": 20.207677481364314,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2025,
+        "mvi_taxa": 22.857677059033673,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2025,
+        "mvi_taxa": 28.4346718866158,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2025,
+        "mvi_taxa": 24.564962439380015,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2025,
+        "mvi_taxa": 33.03699735839976,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2025,
+        "mvi_taxa": 17.10716382428727,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2025,
+        "mvi_taxa": 15.508156625990274,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2025,
+        "mvi_taxa": 22.58535945005985,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2025,
+        "mvi_taxa": 29.14417423296122,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2025,
+        "mvi_taxa": 28.14007249065327,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2025,
+        "mvi_taxa": 19.491805320179974,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2025,
+        "mvi_taxa": 11.270100237126114,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2025,
+        "mvi_taxa": 7.59738361742703,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2025,
+        "mvi_taxa": 22.092479641649543,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2025,
+        "mvi_taxa": 7.844745477721238,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2025,
+        "mvi_taxa": 19.34639435513804,
+        "posicao": 18,
+        "n_ufs": 27
+      }
+    ],
+    "indice": [
+      {
+        "uf": "AC",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "AC",
+        "ano": 2017,
+        "indice": 144.02173913043478
+      },
+      {
+        "uf": "AC",
+        "ano": 2018,
+        "indice": 113.31521739130434
+      },
+      {
+        "uf": "AC",
+        "ano": 2019,
+        "indice": 80.43478260869566
+      },
+      {
+        "uf": "AC",
+        "ano": 2020,
+        "indice": 87.5
+      },
+      {
+        "uf": "AC",
+        "ano": 2021,
+        "indice": 52.71739130434783
+      },
+      {
+        "uf": "AC",
+        "ano": 2022,
+        "indice": 64.40217391304348
+      },
+      {
+        "uf": "AC",
+        "ano": 2023,
+        "indice": 58.152173913043484
+      },
+      {
+        "uf": "AC",
+        "ano": 2024,
+        "indice": 48.641304347826086
+      },
+      {
+        "uf": "AC",
+        "ano": 2025,
+        "indice": 51.902173913043484
+      },
+      {
+        "uf": "AL",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "AL",
+        "ano": 2017,
+        "indice": 102.555910543131
+      },
+      {
+        "uf": "AL",
+        "ano": 2018,
+        "indice": 79.81895633652823
+      },
+      {
+        "uf": "AL",
+        "ano": 2019,
+        "indice": 58.30670926517571
+      },
+      {
+        "uf": "AL",
+        "ano": 2020,
+        "indice": 66.50692225772097
+      },
+      {
+        "uf": "AL",
+        "ano": 2021,
+        "indice": 60.59637912673056
+      },
+      {
+        "uf": "AL",
+        "ano": 2022,
+        "indice": 63.20553780617678
+      },
+      {
+        "uf": "AL",
+        "ano": 2023,
+        "indice": 64.43024494142705
+      },
+      {
+        "uf": "AL",
+        "ano": 2024,
+        "indice": 60.75612353567625
+      },
+      {
+        "uf": "AL",
+        "ano": 2025,
+        "indice": 56.76251331203408
+      },
+      {
+        "uf": "AM",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "AM",
+        "ano": 2017,
+        "indice": 108.07401177460049
+      },
+      {
+        "uf": "AM",
+        "ano": 2018,
+        "indice": 103.78469301934399
+      },
+      {
+        "uf": "AM",
+        "ano": 2019,
+        "indice": 98.57022708158117
+      },
+      {
+        "uf": "AM",
+        "ano": 2020,
+        "indice": 94.28090832632464
+      },
+      {
+        "uf": "AM",
+        "ano": 2021,
+        "indice": 140.62237174095878
+      },
+      {
+        "uf": "AM",
+        "ano": 2022,
+        "indice": 128.7636669470143
+      },
+      {
+        "uf": "AM",
+        "ano": 2023,
+        "indice": 118.25063078216988
+      },
+      {
+        "uf": "AM",
+        "ano": 2024,
+        "indice": 98.65433137089991
+      },
+      {
+        "uf": "AM",
+        "ano": 2025,
+        "indice": 67.19932716568545
+      },
+      {
+        "uf": "AP",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "AP",
+        "ano": 2017,
+        "indice": 108.77192982456141
+      },
+      {
+        "uf": "AP",
+        "ano": 2018,
+        "indice": 121.3032581453634
+      },
+      {
+        "uf": "AP",
+        "ano": 2019,
+        "indice": 115.53884711779449
+      },
+      {
+        "uf": "AP",
+        "ano": 2020,
+        "indice": 89.22305764411027
+      },
+      {
+        "uf": "AP",
+        "ano": 2021,
+        "indice": 123.05764411027569
+      },
+      {
+        "uf": "AP",
+        "ano": 2022,
+        "indice": 91.97994987468672
+      },
+      {
+        "uf": "AP",
+        "ano": 2023,
+        "indice": 130.0751879699248
+      },
+      {
+        "uf": "AP",
+        "ano": 2024,
+        "indice": 90.97744360902256
+      },
+      {
+        "uf": "AP",
+        "ano": 2025,
+        "indice": 85.96491228070175
+      },
+      {
+        "uf": "BA",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "BA",
+        "ano": 2017,
+        "indice": 98.42053307008885
+      },
+      {
+        "uf": "BA",
+        "ano": 2018,
+        "indice": 89.52192920603582
+      },
+      {
+        "uf": "BA",
+        "ano": 2019,
+        "indice": 84.64250458327457
+      },
+      {
+        "uf": "BA",
+        "ano": 2020,
+        "indice": 94.42955859540263
+      },
+      {
+        "uf": "BA",
+        "ano": 2021,
+        "indice": 99.68974756733888
+      },
+      {
+        "uf": "BA",
+        "ano": 2022,
+        "indice": 93.96417994641094
+      },
+      {
+        "uf": "BA",
+        "ano": 2023,
+        "indice": 92.77957974897758
+      },
+      {
+        "uf": "BA",
+        "ano": 2024,
+        "indice": 85.27711183189959
+      },
+      {
+        "uf": "BA",
+        "ano": 2025,
+        "indice": 77.18234381610493
+      },
+      {
+        "uf": "BR",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "BR",
+        "ano": 2017,
+        "indice": 104.02779356137475
+      },
+      {
+        "uf": "BR",
+        "ano": 2018,
+        "indice": 93.49805997045311
+      },
+      {
+        "uf": "BR",
+        "ano": 2019,
+        "indice": 77.50702144584963
+      },
+      {
+        "uf": "BR",
+        "ano": 2020,
+        "indice": 81.9000925369742
+      },
+      {
+        "uf": "BR",
+        "ano": 2021,
+        "indice": 78.39342825137588
+      },
+      {
+        "uf": "BR",
+        "ano": 2022,
+        "indice": 77.86580515284835
+      },
+      {
+        "uf": "BR",
+        "ano": 2023,
+        "indice": 75.39490559605176
+      },
+      {
+        "uf": "BR",
+        "ano": 2024,
+        "indice": 71.78921051349903
+      },
+      {
+        "uf": "BR",
+        "ano": 2025,
+        "indice": 66.19640566910726
+      },
+      {
+        "uf": "CE",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "CE",
+        "ano": 2017,
+        "indice": 149.4391475042064
+      },
+      {
+        "uf": "CE",
+        "ano": 2018,
+        "indice": 134.26808749298937
+      },
+      {
+        "uf": "CE",
+        "ano": 2019,
+        "indice": 66.15255187885586
+      },
+      {
+        "uf": "CE",
+        "ano": 2020,
+        "indice": 117.30229949523276
+      },
+      {
+        "uf": "CE",
+        "ano": 2021,
+        "indice": 95.877734155917
+      },
+      {
+        "uf": "CE",
+        "ano": 2022,
+        "indice": 87.57711721817162
+      },
+      {
+        "uf": "CE",
+        "ano": 2023,
+        "indice": 87.3247335950645
+      },
+      {
+        "uf": "CE",
+        "ano": 2024,
+        "indice": 97.22378014582165
+      },
+      {
+        "uf": "CE",
+        "ano": 2025,
+        "indice": 90.2972518227706
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2017,
+        "indice": 88.71410279860984
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2018,
+        "indice": 87.3971099323212
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2019,
+        "indice": 74.99542710810316
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2020,
+        "indice": 77.39162246204499
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2021,
+        "indice": 66.10572526065484
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2022,
+        "indice": 68.50192061459667
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2023,
+        "indice": 67.80684104627767
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2024,
+        "indice": 61.40479239070788
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2025,
+        "indice": 54.69178708615329
+      },
+      {
+        "uf": "DF",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "DF",
+        "ano": 2017,
+        "indice": 84.52200303490136
+      },
+      {
+        "uf": "DF",
+        "ano": 2018,
+        "indice": 76.63125948406677
+      },
+      {
+        "uf": "DF",
+        "ano": 2019,
+        "indice": 69.95447647951441
+      },
+      {
+        "uf": "DF",
+        "ano": 2020,
+        "indice": 64.4916540212443
+      },
+      {
+        "uf": "DF",
+        "ano": 2021,
+        "indice": 53.262518968133534
+      },
+      {
+        "uf": "DF",
+        "ano": 2022,
+        "indice": 48.710166919575116
+      },
+      {
+        "uf": "DF",
+        "ano": 2023,
+        "indice": 47.192716236722305
+      },
+      {
+        "uf": "DF",
+        "ano": 2024,
+        "indice": 40.971168437025796
+      },
+      {
+        "uf": "DF",
+        "ano": 2025,
+        "indice": 43.55083459787557
+      },
+      {
+        "uf": "ES",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "ES",
+        "ano": 2017,
+        "indice": 115.29051987767585
+      },
+      {
+        "uf": "ES",
+        "ano": 2018,
+        "indice": 90.74923547400611
+      },
+      {
+        "uf": "ES",
+        "ano": 2019,
+        "indice": 81.34556574923548
+      },
+      {
+        "uf": "ES",
+        "ano": 2020,
+        "indice": 92.20183486238533
+      },
+      {
+        "uf": "ES",
+        "ano": 2021,
+        "indice": 89.44954128440367
+      },
+      {
+        "uf": "ES",
+        "ano": 2022,
+        "indice": 86.08562691131499
+      },
+      {
+        "uf": "ES",
+        "ano": 2023,
+        "indice": 83.79204892966361
+      },
+      {
+        "uf": "ES",
+        "ano": 2024,
+        "indice": 75.22935779816514
+      },
+      {
+        "uf": "ES",
+        "ano": 2025,
+        "indice": 69.34250764525994
+      },
+      {
+        "uf": "GO",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "GO",
+        "ano": 2017,
+        "indice": 88.78566688785668
+      },
+      {
+        "uf": "GO",
+        "ano": 2018,
+        "indice": 89.74784339747843
+      },
+      {
+        "uf": "GO",
+        "ano": 2019,
+        "indice": 74.68480424684805
+      },
+      {
+        "uf": "GO",
+        "ano": 2020,
+        "indice": 73.29130723291307
+      },
+      {
+        "uf": "GO",
+        "ano": 2021,
+        "indice": 61.81154611811546
+      },
+      {
+        "uf": "GO",
+        "ano": 2022,
+        "indice": 59.190444591904445
+      },
+      {
+        "uf": "GO",
+        "ano": 2023,
+        "indice": 54.280026542800265
+      },
+      {
+        "uf": "GO",
+        "ano": 2024,
+        "indice": 45.98540145985402
+      },
+      {
+        "uf": "GO",
+        "ano": 2025,
+        "indice": 40.54412740544127
+      },
+      {
+        "uf": "MA",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "MA",
+        "ano": 2017,
+        "indice": 87.8736122971819
+      },
+      {
+        "uf": "MA",
+        "ano": 2018,
+        "indice": 75.9607173356106
+      },
+      {
+        "uf": "MA",
+        "ano": 2019,
+        "indice": 66.69513236549957
+      },
+      {
+        "uf": "MA",
+        "ano": 2020,
+        "indice": 87.14773697694278
+      },
+      {
+        "uf": "MA",
+        "ano": 2021,
+        "indice": 86.42186165670367
+      },
+      {
+        "uf": "MA",
+        "ano": 2022,
+        "indice": 81.12724167378309
+      },
+      {
+        "uf": "MA",
+        "ano": 2023,
+        "indice": 80.999146029035
+      },
+      {
+        "uf": "MA",
+        "ano": 2024,
+        "indice": 90.77711357813834
+      },
+      {
+        "uf": "MA",
+        "ano": 2025,
+        "indice": 88.89837745516652
+      },
+      {
+        "uf": "MG",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "MG",
+        "ano": 2017,
+        "indice": 94.64530892448512
+      },
+      {
+        "uf": "MG",
+        "ano": 2018,
+        "indice": 73.59267734553777
+      },
+      {
+        "uf": "MG",
+        "ano": 2019,
+        "indice": 64.73684210526316
+      },
+      {
+        "uf": "MG",
+        "ano": 2020,
+        "indice": 61.96796338672769
+      },
+      {
+        "uf": "MG",
+        "ano": 2021,
+        "indice": 57.734553775743706
+      },
+      {
+        "uf": "MG",
+        "ano": 2022,
+        "indice": 67.18535469107552
+      },
+      {
+        "uf": "MG",
+        "ano": 2023,
+        "indice": 69.79405034324942
+      },
+      {
+        "uf": "MG",
+        "ano": 2024,
+        "indice": 73.66132723112128
+      },
+      {
+        "uf": "MG",
+        "ano": 2025,
+        "indice": 63.38672768878718
+      },
+      {
+        "uf": "MS",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "MS",
+        "ano": 2017,
+        "indice": 90.67524115755627
+      },
+      {
+        "uf": "MS",
+        "ano": 2018,
+        "indice": 94.85530546623794
+      },
+      {
+        "uf": "MS",
+        "ano": 2019,
+        "indice": 77.491961414791
+      },
+      {
+        "uf": "MS",
+        "ano": 2020,
+        "indice": 97.58842443729904
+      },
+      {
+        "uf": "MS",
+        "ano": 2021,
+        "indice": 82.15434083601286
+      },
+      {
+        "uf": "MS",
+        "ano": 2022,
+        "indice": 91.31832797427653
+      },
+      {
+        "uf": "MS",
+        "ano": 2023,
+        "indice": 96.62379421221866
+      },
+      {
+        "uf": "MS",
+        "ano": 2024,
+        "indice": 89.87138263665595
+      },
+      {
+        "uf": "MS",
+        "ano": 2025,
+        "indice": 95.01607717041801
+      },
+      {
+        "uf": "MT",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "MT",
+        "ano": 2017,
+        "indice": 89.84641638225256
+      },
+      {
+        "uf": "MT",
+        "ano": 2018,
+        "indice": 83.44709897610922
+      },
+      {
+        "uf": "MT",
+        "ano": 2019,
+        "indice": 77.3037542662116
+      },
+      {
+        "uf": "MT",
+        "ano": 2020,
+        "indice": 84.47098976109216
+      },
+      {
+        "uf": "MT",
+        "ano": 2021,
+        "indice": 75.85324232081912
+      },
+      {
+        "uf": "MT",
+        "ano": 2022,
+        "indice": 91.46757679180887
+      },
+      {
+        "uf": "MT",
+        "ano": 2023,
+        "indice": 98.89078498293516
+      },
+      {
+        "uf": "MT",
+        "ano": 2024,
+        "indice": 97.44027303754265
+      },
+      {
+        "uf": "MT",
+        "ano": 2025,
+        "indice": 75.93856655290102
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2017,
+        "indice": 109.97017812525188
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2018,
+        "indice": 94.59982268074474
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2019,
+        "indice": 73.30539211735311
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2020,
+        "indice": 89.2520351414524
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2021,
+        "indice": 84.48456516482631
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2022,
+        "indice": 81.39759813008786
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2023,
+        "indice": 80.49085193842186
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2024,
+        "indice": 78.02853228016443
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2025,
+        "indice": 73.01120335294591
+      },
+      {
+        "uf": "Norte",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "Norte",
+        "ano": 2017,
+        "indice": 106.06305578011317
+      },
+      {
+        "uf": "Norte",
+        "ano": 2018,
+        "indice": 108.78469415251955
+      },
+      {
+        "uf": "Norte",
+        "ano": 2019,
+        "indice": 86.9576933441121
+      },
+      {
+        "uf": "Norte",
+        "ano": 2020,
+        "indice": 77.58016707087039
+      },
+      {
+        "uf": "Norte",
+        "ano": 2021,
+        "indice": 87.06548100242523
+      },
+      {
+        "uf": "Norte",
+        "ano": 2022,
+        "indice": 86.06844516302883
+      },
+      {
+        "uf": "Norte",
+        "ano": 2023,
+        "indice": 80.11317704122878
+      },
+      {
+        "uf": "Norte",
+        "ano": 2024,
+        "indice": 69.72514147130153
+      },
+      {
+        "uf": "Norte",
+        "ano": 2025,
+        "indice": 64.05281595257343
+      },
+      {
+        "uf": "PA",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "PA",
+        "ano": 2017,
+        "indice": 107.6063703351557
+      },
+      {
+        "uf": "PA",
+        "ano": 2018,
+        "indice": 112.19396244354647
+      },
+      {
+        "uf": "PA",
+        "ano": 2019,
+        "indice": 83.12336581887331
+      },
+      {
+        "uf": "PA",
+        "ano": 2020,
+        "indice": 68.3622533872118
+      },
+      {
+        "uf": "PA",
+        "ano": 2021,
+        "indice": 70.4540052293796
+      },
+      {
+        "uf": "PA",
+        "ano": 2022,
+        "indice": 71.73758022343712
+      },
+      {
+        "uf": "PA",
+        "ano": 2023,
+        "indice": 65.24839553125743
+      },
+      {
+        "uf": "PA",
+        "ano": 2024,
+        "indice": 60.82719277394818
+      },
+      {
+        "uf": "PA",
+        "ano": 2025,
+        "indice": 58.87806037556453
+      },
+      {
+        "uf": "PB",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "PB",
+        "ano": 2017,
+        "indice": 97.1299093655589
+      },
+      {
+        "uf": "PB",
+        "ano": 2018,
+        "indice": 91.38972809667673
+      },
+      {
+        "uf": "PB",
+        "ano": 2019,
+        "indice": 71.14803625377644
+      },
+      {
+        "uf": "PB",
+        "ano": 2020,
+        "indice": 88.06646525679758
+      },
+      {
+        "uf": "PB",
+        "ano": 2021,
+        "indice": 80.13595166163142
+      },
+      {
+        "uf": "PB",
+        "ano": 2022,
+        "indice": 82.3262839879154
+      },
+      {
+        "uf": "PB",
+        "ano": 2023,
+        "indice": 80.36253776435045
+      },
+      {
+        "uf": "PB",
+        "ano": 2024,
+        "indice": 80.06042296072508
+      },
+      {
+        "uf": "PB",
+        "ano": 2025,
+        "indice": 77.26586102719033
+      },
+      {
+        "uf": "PE",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "PE",
+        "ano": 2017,
+        "indice": 121.13839285714285
+      },
+      {
+        "uf": "PE",
+        "ano": 2018,
+        "indice": 93.14732142857143
+      },
+      {
+        "uf": "PE",
+        "ano": 2019,
+        "indice": 76.16071428571428
+      },
+      {
+        "uf": "PE",
+        "ano": 2020,
+        "indice": 83.92857142857143
+      },
+      {
+        "uf": "PE",
+        "ano": 2021,
+        "indice": 75.22321428571429
+      },
+      {
+        "uf": "PE",
+        "ano": 2022,
+        "indice": 76.49553571428571
+      },
+      {
+        "uf": "PE",
+        "ano": 2023,
+        "indice": 81.27232142857143
+      },
+      {
+        "uf": "PE",
+        "ano": 2024,
+        "indice": 77.54464285714285
+      },
+      {
+        "uf": "PE",
+        "ano": 2025,
+        "indice": 70.51339285714285
+      },
+      {
+        "uf": "PI",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "PI",
+        "ano": 2017,
+        "indice": 92.88762446657184
+      },
+      {
+        "uf": "PI",
+        "ano": 2018,
+        "indice": 88.3357041251778
+      },
+      {
+        "uf": "PI",
+        "ano": 2019,
+        "indice": 83.49928876244665
+      },
+      {
+        "uf": "PI",
+        "ano": 2020,
+        "indice": 100.56899004267426
+      },
+      {
+        "uf": "PI",
+        "ano": 2021,
+        "indice": 110.95305832147938
+      },
+      {
+        "uf": "PI",
+        "ano": 2022,
+        "indice": 117.78093883357042
+      },
+      {
+        "uf": "PI",
+        "ano": 2023,
+        "indice": 104.83641536273116
+      },
+      {
+        "uf": "PI",
+        "ano": 2024,
+        "indice": 97.43954480796586
+      },
+      {
+        "uf": "PI",
+        "ano": 2025,
+        "indice": 82.36130867709815
+      },
+      {
+        "uf": "PR",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "PR",
+        "ano": 2017,
+        "indice": 86.97278911564625
+      },
+      {
+        "uf": "PR",
+        "ano": 2018,
+        "indice": 81.93877551020408
+      },
+      {
+        "uf": "PR",
+        "ano": 2019,
+        "indice": 75.47619047619048
+      },
+      {
+        "uf": "PR",
+        "ano": 2020,
+        "indice": 84.6938775510204
+      },
+      {
+        "uf": "PR",
+        "ano": 2021,
+        "indice": 81.7687074829932
+      },
+      {
+        "uf": "PR",
+        "ano": 2022,
+        "indice": 88.26530612244898
+      },
+      {
+        "uf": "PR",
+        "ano": 2023,
+        "indice": 76.97278911564625
+      },
+      {
+        "uf": "PR",
+        "ano": 2024,
+        "indice": 73.80952380952381
+      },
+      {
+        "uf": "PR",
+        "ano": 2025,
+        "indice": 62.72108843537415
+      },
+      {
+        "uf": "RJ",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "RJ",
+        "ano": 2017,
+        "indice": 107.77706802938359
+      },
+      {
+        "uf": "RJ",
+        "ano": 2018,
+        "indice": 107.21814116895561
+      },
+      {
+        "uf": "RJ",
+        "ano": 2019,
+        "indice": 95.49664643883743
+      },
+      {
+        "uf": "RJ",
+        "ano": 2020,
+        "indice": 78.36154583200255
+      },
+      {
+        "uf": "RJ",
+        "ano": 2021,
+        "indice": 76.0459916959438
+      },
+      {
+        "uf": "RJ",
+        "ano": 2022,
+        "indice": 71.62248482912807
+      },
+      {
+        "uf": "RJ",
+        "ano": 2023,
+        "indice": 68.18907697221334
+      },
+      {
+        "uf": "RJ",
+        "ano": 2024,
+        "indice": 60.82721175343341
+      },
+      {
+        "uf": "RJ",
+        "ano": 2025,
+        "indice": 62.12072820185245
+      },
+      {
+        "uf": "RN",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "RN",
+        "ano": 2017,
+        "indice": 118.93939393939394
+      },
+      {
+        "uf": "RN",
+        "ano": 2018,
+        "indice": 97.27272727272728
+      },
+      {
+        "uf": "RN",
+        "ano": 2019,
+        "indice": 63.83838383838384
+      },
+      {
+        "uf": "RN",
+        "ano": 2020,
+        "indice": 68.53535353535354
+      },
+      {
+        "uf": "RN",
+        "ano": 2021,
+        "indice": 66.06060606060606
+      },
+      {
+        "uf": "RN",
+        "ano": 2022,
+        "indice": 61.212121212121204
+      },
+      {
+        "uf": "RN",
+        "ano": 2023,
+        "indice": 52.62626262626262
+      },
+      {
+        "uf": "RN",
+        "ano": 2024,
+        "indice": 42.42424242424242
+      },
+      {
+        "uf": "RN",
+        "ano": 2025,
+        "indice": 50.85858585858586
+      },
+      {
+        "uf": "RO",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "RO",
+        "ano": 2017,
+        "indice": 86.3481228668942
+      },
+      {
+        "uf": "RO",
+        "ano": 2018,
+        "indice": 73.54948805460751
+      },
+      {
+        "uf": "RO",
+        "ano": 2019,
+        "indice": 68.60068259385666
+      },
+      {
+        "uf": "RO",
+        "ano": 2020,
+        "indice": 70.4778156996587
+      },
+      {
+        "uf": "RO",
+        "ano": 2021,
+        "indice": 81.05802047781569
+      },
+      {
+        "uf": "RO",
+        "ano": 2022,
+        "indice": 94.02730375426621
+      },
+      {
+        "uf": "RO",
+        "ano": 2023,
+        "indice": 77.64505119453925
+      },
+      {
+        "uf": "RO",
+        "ano": 2024,
+        "indice": 77.98634812286689
+      },
+      {
+        "uf": "RO",
+        "ano": 2025,
+        "indice": 84.1296928327645
+      },
+      {
+        "uf": "RR",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "RR",
+        "ano": 2017,
+        "indice": 99.52830188679245
+      },
+      {
+        "uf": "RR",
+        "ano": 2018,
+        "indice": 181.13207547169813
+      },
+      {
+        "uf": "RR",
+        "ano": 2019,
+        "indice": 103.30188679245282
+      },
+      {
+        "uf": "RR",
+        "ano": 2020,
+        "indice": 100.0
+      },
+      {
+        "uf": "RR",
+        "ano": 2021,
+        "indice": 109.43396226415094
+      },
+      {
+        "uf": "RR",
+        "ano": 2022,
+        "indice": 93.86792452830188
+      },
+      {
+        "uf": "RR",
+        "ano": 2023,
+        "indice": 83.49056603773585
+      },
+      {
+        "uf": "RR",
+        "ano": 2024,
+        "indice": 62.264150943396224
+      },
+      {
+        "uf": "RR",
+        "ano": 2025,
+        "indice": 67.9245283018868
+      },
+      {
+        "uf": "RS",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "RS",
+        "ano": 2017,
+        "indice": 102.65486725663717
+      },
+      {
+        "uf": "RS",
+        "ano": 2018,
+        "indice": 81.44870534251065
+      },
+      {
+        "uf": "RS",
+        "ano": 2019,
+        "indice": 65.94559160930842
+      },
+      {
+        "uf": "RS",
+        "ano": 2020,
+        "indice": 66.63389052769584
+      },
+      {
+        "uf": "RS",
+        "ano": 2021,
+        "indice": 64.7984267453294
+      },
+      {
+        "uf": "RS",
+        "ano": 2022,
+        "indice": 67.74827925270404
+      },
+      {
+        "uf": "RS",
+        "ano": 2023,
+        "indice": 64.96230744018354
+      },
+      {
+        "uf": "RS",
+        "ano": 2024,
+        "indice": 55.85054080629301
+      },
+      {
+        "uf": "RS",
+        "ano": 2025,
+        "indice": 41.49459193706981
+      },
+      {
+        "uf": "SC",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "SC",
+        "ano": 2017,
+        "indice": 111.37897782063646
+      },
+      {
+        "uf": "SC",
+        "ano": 2018,
+        "indice": 90.64609450337512
+      },
+      {
+        "uf": "SC",
+        "ano": 2019,
+        "indice": 78.88138862102217
+      },
+      {
+        "uf": "SC",
+        "ano": 2020,
+        "indice": 78.20636451301833
+      },
+      {
+        "uf": "SC",
+        "ano": 2021,
+        "indice": 71.93828351012537
+      },
+      {
+        "uf": "SC",
+        "ano": 2022,
+        "indice": 66.15236258437801
+      },
+      {
+        "uf": "SC",
+        "ano": 2023,
+        "indice": 64.99517839922855
+      },
+      {
+        "uf": "SC",
+        "ano": 2024,
+        "indice": 66.44165863066537
+      },
+      {
+        "uf": "SC",
+        "ano": 2025,
+        "indice": 59.98071359691417
+      },
+      {
+        "uf": "SE",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "SE",
+        "ano": 2017,
+        "indice": 87.93103448275862
+      },
+      {
+        "uf": "SE",
+        "ano": 2018,
+        "indice": 77.93103448275862
+      },
+      {
+        "uf": "SE",
+        "ano": 2019,
+        "indice": 66.6896551724138
+      },
+      {
+        "uf": "SE",
+        "ano": 2020,
+        "indice": 68.13793103448276
+      },
+      {
+        "uf": "SE",
+        "ano": 2021,
+        "indice": 54.82758620689655
+      },
+      {
+        "uf": "SE",
+        "ano": 2022,
+        "indice": 52.96551724137931
+      },
+      {
+        "uf": "SE",
+        "ano": 2023,
+        "indice": 47.51724137931034
+      },
+      {
+        "uf": "SE",
+        "ano": 2024,
+        "indice": 36.0
+      },
+      {
+        "uf": "SE",
+        "ano": 2025,
+        "indice": 35.03448275862069
+      },
+      {
+        "uf": "SP",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "SP",
+        "ano": 2017,
+        "indice": 98.07145757206659
+      },
+      {
+        "uf": "SP",
+        "ano": 2018,
+        "indice": 87.59642712139667
+      },
+      {
+        "uf": "SP",
+        "ano": 2019,
+        "indice": 82.74462038164839
+      },
+      {
+        "uf": "SP",
+        "ano": 2020,
+        "indice": 84.38895655704425
+      },
+      {
+        "uf": "SP",
+        "ano": 2021,
+        "indice": 74.42143727161998
+      },
+      {
+        "uf": "SP",
+        "ano": 2022,
+        "indice": 75.86276898091758
+      },
+      {
+        "uf": "SP",
+        "ano": 2023,
+        "indice": 70.64555420219246
+      },
+      {
+        "uf": "SP",
+        "ano": 2024,
+        "indice": 76.14697523345514
+      },
+      {
+        "uf": "SP",
+        "ano": 2025,
+        "indice": 73.38611449451888
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2017,
+        "indice": 102.12261354203724
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2018,
+        "indice": 91.49768765563856
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2019,
+        "indice": 82.70484999407091
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2020,
+        "indice": 76.94770544290289
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2021,
+        "indice": 71.86647693584727
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2022,
+        "indice": 72.83291829716589
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2023,
+        "indice": 70.53243211194118
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2024,
+        "indice": 69.74386339381003
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2025,
+        "indice": 66.29906320407922
+      },
+      {
+        "uf": "Sul",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "Sul",
+        "ano": 2017,
+        "indice": 97.38190096755834
+      },
+      {
+        "uf": "Sul",
+        "ano": 2018,
+        "indice": 83.0108138873079
+      },
+      {
+        "uf": "Sul",
+        "ano": 2019,
+        "indice": 71.84120660216277
+      },
+      {
+        "uf": "Sul",
+        "ano": 2020,
+        "indice": 75.89641434262948
+      },
+      {
+        "uf": "Sul",
+        "ano": 2021,
+        "indice": 72.95105293113261
+      },
+      {
+        "uf": "Sul",
+        "ano": 2022,
+        "indice": 76.09561752988047
+      },
+      {
+        "uf": "Sul",
+        "ano": 2023,
+        "indice": 69.99146272054638
+      },
+      {
+        "uf": "Sul",
+        "ano": 2024,
+        "indice": 64.92601024473534
+      },
+      {
+        "uf": "Sul",
+        "ano": 2025,
+        "indice": 53.10187820147979
+      },
+      {
+        "uf": "TO",
+        "ano": 2016,
+        "indice": 100.0
+      },
+      {
+        "uf": "TO",
+        "ano": 2017,
+        "indice": 82.21258134490239
+      },
+      {
+        "uf": "TO",
+        "ano": 2018,
+        "indice": 87.63557483731019
+      },
+      {
+        "uf": "TO",
+        "ano": 2019,
+        "indice": 88.28633405639913
+      },
+      {
+        "uf": "TO",
+        "ano": 2020,
+        "indice": 99.34924078091106
+      },
+      {
+        "uf": "TO",
+        "ano": 2021,
+        "indice": 94.14316702819957
+      },
+      {
+        "uf": "TO",
+        "ano": 2022,
+        "indice": 105.20607375271149
+      },
+      {
+        "uf": "TO",
+        "ano": 2023,
+        "indice": 93.27548806941431
+      },
+      {
+        "uf": "TO",
+        "ano": 2024,
+        "indice": 67.67895878524945
+      },
+      {
+        "uf": "TO",
+        "ano": 2025,
+        "indice": 66.5943600867679
+      }
+    ],
+    "base": 2016,
+    "ranking_mdip": [
+      {
+        "uf": "AC",
+        "ano": 2016,
+        "mdip_taxa": 3.0611482734511504,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2016,
+        "mdip_taxa": 3.334362420782843,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2016,
+        "mdip_taxa": 0.9246146668375954,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2016,
+        "mdip_taxa": 7.541911938590941,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2016,
+        "mdip_taxa": 2.9849640292196558,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2016,
+        "mdip_taxa": 1.2160207272406383,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2016,
+        "mdip_taxa": 0.23511898364109288,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2016,
+        "mdip_taxa": 1.4092669873923451,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2016,
+        "mdip_taxa": 3.3453532073200507,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2016,
+        "mdip_taxa": 1.8262775746343562,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2016,
+        "mdip_taxa": 0.5667325155875255,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2016,
+        "mdip_taxa": 0.9692862995855182,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2016,
+        "mdip_taxa": 0.45378488357846286,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2016,
+        "mdip_taxa": 3.396704640454583,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2016,
+        "mdip_taxa": 0.5500804492657051,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2016,
+        "mdip_taxa": 0.6801032396717821,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2016,
+        "mdip_taxa": 0.8716821597793399,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2016,
+        "mdip_taxa": 2.357080848762577,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2016,
+        "mdip_taxa": 5.560232161633124,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2016,
+        "mdip_taxa": 1.8705046736717545,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2016,
+        "mdip_taxa": 1.0071175233413474,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2016,
+        "mdip_taxa": 0.9723294485530766,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2016,
+        "mdip_taxa": 1.4885039649138352,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2016,
+        "mdip_taxa": 0.8827079395816804,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2016,
+        "mdip_taxa": 4.148683521208379,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2016,
+        "mdip_taxa": 1.915096680315101,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2016,
+        "mdip_taxa": 0.978536136034789,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2017,
+        "mdip_taxa": 4.459878570765617,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2017,
+        "mdip_taxa": 4.206381673446741,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2017,
+        "mdip_taxa": 0.9597368253972941,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2017,
+        "mdip_taxa": 7.019989419873089,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2017,
+        "mdip_taxa": 4.731353303250355,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2017,
+        "mdip_taxa": 1.7515736448030368,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2017,
+        "mdip_taxa": 0.2632060337351173,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2017,
+        "mdip_taxa": 1.1453167996064093,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2017,
+        "mdip_taxa": 3.9092626216075717,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2017,
+        "mdip_taxa": 1.5570919179929685,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2017,
+        "mdip_taxa": 0.7860021167131703,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2017,
+        "mdip_taxa": 1.5111602872973708,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2017,
+        "mdip_taxa": 1.2856760144282748,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2017,
+        "mdip_taxa": 4.565758152507796,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2017,
+        "mdip_taxa": 0.7452382998828982,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2017,
+        "mdip_taxa": 1.2878346285219902,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2017,
+        "mdip_taxa": 0.9318920483825928,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2017,
+        "mdip_taxa": 2.358471399603494,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2017,
+        "mdip_taxa": 6.740851522068723,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2017,
+        "mdip_taxa": 3.0795525410157905,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2017,
+        "mdip_taxa": 1.1075497234448342,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2017,
+        "mdip_taxa": 1.5307020564982128,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2017,
+        "mdip_taxa": 1.1922745905530343,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2017,
+        "mdip_taxa": 1.0998175873972902,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2017,
+        "mdip_taxa": 3.933367014609399,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2017,
+        "mdip_taxa": 2.084494496557546,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2017,
+        "mdip_taxa": 0.4515563858459006,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2018,
+        "mdip_taxa": 2.0707149143241708,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2018,
+        "mdip_taxa": 4.27347855135096,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2018,
+        "mdip_taxa": 1.200800566385769,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2018,
+        "mdip_taxa": 5.666104878395745,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2018,
+        "mdip_taxa": 5.333291207083799,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2018,
+        "mdip_taxa": 2.435087562333008,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2018,
+        "mdip_taxa": 0.16808400704204757,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2018,
+        "mdip_taxa": 0.7552132369748373,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2018,
+        "mdip_taxa": 6.1983820344592475,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2018,
+        "mdip_taxa": 1.0660897462777477,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2018,
+        "mdip_taxa": 0.6748837085068902,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2018,
+        "mdip_taxa": 1.928659257946531,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2018,
+        "mdip_taxa": 1.975596731898159,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2018,
+        "mdip_taxa": 7.858110480334932,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2018,
+        "mdip_taxa": 0.7256356568353878,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2018,
+        "mdip_taxa": 1.1372857664263554,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2018,
+        "mdip_taxa": 0.8883358742802565,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2018,
+        "mdip_taxa": 2.8284587358269766,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2018,
+        "mdip_taxa": 8.939414777190624,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2018,
+        "mdip_taxa": 3.8516704464775895,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2018,
+        "mdip_taxa": 0.5120651073715187,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2018,
+        "mdip_taxa": 4.336001998029721,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2018,
+        "mdip_taxa": 1.2445270598577796,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2018,
+        "mdip_taxa": 1.399195589735501,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2018,
+        "mdip_taxa": 6.32047993510974,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2018,
+        "mdip_taxa": 1.8687305298481283,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2018,
+        "mdip_taxa": 0.8358897628580744,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2019,
+        "mdip_taxa": 2.6079019428869477,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2019,
+        "mdip_taxa": 2.606853267420896,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2019,
+        "mdip_taxa": 2.1232462408287223,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2019,
+        "mdip_taxa": 14.425390579274024,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2019,
+        "mdip_taxa": 5.197315092572721,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2019,
+        "mdip_taxa": 1.489255786032489,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2019,
+        "mdip_taxa": 0.2653163831540016,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2019,
+        "mdip_taxa": 1.0202431164694612,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2019,
+        "mdip_taxa": 7.594373267578124,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2019,
+        "mdip_taxa": 1.017641810152984,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2019,
+        "mdip_taxa": 0.5054610818350467,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2019,
+        "mdip_taxa": 2.231029591368938,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2019,
+        "mdip_taxa": 2.0950125499861385,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2019,
+        "mdip_taxa": 6.544331452370809,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2019,
+        "mdip_taxa": 0.6470676511718022,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2019,
+        "mdip_taxa": 0.7638323498904632,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2019,
+        "mdip_taxa": 1.283137405380073,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2019,
+        "mdip_taxa": 2.5188130408396674,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2019,
+        "mdip_taxa": 10.506840364315133,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2019,
+        "mdip_taxa": 4.562495205815584,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2019,
+        "mdip_taxa": 1.237884904837598,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2019,
+        "mdip_taxa": 1.9809792971155291,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2019,
+        "mdip_taxa": 0.8701583925590383,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2019,
+        "mdip_taxa": 1.0886574731869247,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2019,
+        "mdip_taxa": 7.221485572689907,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2019,
+        "mdip_taxa": 1.8881053046198757,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2019,
+        "mdip_taxa": 1.0172513106647356,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2020,
+        "mdip_taxa": 3.018547296164209,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2020,
+        "mdip_taxa": 2.565982295318902,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2020,
+        "mdip_taxa": 2.4241191297697515,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2020,
+        "mdip_taxa": 12.880422106517608,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2020,
+        "mdip_taxa": 7.621913443193371,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2020,
+        "mdip_taxa": 1.5565298440650988,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2020,
+        "mdip_taxa": 0.3600479060104761,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2020,
+        "mdip_taxa": 0.9842393748898883,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2020,
+        "mdip_taxa": 8.870407701369501,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2020,
+        "mdip_taxa": 1.3212271445273507,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2020,
+        "mdip_taxa": 0.5729672367001859,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2020,
+        "mdip_taxa": 0.7474921637904829,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2020,
+        "mdip_taxa": 3.629949350862964,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2020,
+        "mdip_taxa": 6.063922022795514,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2020,
+        "mdip_taxa": 0.9407624186209562,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2020,
+        "mdip_taxa": 1.2062448962062662,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2020,
+        "mdip_taxa": 0.883747577312676,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2020,
+        "mdip_taxa": 3.273467374731263,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2020,
+        "mdip_taxa": 7.169103134832864,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2020,
+        "mdip_taxa": 4.102807876825219,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2020,
+        "mdip_taxa": 1.1133006022956258,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2020,
+        "mdip_taxa": 2.5349305508245656,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2020,
+        "mdip_taxa": 1.0767774729048207,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2020,
+        "mdip_taxa": 1.1857976736855778,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2020,
+        "mdip_taxa": 8.452567726198907,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2020,
+        "mdip_taxa": 1.7585044917367896,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2020,
+        "mdip_taxa": 1.6978483859121345,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2021,
+        "mdip_taxa": 1.3382205417866975,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2021,
+        "mdip_taxa": 2.0787186778069997,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2021,
+        "mdip_taxa": 2.587702732737921,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2021,
+        "mdip_taxa": 21.423387243517297,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2021,
+        "mdip_taxa": 9.450352123836565,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2021,
+        "mdip_taxa": 1.357918517833078,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2021,
+        "mdip_taxa": 0.250313577354107,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2021,
+        "mdip_taxa": 1.2871224840203088,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2021,
+        "mdip_taxa": 8.094600040645226,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2021,
+        "mdip_taxa": 1.3020727209834104,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2021,
+        "mdip_taxa": 0.5669524677314848,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2021,
+        "mdip_taxa": 1.9406381965685866,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2021,
+        "mdip_taxa": 2.8279611890051917,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2021,
+        "mdip_taxa": 6.789285190583631,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2021,
+        "mdip_taxa": 1.2888016425397868,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2021,
+        "mdip_taxa": 1.1509076682202115,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2021,
+        "mdip_taxa": 1.0440240371181253,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2021,
+        "mdip_taxa": 3.617962682959647,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2021,
+        "mdip_taxa": 8.449050282249532,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2021,
+        "mdip_taxa": 4.6183654009686865,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2021,
+        "mdip_taxa": 0.5698130459224472,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2021,
+        "mdip_taxa": 1.4497010125893106,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2021,
+        "mdip_taxa": 1.435808598583695,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2021,
+        "mdip_taxa": 0.9338101264082088,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2021,
+        "mdip_taxa": 9.55517077877106,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2021,
+        "mdip_taxa": 1.2908406506887662,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2021,
+        "mdip_taxa": 3.131681545300497,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2022,
+        "mdip_taxa": 2.2891069832220508,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2022,
+        "mdip_taxa": 1.6306000320364946,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2022,
+        "mdip_taxa": 2.511662103813845,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2022,
+        "mdip_taxa": 17.30813523241282,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2022,
+        "mdip_taxa": 10.373630302484312,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2022,
+        "mdip_taxa": 1.7055228354157956,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2022,
+        "mdip_taxa": 0.5679033116216798,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2022,
+        "mdip_taxa": 1.6954846895124098,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2022,
+        "mdip_taxa": 7.638353035040768,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2022,
+        "mdip_taxa": 1.401862470208578,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2022,
+        "mdip_taxa": 0.720545663388622,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2022,
+        "mdip_taxa": 1.8498280566685756,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2022,
+        "mdip_taxa": 2.9792417911638966,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2022,
+        "mdip_taxa": 7.672290016010825,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2022,
+        "mdip_taxa": 1.2831199035295107,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2022,
+        "mdip_taxa": 0.99349470704656,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2022,
+        "mdip_taxa": 1.192223401878027,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2022,
+        "mdip_taxa": 4.185460461816193,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2022,
+        "mdip_taxa": 8.283933889473886,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2022,
+        "mdip_taxa": 3.2397450714242675,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2022,
+        "mdip_taxa": 0.5691893984047518,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2022,
+        "mdip_taxa": 1.5705811307241793,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2022,
+        "mdip_taxa": 0.973999273176014,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2022,
+        "mdip_taxa": 0.5781591701103272,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2022,
+        "mdip_taxa": 7.963786490884179,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2022,
+        "mdip_taxa": 0.9479582622758681,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2022,
+        "mdip_taxa": 2.2494806346181835,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2023,
+        "mdip_taxa": 1.7111918793678174,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2023,
+        "mdip_taxa": 2.05057653823533,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2023,
+        "mdip_taxa": 1.3913220648823,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2023,
+        "mdip_taxa": 22.900075582763126,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2023,
+        "mdip_taxa": 11.464173177530276,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2023,
+        "mdip_taxa": 1.565783796573369,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2023,
+        "mdip_taxa": 0.9098435978855235,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2023,
+        "mdip_taxa": 1.5946740829642683,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2023,
+        "mdip_taxa": 7.10705381276941,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2023,
+        "mdip_taxa": 0.8853052746773847,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2023,
+        "mdip_taxa": 0.6447847433199007,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2023,
+        "mdip_taxa": 4.551757829805258,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2023,
+        "mdip_taxa": 5.901986269809699,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2023,
+        "mdip_taxa": 6.232503725574853,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2023,
+        "mdip_taxa": 1.6729430316831164,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2023,
+        "mdip_taxa": 1.2402145234796258,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2023,
+        "mdip_taxa": 0.7427475897097967,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2023,
+        "mdip_taxa": 2.901174099202458,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2023,
+        "mdip_taxa": 5.059889984862738,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2023,
+        "mdip_taxa": 2.6773153976482695,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2023,
+        "mdip_taxa": 0.5171655878017877,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2023,
+        "mdip_taxa": 1.8697772088541142,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2023,
+        "mdip_taxa": 1.3722686952005883,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2023,
+        "mdip_taxa": 0.9965672672813595,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2023,
+        "mdip_taxa": 10.035083352541681,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2023,
+        "mdip_taxa": 1.0992229758539536,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2023,
+        "mdip_taxa": 2.7437625662730327,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2024,
+        "mdip_taxa": 1.135549395830944,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2024,
+        "mdip_taxa": 2.329117320434371,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2024,
+        "mdip_taxa": 1.0043891807197454,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2024,
+        "mdip_taxa": 17.064485069821146,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2024,
+        "mdip_taxa": 10.477752519391082,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2024,
+        "mdip_taxa": 2.046859878687272,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2024,
+        "mdip_taxa": 0.5028801623163063,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2024,
+        "mdip_taxa": 1.9014516608327041,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2024,
+        "mdip_taxa": 5.074496465062228,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2024,
+        "mdip_taxa": 1.0840170247726417,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2024,
+        "mdip_taxa": 0.9379679140873918,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2024,
+        "mdip_taxa": 2.308836122602644,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2024,
+        "mdip_taxa": 5.578147632714949,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2024,
+        "mdip_taxa": 6.901879965919948,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2024,
+        "mdip_taxa": 1.3268870746723795,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2024,
+        "mdip_taxa": 0.8176932893274567,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2024,
+        "mdip_taxa": 0.8887187815310018,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2024,
+        "mdip_taxa": 3.382759680718227,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2024,
+        "mdip_taxa": 4.08253835626088,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2024,
+        "mdip_taxa": 2.6406884826226737,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2024,
+        "mdip_taxa": 0.45813058668775597,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2024,
+        "mdip_taxa": 0.9765720368362972,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2024,
+        "mdip_taxa": 1.309003674560315,
+        "posicao": 17,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2024,
+        "mdip_taxa": 0.9803385046809923,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2024,
+        "mdip_taxa": 6.328901211089805,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2024,
+        "mdip_taxa": 1.7684218329490007,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2024,
+        "mdip_taxa": 3.169889599085043,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AC",
+        "ano": 2025,
+        "mdip_taxa": 1.0176712966941512,
+        "posicao": 21,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AL",
+        "ano": 2025,
+        "mdip_taxa": 3.601535993005569,
+        "posicao": 10,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AM",
+        "ano": 2025,
+        "mdip_taxa": 0.9255796905601978,
+        "posicao": 23,
+        "n_ufs": 27
+      },
+      {
+        "uf": "AP",
+        "ano": 2025,
+        "mdip_taxa": 17.110612671524592,
+        "posicao": 1,
+        "n_ufs": 27
+      },
+      {
+        "uf": "BA",
+        "ano": 2025,
+        "mdip_taxa": 10.55752685427997,
+        "posicao": 2,
+        "n_ufs": 27
+      },
+      {
+        "uf": "CE",
+        "ano": 2025,
+        "mdip_taxa": 2.1254017225032356,
+        "posicao": 13,
+        "n_ufs": 27
+      },
+      {
+        "uf": "DF",
+        "ano": 2025,
+        "mdip_taxa": 0.46714954357821203,
+        "posicao": 26,
+        "n_ufs": 27
+      },
+      {
+        "uf": "ES",
+        "ano": 2025,
+        "mdip_taxa": 1.768901928684659,
+        "posicao": 16,
+        "n_ufs": 27
+      },
+      {
+        "uf": "GO",
+        "ano": 2025,
+        "mdip_taxa": 4.876321270904028,
+        "posicao": 5,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MA",
+        "ano": 2025,
+        "mdip_taxa": 1.9948103583662562,
+        "posicao": 14,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MG",
+        "ano": 2025,
+        "mdip_taxa": 0.9675862802996488,
+        "posicao": 22,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MS",
+        "ano": 2025,
+        "mdip_taxa": 2.5644260763152684,
+        "posicao": 12,
+        "n_ufs": 27
+      },
+      {
+        "uf": "MT",
+        "ano": 2025,
+        "mdip_taxa": 3.6469552161604293,
+        "posicao": 9,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PA",
+        "ano": 2025,
+        "mdip_taxa": 7.255031341276215,
+        "posicao": 4,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PB",
+        "ano": 2025,
+        "mdip_taxa": 1.392734918361721,
+        "posicao": 18,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PE",
+        "ano": 2025,
+        "mdip_taxa": 1.0771797176053102,
+        "posicao": 20,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PI",
+        "ano": 2025,
+        "mdip_taxa": 0.8568354937898632,
+        "posicao": 24,
+        "n_ufs": 27
+      },
+      {
+        "uf": "PR",
+        "ano": 2025,
+        "mdip_taxa": 4.05365048466774,
+        "posicao": 7,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RJ",
+        "ano": 2025,
+        "mdip_taxa": 4.6331919900122776,
+        "posicao": 6,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RN",
+        "ano": 2025,
+        "mdip_taxa": 3.9649968916739695,
+        "posicao": 8,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RO",
+        "ano": 2025,
+        "mdip_taxa": 2.682724963611975,
+        "posicao": 11,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RR",
+        "ano": 2025,
+        "mdip_taxa": 0.40607927750374945,
+        "posicao": 27,
+        "n_ufs": 27
+      },
+      {
+        "uf": "RS",
+        "ano": 2025,
+        "mdip_taxa": 0.6765620995431159,
+        "posicao": 25,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SC",
+        "ano": 2025,
+        "mdip_taxa": 1.2214443114834452,
+        "posicao": 19,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SE",
+        "ano": 2025,
+        "mdip_taxa": 8.393402698500712,
+        "posicao": 3,
+        "n_ufs": 27
+      },
+      {
+        "uf": "SP",
+        "ano": 2025,
+        "mdip_taxa": 1.811995151838792,
+        "posicao": 15,
+        "n_ufs": 27
+      },
+      {
+        "uf": "TO",
+        "ano": 2025,
+        "mdip_taxa": 1.638456850923743,
+        "posicao": 17,
+        "n_ufs": 27
+      }
+    ],
+    "pct_mdip_nas_mvi": [
+      {
+        "uf": "AC",
+        "ano": 2016,
+        "pct": 6.7934782608695645
+      },
+      {
+        "uf": "AC",
+        "ano": 2017,
+        "pct": 6.981132075471698
+      },
+      {
+        "uf": "AC",
+        "ano": 2018,
+        "pct": 4.316546762589928
+      },
+      {
+        "uf": "AC",
+        "ano": 2019,
+        "pct": 7.77027027027027
+      },
+      {
+        "uf": "AC",
+        "ano": 2020,
+        "pct": 8.385093167701864
+      },
+      {
+        "uf": "AC",
+        "ano": 2021,
+        "pct": 5.670103092783505
+      },
+      {
+        "uf": "AC",
+        "ano": 2022,
+        "pct": 8.016877637130802
+      },
+      {
+        "uf": "AC",
+        "ano": 2023,
+        "pct": 7.009345794392523
+      },
+      {
+        "uf": "AC",
+        "ano": 2024,
+        "pct": 5.58659217877095
+      },
+      {
+        "uf": "AC",
+        "ano": 2025,
+        "pct": 4.712041884816754
+      },
+      {
+        "uf": "AL",
+        "ano": 2016,
+        "pct": 5.963791267305645
+      },
+      {
+        "uf": "AL",
+        "ano": 2017,
+        "pct": 7.372793354101765
+      },
+      {
+        "uf": "AL",
+        "ano": 2018,
+        "pct": 9.472981987991995
+      },
+      {
+        "uf": "AL",
+        "ano": 2019,
+        "pct": 7.9452054794520555
+      },
+      {
+        "uf": "AL",
+        "ano": 2020,
+        "pct": 6.885508406725379
+      },
+      {
+        "uf": "AL",
+        "ano": 2021,
+        "pct": 5.711775043936731
+      },
+      {
+        "uf": "AL",
+        "ano": 2022,
+        "pct": 4.296545914069082
+      },
+      {
+        "uf": "AL",
+        "ano": 2023,
+        "pct": 5.454545454545454
+      },
+      {
+        "uf": "AL",
+        "ano": 2024,
+        "pct": 6.573181419807186
+      },
+      {
+        "uf": "AL",
+        "ano": 2025,
+        "pct": 10.881801125703564
+      },
+      {
+        "uf": "AM",
+        "ano": 2016,
+        "pct": 3.1118587047939443
+      },
+      {
+        "uf": "AM",
+        "ano": 2017,
+        "pct": 3.035019455252918
+      },
+      {
+        "uf": "AM",
+        "ano": 2018,
+        "pct": 3.970826580226904
+      },
+      {
+        "uf": "AM",
+        "ano": 2019,
+        "pct": 7.508532423208192
+      },
+      {
+        "uf": "AM",
+        "ano": 2020,
+        "pct": 9.099018733273862
+      },
+      {
+        "uf": "AM",
+        "ano": 2021,
+        "pct": 6.04066985645933
+      },
+      {
+        "uf": "AM",
+        "ano": 2022,
+        "pct": 6.466361854996734
+      },
+      {
+        "uf": "AM",
+        "ano": 2023,
+        "pct": 4.196301564722617
+      },
+      {
+        "uf": "AM",
+        "ano": 2024,
+        "pct": 3.6658141517476555
+      },
+      {
+        "uf": "AM",
+        "ano": 2025,
+        "pct": 5.006257822277847
+      },
+      {
+        "uf": "AP",
+        "ano": 2016,
+        "pct": 14.786967418546364
+      },
+      {
+        "uf": "AP",
+        "ano": 2017,
+        "pct": 12.903225806451612
+      },
+      {
+        "uf": "AP",
+        "ano": 2018,
+        "pct": 9.710743801652892
+      },
+      {
+        "uf": "AP",
+        "ano": 2019,
+        "pct": 26.46420824295011
+      },
+      {
+        "uf": "AP",
+        "ano": 2020,
+        "pct": 31.179775280898873
+      },
+      {
+        "uf": "AP",
+        "ano": 2021,
+        "pct": 31.771894093686353
+      },
+      {
+        "uf": "AP",
+        "ano": 2022,
+        "pct": 34.60490463215259
+      },
+      {
+        "uf": "AP",
+        "ano": 2023,
+        "pct": 35.26011560693642
+      },
+      {
+        "uf": "AP",
+        "ano": 2024,
+        "pct": 37.74104683195592
+      },
+      {
+        "uf": "AP",
+        "ano": 2025,
+        "pct": 40.2332361516035
+      },
+      {
+        "uf": "BA",
+        "ano": 2016,
+        "pct": 6.430686786066846
+      },
+      {
+        "uf": "BA",
+        "ano": 2017,
+        "pct": 10.402636480871184
+      },
+      {
+        "uf": "BA",
+        "ano": 2018,
+        "pct": 12.444864524259609
+      },
+      {
+        "uf": "BA",
+        "ano": 2019,
+        "pct": 12.87904031989337
+      },
+      {
+        "uf": "BA",
+        "ano": 2020,
+        "pct": 16.995221027479094
+      },
+      {
+        "uf": "BA",
+        "ano": 2021,
+        "pct": 18.885273730372045
+      },
+      {
+        "uf": "BA",
+        "ano": 2022,
+        "pct": 22.017109410175596
+      },
+      {
+        "uf": "BA",
+        "ano": 2023,
+        "pct": 25.839793281653744
+      },
+      {
+        "uf": "BA",
+        "ano": 2024,
+        "pct": 25.7317678187531
+      },
+      {
+        "uf": "BA",
+        "ano": 2025,
+        "pct": 28.686278092453865
+      },
+      {
+        "uf": "BR",
+        "ano": 2016,
+        "pct": 6.883452116174489
+      },
+      {
+        "uf": "BR",
+        "ano": 2017,
+        "pct": 8.08233715159649
+      },
+      {
+        "uf": "BR",
+        "ano": 2018,
+        "pct": 10.72197527434366
+      },
+      {
+        "uf": "BR",
+        "ano": 2019,
+        "pct": 13.302752293577983
+      },
+      {
+        "uf": "BR",
+        "ano": 2020,
+        "pct": 12.712099587694258
+      },
+      {
+        "uf": "BR",
+        "ano": 2021,
+        "pct": 13.446404903909876
+      },
+      {
+        "uf": "BR",
+        "ano": 2022,
+        "pct": 13.458290765798637
+      },
+      {
+        "uf": "BR",
+        "ano": 2023,
+        "pct": 13.808918843263495
+      },
+      {
+        "uf": "BR",
+        "ano": 2024,
+        "pct": 14.1044776119403
+      },
+      {
+        "uf": "BR",
+        "ano": 2025,
+        "pct": 16.191293684855918
+      },
+      {
+        "uf": "CE",
+        "ano": 2016,
+        "pct": 3.0566461020751543
+      },
+      {
+        "uf": "CE",
+        "ano": 2017,
+        "pct": 2.9649089885531996
+      },
+      {
+        "uf": "CE",
+        "ano": 2018,
+        "pct": 4.6157059314954045
+      },
+      {
+        "uf": "CE",
+        "ano": 2019,
+        "pct": 5.765154726579059
+      },
+      {
+        "uf": "CE",
+        "ano": 2020,
+        "pct": 3.418599091561081
+      },
+      {
+        "uf": "CE",
+        "ano": 2021,
+        "pct": 3.480549868382568
+      },
+      {
+        "uf": "CE",
+        "ano": 2022,
+        "pct": 4.803073967339097
+      },
+      {
+        "uf": "CE",
+        "ano": 2023,
+        "pct": 4.624277456647398
+      },
+      {
+        "uf": "CE",
+        "ano": 2024,
+        "pct": 5.451398903951543
+      },
+      {
+        "uf": "CE",
+        "ano": 2025,
+        "pct": 6.118012422360248
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2016,
+        "pct": 4.975306383757088
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2017,
+        "pct": 7.360824742268041
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2018,
+        "pct": 11.615738802846378
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2019,
+        "pct": 16.48780487804878
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2020,
+        "pct": 18.695343890333255
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2021,
+        "pct": 20.088544548976202
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2022,
+        "pct": 19.092122830440587
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2023,
+        "pct": 24.22444024817912
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2024,
+        "pct": 19.928507596067917
+      },
+      {
+        "uf": "Centro-Oeste",
+        "ano": 2025,
+        "pct": 19.83277591973244
+      },
+      {
+        "uf": "DF",
+        "ano": 2016,
+        "pct": 1.062215477996965
+      },
+      {
+        "uf": "DF",
+        "ano": 2017,
+        "pct": 1.436265709156194
+      },
+      {
+        "uf": "DF",
+        "ano": 2018,
+        "pct": 0.9900990099009901
+      },
+      {
+        "uf": "DF",
+        "ano": 2019,
+        "pct": 1.735357917570499
+      },
+      {
+        "uf": "DF",
+        "ano": 2020,
+        "pct": 2.588235294117647
+      },
+      {
+        "uf": "DF",
+        "ano": 2021,
+        "pct": 1.9943019943019942
+      },
+      {
+        "uf": "DF",
+        "ano": 2022,
+        "pct": 4.984423676012461
+      },
+      {
+        "uf": "DF",
+        "ano": 2023,
+        "pct": 8.681672025723474
+      },
+      {
+        "uf": "DF",
+        "ano": 2024,
+        "pct": 5.555555555555555
+      },
+      {
+        "uf": "DF",
+        "ano": 2025,
+        "pct": 4.878048780487805
+      },
+      {
+        "uf": "ES",
+        "ano": 2016,
+        "pct": 4.281345565749235
+      },
+      {
+        "uf": "ES",
+        "ano": 2017,
+        "pct": 3.050397877984085
+      },
+      {
+        "uf": "ES",
+        "ano": 2018,
+        "pct": 2.527379949452401
+      },
+      {
+        "uf": "ES",
+        "ano": 2019,
+        "pct": 3.8533834586466162
+      },
+      {
+        "uf": "ES",
+        "ano": 2020,
+        "pct": 3.316749585406302
+      },
+      {
+        "uf": "ES",
+        "ano": 2021,
+        "pct": 4.188034188034187
+      },
+      {
+        "uf": "ES",
+        "ano": 2022,
+        "pct": 5.772646536412078
+      },
+      {
+        "uf": "ES",
+        "ano": 2023,
+        "pct": 5.930656934306569
+      },
+      {
+        "uf": "ES",
+        "ano": 2024,
+        "pct": 7.926829268292683
+      },
+      {
+        "uf": "ES",
+        "ano": 2025,
+        "pct": 8.04851157662624
+      },
+      {
+        "uf": "GO",
+        "ano": 2016,
+        "pct": 7.43198407431984
+      },
+      {
+        "uf": "GO",
+        "ano": 2017,
+        "pct": 9.902840059790732
+      },
+      {
+        "uf": "GO",
+        "ano": 2018,
+        "pct": 15.859519408502774
+      },
+      {
+        "uf": "GO",
+        "ano": 2019,
+        "pct": 23.678365171035097
+      },
+      {
+        "uf": "GO",
+        "ano": 2020,
+        "pct": 28.564961521050247
+      },
+      {
+        "uf": "GO",
+        "ano": 2021,
+        "pct": 30.273752012882447
+      },
+      {
+        "uf": "GO",
+        "ano": 2022,
+        "pct": 30.213004484304935
+      },
+      {
+        "uf": "GO",
+        "ano": 2023,
+        "pct": 31.60146699266504
+      },
+      {
+        "uf": "GO",
+        "ano": 2024,
+        "pct": 26.911976911976907
+      },
+      {
+        "uf": "GO",
+        "ano": 2025,
+        "pct": 29.623567921440262
+      },
+      {
+        "uf": "MA",
+        "ano": 2016,
+        "pct": 5.422715627668659
+      },
+      {
+        "uf": "MA",
+        "ano": 2017,
+        "pct": 5.296404275996112
+      },
+      {
+        "uf": "MA",
+        "ano": 2018,
+        "pct": 4.215851602023609
+      },
+      {
+        "uf": "MA",
+        "ano": 2019,
+        "pct": 4.609475032010243
+      },
+      {
+        "uf": "MA",
+        "ano": 2020,
+        "pct": 4.605585497305242
+      },
+      {
+        "uf": "MA",
+        "ano": 2021,
+        "pct": 4.3478260869565215
+      },
+      {
+        "uf": "MA",
+        "ano": 2022,
+        "pct": 5.0
+      },
+      {
+        "uf": "MA",
+        "ano": 2023,
+        "pct": 3.268318397469689
+      },
+      {
+        "uf": "MA",
+        "ano": 2024,
+        "pct": 3.574788334901223
+      },
+      {
+        "uf": "MA",
+        "ano": 2025,
+        "pct": 6.724303554274735
+      },
+      {
+        "uf": "MG",
+        "ano": 2016,
+        "pct": 2.723112128146453
+      },
+      {
+        "uf": "MG",
+        "ano": 2017,
+        "pct": 4.013539651837524
+      },
+      {
+        "uf": "MG",
+        "ano": 2018,
+        "pct": 4.41542288557214
+      },
+      {
+        "uf": "MG",
+        "ano": 2019,
+        "pct": 3.7822552138564864
+      },
+      {
+        "uf": "MG",
+        "ano": 2020,
+        "pct": 4.5051698670605616
+      },
+      {
+        "uf": "MG",
+        "ano": 2021,
+        "pct": 4.597701149425287
+      },
+      {
+        "uf": "MG",
+        "ano": 2022,
+        "pct": 5.040871934604905
+      },
+      {
+        "uf": "MG",
+        "ano": 2023,
+        "pct": 4.491803278688525
+      },
+      {
+        "uf": "MG",
+        "ano": 2024,
+        "pct": 6.2131096613855235
+      },
+      {
+        "uf": "MG",
+        "ano": 2025,
+        "pct": 7.472924187725631
+      },
+      {
+        "uf": "MS",
+        "ano": 2016,
+        "pct": 4.180064308681672
+      },
+      {
+        "uf": "MS",
+        "ano": 2017,
+        "pct": 7.2695035460992905
+      },
+      {
+        "uf": "MS",
+        "ano": 2018,
+        "pct": 8.983050847457626
+      },
+      {
+        "uf": "MS",
+        "ano": 2019,
+        "pct": 12.863070539419086
+      },
+      {
+        "uf": "MS",
+        "ano": 2020,
+        "pct": 3.459637561779242
+      },
+      {
+        "uf": "MS",
+        "ano": 2021,
+        "pct": 10.371819960861057
+      },
+      {
+        "uf": "MS",
+        "ano": 2022,
+        "pct": 8.97887323943662
+      },
+      {
+        "uf": "MS",
+        "ano": 2023,
+        "pct": 21.79700499168053
+      },
+      {
+        "uf": "MS",
+        "ano": 2024,
+        "pct": 11.985688729874775
+      },
+      {
+        "uf": "MS",
+        "ano": 2025,
+        "pct": 12.690355329949238
+      },
+      {
+        "uf": "MT",
+        "ano": 2016,
+        "pct": 1.2798634812286689
+      },
+      {
+        "uf": "MT",
+        "ano": 2017,
+        "pct": 4.083570750237417
+      },
+      {
+        "uf": "MT",
+        "ano": 2018,
+        "pct": 6.952965235173824
+      },
+      {
+        "uf": "MT",
+        "ano": 2019,
+        "pct": 8.057395143487858
+      },
+      {
+        "uf": "MT",
+        "ano": 2020,
+        "pct": 12.929292929292929
+      },
+      {
+        "uf": "MT",
+        "ano": 2021,
+        "pct": 11.473565804274466
+      },
+      {
+        "uf": "MT",
+        "ano": 2022,
+        "pct": 10.167910447761194
+      },
+      {
+        "uf": "MT",
+        "ano": 2023,
+        "pct": 19.240724762726487
+      },
+      {
+        "uf": "MT",
+        "ano": 2024,
+        "pct": 18.739054290718038
+      },
+      {
+        "uf": "MT",
+        "ano": 2025,
+        "pct": 15.955056179775282
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2016,
+        "pct": 4.340291770774563
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2017,
+        "pct": 5.551890941072999
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2018,
+        "pct": 7.1227741330834125
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2019,
+        "pct": 8.438702583837273
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2020,
+        "pct": 8.962839210728315
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2021,
+        "pct": 10.29383705399733
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2022,
+        "pct": 11.02089315773839
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2023,
+        "pct": 12.541931607670357
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2024,
+        "pct": 11.853114347691355
+      },
+      {
+        "uf": "Nordeste",
+        "ano": 2025,
+        "pct": 14.036540266048464
+      },
+      {
+        "uf": "Norte",
+        "ano": 2016,
+        "pct": 5.9283212072217735
+      },
+      {
+        "uf": "Norte",
+        "ano": 2017,
+        "pct": 6.974085365853659
+      },
+      {
+        "uf": "Norte",
+        "ano": 2018,
+        "pct": 10.279910824869953
+      },
+      {
+        "uf": "Norte",
+        "ano": 2019,
+        "pct": 13.108149984505731
+      },
+      {
+        "uf": "Norte",
+        "ano": 2020,
+        "pct": 14.414727335880514
+      },
+      {
+        "uf": "Norte",
+        "ano": 2021,
+        "pct": 13.633549984524915
+      },
+      {
+        "uf": "Norte",
+        "ano": 2022,
+        "pct": 14.41765810895429
+      },
+      {
+        "uf": "Norte",
+        "ano": 2023,
+        "pct": 14.446686848301379
+      },
+      {
+        "uf": "Norte",
+        "ano": 2024,
+        "pct": 16.483091787439612
+      },
+      {
+        "uf": "Norte",
+        "ano": 2025,
+        "pct": 18.826251577618848
+      },
+      {
+        "uf": "PA",
+        "ano": 2016,
+        "pct": 6.679343950558593
+      },
+      {
+        "uf": "PA",
+        "ano": 2017,
+        "pct": 8.43825933289154
+      },
+      {
+        "uf": "PA",
+        "ano": 2018,
+        "pct": 14.173728813559322
+      },
+      {
+        "uf": "PA",
+        "ano": 2019,
+        "pct": 16.0995138690306
+      },
+      {
+        "uf": "PA",
+        "ano": 2020,
+        "pct": 18.324061196105703
+      },
+      {
+        "uf": "PA",
+        "ano": 2021,
+        "pct": 18.488529014844804
+      },
+      {
+        "uf": "PA",
+        "ano": 2022,
+        "pct": 20.64280980781975
+      },
+      {
+        "uf": "PA",
+        "ano": 2023,
+        "pct": 19.562841530054644
+      },
+      {
+        "uf": "PA",
+        "ano": 2024,
+        "pct": 23.368503321610003
+      },
+      {
+        "uf": "PA",
+        "ano": 2025,
+        "pct": 25.51473556721841
+      },
+      {
+        "uf": "PB",
+        "ano": 2016,
+        "pct": 1.6616314199395772
+      },
+      {
+        "uf": "PB",
+        "ano": 2017,
+        "pct": 2.332814930015552
+      },
+      {
+        "uf": "PB",
+        "ano": 2018,
+        "pct": 2.396694214876033
+      },
+      {
+        "uf": "PB",
+        "ano": 2019,
+        "pct": 2.7600849256900215
+      },
+      {
+        "uf": "PB",
+        "ano": 2020,
+        "pct": 3.2590051457975986
+      },
+      {
+        "uf": "PB",
+        "ano": 2021,
+        "pct": 4.806786050895382
+      },
+      {
+        "uf": "PB",
+        "ano": 2022,
+        "pct": 4.678899082568807
+      },
+      {
+        "uf": "PB",
+        "ano": 2023,
+        "pct": 6.484962406015038
+      },
+      {
+        "uf": "PB",
+        "ano": 2024,
+        "pct": 5.188679245283019
+      },
+      {
+        "uf": "PB",
+        "ano": 2025,
+        "pct": 5.669599217986314
+      },
+      {
+        "uf": "PE",
+        "ano": 2016,
+        "pct": 1.4285714285714286
+      },
+      {
+        "uf": "PE",
+        "ano": 2017,
+        "pct": 2.248019163442049
+      },
+      {
+        "uf": "PE",
+        "ano": 2018,
+        "pct": 2.5880661394680087
+      },
+      {
+        "uf": "PE",
+        "ano": 2019,
+        "pct": 2.1395076201641263
+      },
+      {
+        "uf": "PE",
+        "ano": 2020,
+        "pct": 3.0851063829787235
+      },
+      {
+        "uf": "PE",
+        "ano": 2021,
+        "pct": 3.086053412462908
+      },
+      {
+        "uf": "PE",
+        "ano": 2022,
+        "pct": 2.6262036766851473
+      },
+      {
+        "uf": "PE",
+        "ano": 2023,
+        "pct": 3.240867893435869
+      },
+      {
+        "uf": "PE",
+        "ano": 2024,
+        "pct": 2.2452504317789295
+      },
+      {
+        "uf": "PE",
+        "ano": 2025,
+        "pct": 3.2605254827477053
+      },
+      {
+        "uf": "PI",
+        "ano": 2016,
+        "pct": 3.982930298719772
+      },
+      {
+        "uf": "PI",
+        "ano": 2017,
+        "pct": 4.594180704441041
+      },
+      {
+        "uf": "PI",
+        "ano": 2018,
+        "pct": 4.669887278582931
+      },
+      {
+        "uf": "PI",
+        "ano": 2019,
+        "pct": 7.155025553662692
+      },
+      {
+        "uf": "PI",
+        "ano": 2020,
+        "pct": 4.101838755304102
+      },
+      {
+        "uf": "PI",
+        "ano": 2021,
+        "pct": 4.358974358974359
+      },
+      {
+        "uf": "PI",
+        "ano": 2022,
+        "pct": 4.710144927536232
+      },
+      {
+        "uf": "PI",
+        "ano": 2023,
+        "pct": 3.3921302578018993
+      },
+      {
+        "uf": "PI",
+        "ano": 2024,
+        "pct": 4.37956204379562
+      },
+      {
+        "uf": "PI",
+        "ano": 2025,
+        "pct": 5.008635578583765
+      },
+      {
+        "uf": "PR",
+        "ano": 2016,
+        "pct": 9.013605442176871
+      },
+      {
+        "uf": "PR",
+        "ano": 2017,
+        "pct": 10.441924129839656
+      },
+      {
+        "uf": "PR",
+        "ano": 2018,
+        "pct": 13.325031133250311
+      },
+      {
+        "uf": "PR",
+        "ano": 2019,
+        "pct": 12.978819287967552
+      },
+      {
+        "uf": "PR",
+        "ano": 2020,
+        "pct": 15.140562248995984
+      },
+      {
+        "uf": "PR",
+        "ano": 2021,
+        "pct": 17.096505823627286
+      },
+      {
+        "uf": "PR",
+        "ano": 2022,
+        "pct": 18.458574181117534
+      },
+      {
+        "uf": "PR",
+        "ano": 2023,
+        "pct": 15.068493150684931
+      },
+      {
+        "uf": "PR",
+        "ano": 2024,
+        "pct": 18.433179723502306
+      },
+      {
+        "uf": "PR",
+        "ano": 2025,
+        "pct": 26.13882863340564
+      },
+      {
+        "uf": "RJ",
+        "ano": 2016,
+        "pct": 14.771638454167999
+      },
+      {
+        "uf": "RJ",
+        "ano": 2017,
+        "pct": 16.698770188176027
+      },
+      {
+        "uf": "RJ",
+        "ano": 2018,
+        "pct": 22.84778075662794
+      },
+      {
+        "uf": "RJ",
+        "ano": 2019,
+        "pct": 30.334448160535114
+      },
+      {
+        "uf": "RJ",
+        "ano": 2020,
+        "pct": 25.37191766863664
+      },
+      {
+        "uf": "RJ",
+        "ano": 2021,
+        "pct": 28.475430491390174
+      },
+      {
+        "uf": "RJ",
+        "ano": 2022,
+        "pct": 29.654403567447048
+      },
+      {
+        "uf": "RJ",
+        "ano": 2023,
+        "pct": 20.398126463700233
+      },
+      {
+        "uf": "RJ",
+        "ano": 2024,
+        "pct": 18.45628773956419
+      },
+      {
+        "uf": "RJ",
+        "ano": 2025,
+        "pct": 20.51413881748072
+      },
+      {
+        "uf": "RN",
+        "ano": 2016,
+        "pct": 3.2828282828282833
+      },
+      {
+        "uf": "RN",
+        "ano": 2017,
+        "pct": 4.585987261146497
+      },
+      {
+        "uf": "RN",
+        "ano": 2018,
+        "pct": 6.95742471443406
+      },
+      {
+        "uf": "RN",
+        "ano": 2019,
+        "pct": 12.658227848101266
+      },
+      {
+        "uf": "RN",
+        "ano": 2020,
+        "pct": 10.685335298452468
+      },
+      {
+        "uf": "RN",
+        "ano": 2021,
+        "pct": 11.62079510703364
+      },
+      {
+        "uf": "RN",
+        "ano": 2022,
+        "pct": 8.828382838283828
+      },
+      {
+        "uf": "RN",
+        "ano": 2023,
+        "pct": 8.829174664107486
+      },
+      {
+        "uf": "RN",
+        "ano": 2024,
+        "pct": 10.833333333333334
+      },
+      {
+        "uf": "RN",
+        "ano": 2025,
+        "pct": 13.604766633565044
+      },
+      {
+        "uf": "RO",
+        "ano": 2016,
+        "pct": 3.0716723549488054
+      },
+      {
+        "uf": "RO",
+        "ano": 2017,
+        "pct": 3.9525691699604746
+      },
+      {
+        "uf": "RO",
+        "ano": 2018,
+        "pct": 2.088167053364269
+      },
+      {
+        "uf": "RO",
+        "ano": 2019,
+        "pct": 5.472636815920398
+      },
+      {
+        "uf": "RO",
+        "ano": 2020,
+        "pct": 4.842615012106537
+      },
+      {
+        "uf": "RO",
+        "ano": 2021,
+        "pct": 1.8947368421052633
+      },
+      {
+        "uf": "RO",
+        "ano": 2022,
+        "pct": 1.6333938294010888
+      },
+      {
+        "uf": "RO",
+        "ano": 2023,
+        "pct": 1.9780219780219779
+      },
+      {
+        "uf": "RO",
+        "ano": 2024,
+        "pct": 1.75054704595186
+      },
+      {
+        "uf": "RO",
+        "ano": 2025,
+        "pct": 9.533468559837727
+      },
+      {
+        "uf": "RR",
+        "ano": 2016,
+        "pct": 2.358490566037736
+      },
+      {
+        "uf": "RR",
+        "ano": 2017,
+        "pct": 3.7914691943127963
+      },
+      {
+        "uf": "RR",
+        "ano": 2018,
+        "pct": 6.510416666666667
+      },
+      {
+        "uf": "RR",
+        "ano": 2019,
+        "pct": 5.47945205479452
+      },
+      {
+        "uf": "RR",
+        "ano": 2020,
+        "pct": 7.547169811320755
+      },
+      {
+        "uf": "RR",
+        "ano": 2021,
+        "pct": 3.8793103448275863
+      },
+      {
+        "uf": "RR",
+        "ano": 2022,
+        "pct": 5.025125628140704
+      },
+      {
+        "uf": "RR",
+        "ano": 2023,
+        "pct": 7.344632768361582
+      },
+      {
+        "uf": "RR",
+        "ano": 2024,
+        "pct": 5.303030303030303
+      },
+      {
+        "uf": "RR",
+        "ano": 2025,
+        "pct": 2.083333333333333
+      },
+      {
+        "uf": "RS",
+        "ano": 2016,
+        "pct": 5.506391347099312
+      },
+      {
+        "uf": "RS",
+        "ano": 2017,
+        "pct": 4.310344827586207
+      },
+      {
+        "uf": "RS",
+        "ano": 2018,
+        "pct": 5.674044265593562
+      },
+      {
+        "uf": "RS",
+        "ano": 2019,
+        "pct": 4.920477137176938
+      },
+      {
+        "uf": "RS",
+        "ano": 2020,
+        "pct": 6.050172159370389
+      },
+      {
+        "uf": "RS",
+        "ano": 2021,
+        "pct": 7.890743550834597
+      },
+      {
+        "uf": "RS",
+        "ano": 2022,
+        "pct": 5.128205128205128
+      },
+      {
+        "uf": "RS",
+        "ano": 2023,
+        "pct": 7.769929364278506
+      },
+      {
+        "uf": "RS",
+        "ano": 2024,
+        "pct": 8.626760563380282
+      },
+      {
+        "uf": "RS",
+        "ano": 2025,
+        "pct": 6.003159557661927
+      },
+      {
+        "uf": "SC",
+        "ano": 2016,
+        "pct": 5.88235294117647
+      },
+      {
+        "uf": "SC",
+        "ano": 2017,
+        "pct": 6.666666666666667
+      },
+      {
+        "uf": "SC",
+        "ano": 2018,
+        "pct": 10.53191489361702
+      },
+      {
+        "uf": "SC",
+        "ano": 2019,
+        "pct": 9.535452322738386
+      },
+      {
+        "uf": "SC",
+        "ano": 2020,
+        "pct": 10.60419235511714
+      },
+      {
+        "uf": "SC",
+        "ano": 2021,
+        "pct": 9.383378016085791
+      },
+      {
+        "uf": "SC",
+        "ano": 2022,
+        "pct": 6.41399416909621
+      },
+      {
+        "uf": "SC",
+        "ano": 2023,
+        "pct": 11.72106824925816
+      },
+      {
+        "uf": "SC",
+        "ano": 2024,
+        "pct": 11.46589259796807
+      },
+      {
+        "uf": "SC",
+        "ano": 2025,
+        "pct": 16.077170418006432
+      },
+      {
+        "uf": "SE",
+        "ano": 2016,
+        "pct": 6.482758620689655
+      },
+      {
+        "uf": "SE",
+        "ano": 2017,
+        "pct": 7.0588235294117645
+      },
+      {
+        "uf": "SE",
+        "ano": 2018,
+        "pct": 12.743362831858407
+      },
+      {
+        "uf": "SE",
+        "ano": 2019,
+        "pct": 17.166494312306103
+      },
+      {
+        "uf": "SE",
+        "ano": 2020,
+        "pct": 19.838056680161944
+      },
+      {
+        "uf": "SE",
+        "ano": 2021,
+        "pct": 26.41509433962264
+      },
+      {
+        "uf": "SE",
+        "ano": 2022,
+        "pct": 22.916666666666664
+      },
+      {
+        "uf": "SE",
+        "ano": 2023,
+        "pct": 33.236574746008706
+      },
+      {
+        "uf": "SE",
+        "ano": 2024,
+        "pct": 27.77777777777778
+      },
+      {
+        "uf": "SE",
+        "ano": 2025,
+        "pct": 37.99212598425197
+      },
+      {
+        "uf": "SP",
+        "ano": 2016,
+        "pct": 17.397482744620383
+      },
+      {
+        "uf": "SP",
+        "ano": 2017,
+        "pct": 19.457669219623266
+      },
+      {
+        "uf": "SP",
+        "ano": 2018,
+        "pct": 19.721900347624565
+      },
+      {
+        "uf": "SP",
+        "ano": 2019,
+        "pct": 21.270853778213937
+      },
+      {
+        "uf": "SP",
+        "ano": 2020,
+        "pct": 19.581428915082995
+      },
+      {
+        "uf": "SP",
+        "ano": 2021,
+        "pct": 15.548281505728315
+      },
+      {
+        "uf": "SP",
+        "ano": 2022,
+        "pct": 11.265721166711266
+      },
+      {
+        "uf": "SP",
+        "ano": 2023,
+        "pct": 14.482758620689657
+      },
+      {
+        "uf": "SP",
+        "ano": 2024,
+        "pct": 21.674220207944547
+      },
+      {
+        "uf": "SP",
+        "ano": 2025,
+        "pct": 23.09820193637621
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2016,
+        "pct": 11.6032254239298
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2017,
+        "pct": 13.231537389688805
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2018,
+        "pct": 16.569466044582683
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2019,
+        "pct": 20.28102372929959
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2020,
+        "pct": 17.113576822314684
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2021,
+        "pct": 17.251051893408135
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2022,
+        "pct": 15.988277434060565
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2023,
+        "pct": 13.256556825823807
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2024,
+        "pct": 15.251211425656722
+      },
+      {
+        "uf": "Sudeste",
+        "ano": 2025,
+        "pct": 17.107851904847077
+      },
+      {
+        "uf": "Sul",
+        "ano": 2016,
+        "pct": 7.029026750142288
+      },
+      {
+        "uf": "Sul",
+        "ano": 2017,
+        "pct": 6.998831092928112
+      },
+      {
+        "uf": "Sul",
+        "ano": 2018,
+        "pct": 9.61604388069935
+      },
+      {
+        "uf": "Sul",
+        "ano": 2019,
+        "pct": 9.20974450386215
+      },
+      {
+        "uf": "Sul",
+        "ano": 2020,
+        "pct": 10.98612673415823
+      },
+      {
+        "uf": "Sul",
+        "ano": 2021,
+        "pct": 12.42441973863858
+      },
+      {
+        "uf": "Sul",
+        "ano": 2022,
+        "pct": 11.761406133133882
+      },
+      {
+        "uf": "Sul",
+        "ano": 2023,
+        "pct": 11.669038422443586
+      },
+      {
+        "uf": "Sul",
+        "ano": 2024,
+        "pct": 13.719044488275259
+      },
+      {
+        "uf": "Sul",
+        "ano": 2025,
+        "pct": 17.631296891747052
+      },
+      {
+        "uf": "TO",
+        "ano": 2016,
+        "pct": 3.2537960954446854
+      },
+      {
+        "uf": "TO",
+        "ano": 2017,
+        "pct": 1.8469656992084433
+      },
+      {
+        "uf": "TO",
+        "ano": 2018,
+        "pct": 3.217821782178218
+      },
+      {
+        "uf": "TO",
+        "ano": 2019,
+        "pct": 3.9312039312039313
+      },
+      {
+        "uf": "TO",
+        "ano": 2020,
+        "pct": 5.895196506550218
+      },
+      {
+        "uf": "TO",
+        "ano": 2021,
+        "pct": 10.829493087557603
+      },
+      {
+        "uf": "TO",
+        "ano": 2022,
+        "pct": 7.010309278350515
+      },
+      {
+        "uf": "TO",
+        "ano": 2023,
+        "pct": 10.0
+      },
+      {
+        "uf": "TO",
+        "ano": 2024,
+        "pct": 16.025641025641026
+      },
+      {
+        "uf": "TO",
+        "ano": 2025,
+        "pct": 8.469055374592834
+      }
+    ]
+  }
 }

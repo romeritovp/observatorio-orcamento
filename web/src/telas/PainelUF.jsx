@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { participacoesNoPais, rankingIbid, rankingIdeb, totaisPorUfAno } from '../calculos.js'
+import { participacoesNoPais, rankingIbid, rankingIdeb, rankingMvi, totaisPorUfAno } from '../calculos.js'
 import { INDICADORES, tituloDoIndicador } from '../navegacao.config.js'
 import { pct, reais, reaisCompacto, numero } from '../formatacao.js'
 import { caminhoUf } from '../rotas.js'
@@ -9,8 +9,8 @@ const minusculaInicial = (t) => t.charAt(0).toLocaleLowerCase('pt-BR') + t.slice
 
 // Painel do estado (/sp): a visão geral, um cartão por indicador da configuração, com o número principal do último
 // ano e o link para a página do indicador. Indicador sem resumo próprio mostra só a descrição curta.
-// Os arquivos do PIB, do IBID e do IDEB chegam sob demanda (App.jsx); enquanto não chegam, o cartão avisa.
-export default function PainelUF({ dados, uf, pib, ibid, ideb }) {
+// Os arquivos do PIB, do IBID, do IDEB e da violência chegam sob demanda (App.jsx); enquanto não chegam, o cartão avisa.
+export default function PainelUF({ dados, uf, pib, ibid, ideb, violencia }) {
   const { meta, despesa, ipca } = dados
   const anoBase = meta.deflacao.ano_base_padrao
   const totais = useMemo(() => totaisPorUfAno(despesa, ipca.serie, { anoBase }), [despesa, ipca.serie, anoBase])
@@ -40,6 +40,13 @@ export default function PainelUF({ dados, uf, pib, ibid, ideb }) {
       const ano = Math.max(...ibid.anos)
       const l = rankingIbid(ibid, ano).find((x) => x.uf === uf.sigla)
       return l && { valor: `${l.posicao}º`, detalhe: `no índice de inovação do INPI (IBID) em ${ano}, entre 27 estados` }
+    },
+    violencia: () => {
+      if (!violencia) return null
+      const ano = violencia.ultimo_ano
+      const l = rankingMvi(violencia.linhas, ano, violencia.pais).find((x) => x.uf === uf.sigla)
+      return l && { valor: numero(l.numero), detalhe: `mortes violentas intencionais em ${ano} (sujeito a revisão); `
+        + `${numero(l.taxa, 1)} por 100 mil, ${l.posicao}º de ${l.n_ufs} estados pela taxa (1º = maior)` }
     },
   }
 

@@ -59,6 +59,7 @@ function idsDasRessalvas() {
     ...receita.ressalvas, ...Object.values(receita.ressalvas_por_uf).flat(), ...divida.ressalvas,
     ...lerArquivo('pib.json').ressalvas, ...meta.ibid.ressalvas,
     ...ideb.ressalvas, ...Object.values(ideb.ressalvas_por_uf).flat(),
+    ...lerArquivo('violencia.json').ressalvas,
   ].map((r) => r.id)
 }
 

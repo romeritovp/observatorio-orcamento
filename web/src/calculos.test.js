@@ -7,6 +7,7 @@ import {
   aprovacaoPorSerie, idebRecalculado, rankingIdeb, ressalvasDoIdeb, serieIdeb, tendenciasDoIdeb,
   cruzamentoPesquisa, dispersaoIbid, idAgregado, indicadoresDaSubfuncao, pilaresComparados, rankingIbid, serieIbid,
   crescimentoAcumulado, participacaoNoPais, participacaoNoVab, participacoesNoPais, rebasear, setoresPorAno, tabelaPib,
+  indiceMvi, pctMdipNasMvi, rankingMvi, serieMvi, valorMvi,
 } from './calculos.js'
 import { lerJson } from './testes/publicados.js'
 
@@ -995,5 +996,81 @@ describe('IDEB: dados publicados', () => {
         }
       }
     }
+  })
+})
+
+// --- Violência (FBSP, mortes violentas intencionais) --------------------------------------------
+
+describe('Violência: exemplos pequenos, UFs fictícias e o país ZZ', () => {
+  const L = [
+    { uf: 'AA', ano: 2020, mvi_numero: 100, mvi_taxa: 20 }, { uf: 'BB', ano: 2020, mvi_numero: 300, mvi_taxa: 30 },
+    { uf: 'ZZ', ano: 2020, mvi_numero: 400, mvi_taxa: 26 },
+    { uf: 'AA', ano: 2021, mvi_numero: 120, mvi_taxa: 30 }, { uf: 'BB', ano: 2021, mvi_numero: 280, mvi_taxa: 30 },
+    { uf: 'ZZ', ano: 2021, mvi_numero: 400, mvi_taxa: 27 },
+    { uf: 'AA', ano: 2022, mvi_numero: 90, mvi_taxa: null }, { uf: 'ZZ', ano: 2022, mvi_numero: 380, mvi_taxa: 25 },
+  ]
+  it('ranking pela taxa: 1 = maior, empate com a melhor posição, sem o país, nulo no fim', () => {
+    expect(rankingMvi(L, 2020, 'ZZ')).toEqual([
+      { uf: 'BB', taxa: 30, numero: 300, posicao: 1, n_ufs: 2 }, { uf: 'AA', taxa: 20, numero: 100, posicao: 2, n_ufs: 2 },
+    ])
+    expect(rankingMvi(L, 2021, 'ZZ').map((l) => l.posicao)).toEqual([1, 1])
+    expect(rankingMvi(L, 2022, 'ZZ')).toEqual([{ uf: 'AA', taxa: null, numero: 90, posicao: null, n_ufs: 0 }])
+  })
+  it('índice da soma dos membros, primeiro ano = 100; falta de membro deixa o ano nulo', () => {
+    expect(indiceMvi(L, ['AA'], 2020, [2020, 2021])).toEqual([{ ano: 2020, valor: 100 }, { ano: 2021, valor: 120 }])
+    expect(indiceMvi(L, ['AA', 'BB'], 2020, [2021, 2022])).toEqual([{ ano: 2021, valor: 100 }, { ano: 2022, valor: null }])
+    expect(indiceMvi(L, ['AA'], 2019, [2020])).toEqual([{ ano: 2020, valor: null }])
+  })
+  it('letalidade policial: ranking pela taxa de MDIP e % das MVI por grupo', () => {
+    const M = [
+      { uf: 'AA', ano: 2020, mvi_numero: 100, mdip_numero: 10, mdip_taxa: 2 }, { uf: 'BB', ano: 2020, mvi_numero: 300, mdip_numero: 60, mdip_taxa: 6 },
+      { uf: 'ZZ', ano: 2020, mvi_numero: 400, mdip_numero: 70, mdip_taxa: 4.5 }, { uf: 'AA', ano: 2021, mvi_numero: 50, mdip_numero: null },
+    ]
+    expect(rankingMvi(M, 2020, 'ZZ', 'mdip').map((l) => [l.uf, l.numero, l.posicao])).toEqual([['BB', 60, 1], ['AA', 10, 2]])
+    expect(pctMdipNasMvi(M, ['AA', 'BB'], [2020, 2021])).toEqual([{ ano: 2020, valor: 17.5 }, { ano: 2021, valor: null }])
+    expect(pctMdipNasMvi(M, ['AA'], [2020])).toEqual([{ ano: 2020, valor: 10 }])
+  })
+  it('série e valor de um território', () => {
+    expect(serieMvi(L, 'ZZ', [2021, 2023], 'mvi_taxa')).toEqual([{ ano: 2021, valor: 27 }, { ano: 2023, valor: null }])
+    expect(valorMvi(L, 'AA', 2022, 'mvi_taxa')).toBeNull()
+  })
+})
+
+describe('Violência: gabarito.json (27 UFs, regiões e o país, todos os anos)', () => {
+  const { violencia: gabarito } = lerJson('gabarito.json')
+  const violencia = lerJson('violencia.json')
+  const regioes = {}
+  for (const t of violencia.territorios) if (t.regiao) (regioes[t.regiao] ??= []).push(t.uf)
+
+  it('ranking pela taxa em cada ano', () => {
+    const erros = gabarito.ranking.filter((e) => {
+      const c = rankingMvi(violencia.linhas, e.ano, violencia.pais).find((l) => l.uf === e.uf)
+      return c?.posicao !== e.posicao || c?.n_ufs !== e.n_ufs
+    })
+    expect(gabarito.ranking).toHaveLength(27 * violencia.anos.length)
+    expect(erros.slice(0, 5)).toEqual([])
+  })
+  it('letalidade policial: ranking pela taxa de MDIP e % das MDIP nas MVI (UF, região, país)', () => {
+    const errosRanking = gabarito.ranking_mdip.filter((e) => {
+      const c = rankingMvi(violencia.linhas, e.ano, violencia.pais, 'mdip').find((l) => l.uf === e.uf)
+      return c?.posicao !== e.posicao || c?.n_ufs !== e.n_ufs
+    })
+    expect(gabarito.ranking_mdip).toHaveLength(27 * violencia.anos.length)
+    expect(errosRanking.slice(0, 5)).toEqual([])
+    const errosPct = gabarito.pct_mdip_nas_mvi.filter((e) => {
+      const c = pctMdipNasMvi(violencia.linhas, regioes[e.uf] ?? [e.uf], [e.ano])[0].valor
+      return Math.abs(c / e.pct - 1) > 1e-9
+    })
+    expect(gabarito.pct_mdip_nas_mvi).toHaveLength((27 + 1 + Object.keys(regioes).length) * violencia.anos.length)
+    expect(errosPct.slice(0, 5)).toEqual([])
+  })
+  it('índice do número (UF, região = soma das UFs, país), primeiro ano = 100', () => {
+    const erros = gabarito.indice.filter((e) => {
+      const membros = regioes[e.uf] ?? [e.uf]
+      const c = indiceMvi(violencia.linhas, membros, gabarito.base, [e.ano])[0].valor
+      return e.indice === null ? c !== null : Math.abs(c / e.indice - 1) > 1e-9
+    })
+    expect(gabarito.indice).toHaveLength((27 + 1 + Object.keys(regioes).length) * violencia.anos.length)
+    expect(erros.slice(0, 5)).toEqual([])
   })
 })

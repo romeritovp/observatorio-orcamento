@@ -157,9 +157,13 @@ export default function Filtros({ estado, ufs, anos, anoBase, funcoes, regioes, 
 }
 
 // Tela "Por estado": estado, ano e valores, com o mesmo comportamento.
+// Classe do bloco de filtros. Nas páginas de um estado (/sp/pib) o campo Estado não aparece (está no subcabeçalho):
+// "sem-estado" troca a grade por uma sem a coluna dele, com os outros campos na mesma largura.
+const classeFiltros = (variante, estado) => `filtros ${variante}${estado.ufNoCaminho ? ' sem-estado' : ''}`
+
 export function FiltrosEstado({ estado, ufs, anos, anoBase, onMudar }) {
   return (
-    <div className="filtros filtros-estado">
+    <div className={classeFiltros('filtros-estado', estado)}>
       <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
       <CampoAno estado={estado} anos={anos} onMudar={onMudar} />
       <CampoValores estado={estado} anoBase={anoBase} onMudar={onMudar} />
@@ -170,7 +174,7 @@ export function FiltrosEstado({ estado, ufs, anos, anoBase, onMudar }) {
 // Tela "PIB dos Estados": estado, ano, ano inicial do crescimento e estados para comparar (anos do PIB, não os do orçamento).
 export function FiltrosPib({ estado, ufs, anos, regioes, paresPadrao, onMudar }) {
   return (
-    <div className="filtros filtros-pib">
+    <div className={classeFiltros('filtros-pib', estado)}>
       <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
       <label className="campo">
         <span>Ano</span>
@@ -192,7 +196,7 @@ export function FiltrosPib({ estado, ufs, anos, regioes, paresPadrao, onMudar })
 // Tela "Pesquisa e Inovação": estado, ano (do IBID) e estados para comparar.
 export function FiltrosInovacao({ estado, ufs, anos, regioes, paresPadrao, onMudar }) {
   return (
-    <div className="filtros filtros-inovacao">
+    <div className={classeFiltros('filtros-inovacao', estado)}>
       <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
       <label className="campo">
         <span>Ano</span>
@@ -209,7 +213,7 @@ export function FiltrosInovacao({ estado, ufs, anos, regioes, paresPadrao, onMud
 // redesDisponiveis: as que existem na etapa (as outras ficam desativadas).
 export function FiltrosEducacao({ estado, ufs, anos, etapas, redes, redesDisponiveis, regioes, paresPadrao, onMudar }) {
   return (
-    <div className="filtros filtros-educacao">
+    <div className={classeFiltros('filtros-educacao', estado)}>
       <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
       <label className="campo">
         <span>Ano</span>
@@ -230,6 +234,17 @@ export function FiltrosEducacao({ estado, ufs, anos, etapas, redes, redesDisponi
         </select>
       </label>
       {estado.uf && <CampoPares estado={estado} ufs={ufs} regioes={regioes} paresPadrao={paresPadrao} onMudar={onMudar} />}
+    </div>
+  )
+}
+
+// Tela "Violência": só o estado (na visão nacional; nas páginas de um estado ele está no subcabeçalho e o bloco some).
+// Os anos são os da série inteira, sem filtro: a tela mostra a série e o ranking do último ano.
+export function FiltrosViolencia({ estado, ufs, onMudar }) {
+  if (estado.ufNoCaminho) return null
+  return (
+    <div className={classeFiltros('filtros-violencia', estado)}>
+      <CampoEstado estado={estado} ufs={ufs} rotulo="Estado" onMudar={onMudar} />
     </div>
   )
 }

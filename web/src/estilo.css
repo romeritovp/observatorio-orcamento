@@ -324,6 +324,9 @@ body.sem-rolagem { overflow: hidden; }
   .filtros.filtros-estado { grid-template-columns: 1.4fr 0.7fr 2fr; }
   .filtros-estado .inflacao { grid-column: auto; }
   .filtros.filtros-pib { grid-template-columns: 1.4fr 0.7fr 0.9fr; }
+  /* páginas de um estado: sem a coluna do campo Estado (ele está no subcabeçalho); os outros campos mantêm a largura */
+  .filtros.filtros-estado.sem-estado { grid-template-columns: 0.7fr 2fr 1.4fr; }
+  .filtros.filtros-pib.sem-estado { grid-template-columns: 0.7fr 0.9fr 1.4fr; }
 }
 
 /* Resumo do ano */
@@ -556,7 +559,10 @@ body { overflow-x: clip; }
 .dispersao .quadrante { font-size: 11px; fill: var(--texto-3); font-style: italic; }
 .dispersao .titulo-eixo { font-size: 12px; fill: var(--texto-2); }
 .barras-comparadas .barra { top: 0; bottom: 0; }
-@media (min-width: 720px) { .filtros.filtros-inovacao { grid-template-columns: 1.4fr 0.7fr; } }
+@media (min-width: 720px) {
+  .filtros.filtros-inovacao { grid-template-columns: 1.4fr 0.7fr; }
+  .filtros.filtros-inovacao.sem-estado { grid-template-columns: 0.7fr 1.4fr; }
+}
 .rodape code.sha { font-size: 0.75rem; word-break: break-all; }
 
 .barras-comparadas .tipico .barra, .amostra.tipico { background: var(--texto-3); }
@@ -564,4 +570,11 @@ body { overflow-x: clip; }
 /* alvo de toque (24 px), invisível: vence as cores de destaque e de par */
 .dispersao .ponto circle.alvo, .dispersao .ponto.par circle.alvo, .dispersao .ponto.destaque circle.alvo { fill: transparent; stroke: none; cursor: pointer; }
 .dispersao .ponto.ativo circle:not(.alvo) { stroke: var(--texto); stroke-width: 2; }
-@media (min-width: 720px) { .filtros.filtros-educacao { grid-template-columns: 1.3fr 0.6fr 1fr 0.9fr; } }
+@media (min-width: 720px) {
+  .filtros.filtros-educacao { grid-template-columns: 1.3fr 0.6fr 1fr 0.9fr; }
+  .filtros.filtros-educacao.sem-estado { grid-template-columns: 0.6fr 1fr 0.9fr 1.3fr; }
+}
+
+/* Violência: a taxa em segundo plano (muda de base de população) e o ano sujeito a revisão */
+.secao.secundaria h4 { margin: 0 0 8px; font-size: 0.95rem; color: var(--texto-2); }
+.grafico text.provisorio { fill: var(--texto-2); font-style: italic; }

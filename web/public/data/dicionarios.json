@@ -5,189 +5,216 @@
       "cod_ibge": "11",
       "nome": "Rondônia",
       "regiao": "Norte",
-      "artigo": null
+      "artigo": null,
+      "capital": "Porto Velho"
     },
     {
       "uf": "AC",
       "cod_ibge": "12",
       "nome": "Acre",
       "regiao": "Norte",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Rio Branco"
     },
     {
       "uf": "AM",
       "cod_ibge": "13",
       "nome": "Amazonas",
       "regiao": "Norte",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Manaus"
     },
     {
       "uf": "RR",
       "cod_ibge": "14",
       "nome": "Roraima",
       "regiao": "Norte",
-      "artigo": null
+      "artigo": null,
+      "capital": "Boa Vista"
     },
     {
       "uf": "PA",
       "cod_ibge": "15",
       "nome": "Pará",
       "regiao": "Norte",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Belém"
     },
     {
       "uf": "AP",
       "cod_ibge": "16",
       "nome": "Amapá",
       "regiao": "Norte",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Macapá"
     },
     {
       "uf": "TO",
       "cod_ibge": "17",
       "nome": "Tocantins",
       "regiao": "Norte",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Palmas"
     },
     {
       "uf": "MA",
       "cod_ibge": "21",
       "nome": "Maranhão",
       "regiao": "Nordeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "São Luís"
     },
     {
       "uf": "PI",
       "cod_ibge": "22",
       "nome": "Piauí",
       "regiao": "Nordeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Teresina"
     },
     {
       "uf": "CE",
       "cod_ibge": "23",
       "nome": "Ceará",
       "regiao": "Nordeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Fortaleza"
     },
     {
       "uf": "RN",
       "cod_ibge": "24",
       "nome": "Rio Grande do Norte",
       "regiao": "Nordeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Natal"
     },
     {
       "uf": "PB",
       "cod_ibge": "25",
       "nome": "Paraíba",
       "regiao": "Nordeste",
-      "artigo": "a"
+      "artigo": "a",
+      "capital": "João Pessoa"
     },
     {
       "uf": "PE",
       "cod_ibge": "26",
       "nome": "Pernambuco",
       "regiao": "Nordeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "Recife"
     },
     {
       "uf": "AL",
       "cod_ibge": "27",
       "nome": "Alagoas",
       "regiao": "Nordeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "Maceió"
     },
     {
       "uf": "SE",
       "cod_ibge": "28",
       "nome": "Sergipe",
       "regiao": "Nordeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "Aracaju"
     },
     {
       "uf": "BA",
       "cod_ibge": "29",
       "nome": "Bahia",
       "regiao": "Nordeste",
-      "artigo": "a"
+      "artigo": "a",
+      "capital": "Salvador"
     },
     {
       "uf": "MG",
       "cod_ibge": "31",
       "nome": "Minas Gerais",
       "regiao": "Sudeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "Belo Horizonte"
     },
     {
       "uf": "ES",
       "cod_ibge": "32",
       "nome": "Espírito Santo",
       "regiao": "Sudeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Vitória"
     },
     {
       "uf": "RJ",
       "cod_ibge": "33",
       "nome": "Rio de Janeiro",
       "regiao": "Sudeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Rio de Janeiro"
     },
     {
       "uf": "SP",
       "cod_ibge": "35",
       "nome": "São Paulo",
       "regiao": "Sudeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "São Paulo"
     },
     {
       "uf": "PR",
       "cod_ibge": "41",
       "nome": "Paraná",
       "regiao": "Sul",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Curitiba"
     },
     {
       "uf": "SC",
       "cod_ibge": "42",
       "nome": "Santa Catarina",
       "regiao": "Sul",
-      "artigo": null
+      "artigo": null,
+      "capital": "Florianópolis"
     },
     {
       "uf": "RS",
       "cod_ibge": "43",
       "nome": "Rio Grande do Sul",
       "regiao": "Sul",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Porto Alegre"
     },
     {
       "uf": "MS",
       "cod_ibge": "50",
       "nome": "Mato Grosso do Sul",
       "regiao": "Centro-Oeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Campo Grande"
     },
     {
       "uf": "MT",
       "cod_ibge": "51",
       "nome": "Mato Grosso",
       "regiao": "Centro-Oeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Cuiabá"
     },
     {
       "uf": "GO",
       "cod_ibge": "52",
       "nome": "Goiás",
       "regiao": "Centro-Oeste",
-      "artigo": null
+      "artigo": null,
+      "capital": "Goiânia"
     },
     {
       "uf": "DF",
       "cod_ibge": "53",
       "nome": "Distrito Federal",
       "regiao": "Centro-Oeste",
-      "artigo": "o"
+      "artigo": "o",
+      "capital": "Brasília"
     }
   ],
   "funcoes": [

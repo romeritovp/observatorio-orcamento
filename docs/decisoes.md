@@ -458,6 +458,26 @@ A escolha é feita por `analytics.nomes_de_exibicao` e exportada em `estatais.js
 
 **Consequência:** série 2016–2025, 28 territórios; soma das UFs = Brasil em todos os anos. 173 das 280 linhas têm o número revisado (Brasil 2021: 47.503 → 48.288). **A taxa mistura bases de população:** a população implícita do Brasil cai de 211,8 mi (2020) para 202,0 mi (2021) e volta a 211,7 mi (2023); as taxas de 2021–2022 vêm da edição 2023 (Censo 2022) e as de 2023 em diante de estimativas novas do IBGE (edição 2025). Por isso 27 casos passam de 5%, quase todos em 2021 e 2023 (Roraima 2018–2019 é crescimento real). Comparar taxas através de 2020→2021 e 2022→2023 exige recalcular com uma série de população única.
 
+### 2026-10-15 — Indicador "Violência" (`/<uf>/violencia`, `/indicadores/violencia`)
+**Contexto:** a tabela `fbsp_mvi` (mortes violentas intencionais, 2016–2025) entra no site como indicador, no padrão das telas existentes (PIB como modelo).
+**Decisão (do usuário):**
+1. **Destaque é o número de mortes**, não a taxa: a taxa de cada ano usa a população da edição de onde vem e muda de base entre 2020→2021 e 2022→2023 (anos achados pelo pipeline: população implícita do Brasil variando mais de 2% de um ano para o outro, `publicacao/violencia.py → quebras_de_base`). A taxa aparece em segundo plano, com as quebras marcadas no gráfico.
+2. **Ranking das UFs pela taxa**, no último ano (regra do projeto: comparar estados só normalizado). No mesmo ano todas as taxas vêm da mesma edição e da mesma base, então a comparação vale. O número aparece ao lado.
+3. **Comparação com a região e o Brasil pelo índice do número** (primeiro ano = 100; região = soma das UFs dela): compara a evolução de territórios de tamanhos diferentes sem depender da população.
+4. O último ano leva a marca "sujeito a revisão" (saiu numa edição só); as revisões entre edições ficam numa tabela na página do estado.
+5. Novo eixo no menu: "Segurança pública".
+
+**Consequência:** contas em `web/src/calculos.js` (`rankingMvi`, `indiceMvi`, `serieMvi`), conferidas contra `gabarito.json → violencia` (`publicacao.violencia.gabarito_violencia`). Ressalvas com ligação para o bloco "FBSP" da metodologia (`#fonte-fbsp`).
+
+### 2026-10-16 — Violência: letalidade policial (`fbsp_mdip`)
+**Contexto:** cada edição do Anuário (planilhas 2018–2026) traz uma tabela de mortes decorrentes de intervenção policial (MDIP) por UF, com a abertura por corporação (civil, militar) e situação (em serviço, fora) e a coluna Total (número e taxa), e outra com a proporção das MDIP nas MVI. Já estavam na tabela `fbsp`.
+**Decisão:**
+1. Nova tabela `fbsp_mdip`, do Total de cada edição, pelo mesmo caminho de `fbsp_mvi` (`docs/fbsp_temas.csv`, tema `mdip`; `extractors/nacional/fbsp/mvi.py` passou a gerar os dois temas): edição mais recente, primeira publicação e revisão; 27 UFs e o Brasil; soma das UFs = Brasil; e **MDIP ≤ MVI** em todas as UFs e anos (as MDIP estão dentro das MVI).
+2. Na tela "Violência", um bloco "Letalidade policial": número de mortes (destaque), **% das MVI** (UF, região e Brasil; não depende da população, por isso vale para comparar estados e anos apesar da quebra de base da taxa) e ranking das UFs pela taxa no último ano. O % é calculado no site (soma das MDIP / soma das MVI), não lido da tabela de proporção do Anuário.
+3. A abertura por corporação e situação fica de fora: na extração, "-" (fenômeno inexistente) e "..." (não disponível) viram nulo do mesmo jeito, e muitas UFs não têm todas as aberturas. Policiais vítimas também ficam de fora pelo mesmo motivo.
+
+**Consequência:** Brasil, 2025: 6.602 mortes por intervenção policial, 16,2% das MVI (2016: 4.240, 6,9%).
+
 ### 2026-10-15 — Navegação por estado e por indicador, com rotas em caminho
 **Contexto:** o menu tinha uma aba por tela ("Por estado | Comparar | PIB dos Estados | Pesquisa e Inovação | Educação | Como fazemos") e o botão de tema quebrava para uma segunda linha; cada indicador novo virava uma aba.
 **Decisão (do usuário, escolhida entre caminhos, parâmetros de busca e hash):**

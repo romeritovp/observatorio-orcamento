@@ -3,7 +3,8 @@
 // dívida e receita (totais). Por UF (sob demanda, tela "Por estado"): subfunções, linhas da receita e
 // lista completa de estatais. Tela "PIB dos Estados" (sob demanda): pib.json (todas as UFs e o país) e
 // pib/<UF>.json (atividades da UF). Tela "Pesquisa e Inovação" (sob demanda): ibid.json e
-// despesa_ensino_superior.json. Tela "Educação" (sob demanda): ideb.json e ideb/<UF>.json.
+// despesa_ensino_superior.json. Tela "Educação" (sob demanda): ideb.json e ideb/<UF>.json. Tela "Violência"
+// (sob demanda): violencia.json.
 
 // Nome no objeto de dados → arquivo
 const GERAIS = {
@@ -69,6 +70,9 @@ export const carregarIdebDaUf = (uf) => lerUmaVez(`ideb/${uf}`)
 
 /** despesa_ensino_superior.json: subfunção 364 em Educação, 27 UFs (mesma tela). */
 export const carregarEnsinoSuperior = () => lerUmaVez('despesa_ensino_superior')
+
+/** violencia.json: mortes violentas intencionais (FBSP) das 27 UFs e do Brasil (tela "Violência"). */
+export const carregarViolencia = () => lerUmaVez('violencia')
 
 /** pib/<UF>.json: a conta da produção da UF por atividade. */
 export const carregarPibDaUf = (uf) => lerUmaVez(`pib/${uf}`)

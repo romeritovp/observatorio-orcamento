@@ -23,6 +23,7 @@ export const EIXOS = [
   { slug: 'financas', nome: 'Finanças públicas' },
   { slug: 'economia', nome: 'Economia' },
   { slug: 'social', nome: 'Social' },
+  { slug: 'seguranca', nome: 'Segurança pública' },
   { slug: 'ciencia', nome: 'Ciência' },
 ]
 
@@ -39,6 +40,8 @@ export const INDICADORES = [
     descricaoCurta: 'IDEB por etapa e rede, de 2005 a 2025', disponivel: true },
   { slug: 'pesquisa-e-inovacao', nome: 'Pesquisa e Inovação', artigo: 'a', eixo: 'ciencia', view: 'inovacao', viewNacional: 'inovacao',
     descricaoCurta: 'Índice de inovação do INPI e gasto em ciência e tecnologia', disponivel: true },
+  { slug: 'violencia', nome: 'Violência', artigo: 'a', eixo: 'seguranca', view: 'violencia', viewNacional: 'violencia',
+    descricaoCurta: 'Mortes violentas intencionais, de 2016 a 2025', disponivel: true },
 ]
 
 /** Indicadores agrupados por eixo, na ordem de EIXOS: [{eixo, indicadores: [...]}] (eixos vazios ficam de fora). */

@@ -207,11 +207,17 @@ def montar_compartilhar(site, dados, numeros):
                      "description": "O IDEB de cada estado, por etapa e rede, de 2005 a 2025: série histórica, tendência e "
                                     "ranking, com os dados do Inep.",
                      "image": imagem("padrao.png")},
-        "views": ["estado", "comparar", "pib", "inovacao", "educacao"],
+        "violencia": {"title": f"Violência · {nome}",
+                      "description": "As mortes violentas intencionais em cada estado desde 2016, a comparação com a "
+                                     "região e o Brasil e o ranking pela taxa, com os dados do Anuário Brasileiro de "
+                                     "Segurança Pública.",
+                      "image": imagem("padrao.png")},
+        "views": ["estado", "comparar", "pib", "inovacao", "educacao", "violencia"],
         # slug do indicador na URL (/sp/pib, /indicadores/pib) → chave dos textos acima; o mesmo que
         # web/src/navegacao.config.js (um teste do front confere). "orcamento" usa "comparar" na visão nacional
         # e o texto da UF na página do estado.
-        "indicadores": {"orcamento": "comparar", "pib": "pib", "educacao": "educacao", "pesquisa-e-inovacao": "inovacao"},
+        "indicadores": {"orcamento": "comparar", "pib": "pib", "educacao": "educacao", "pesquisa-e-inovacao": "inovacao",
+                        "violencia": "violencia"},
         "ufs": ufs,
         "funcoes": funcoes,
     }

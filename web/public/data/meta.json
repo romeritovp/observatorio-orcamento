@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-10-14T21:54:48+00:00",
+  "gerado_em": "2026-10-16T10:25:16+00:00",
   "versao_esquema": 1,
   "uf_padrao": "SP",
   "arquivos": {
@@ -19,6 +19,7 @@
     "despesa_ensino_superior.json": "subfunção 364 (Ensino Superior) em Educação, 27 UFs, em R$ nominais (carregado pela tela Pesquisa e Inovação)",
     "ideb.json": "IDEB (Inep) por UF, região e Brasil, etapa e rede, sem metas (carregado pela tela Educação)",
     "ideb/<UF>.json": "aprovação por série da UF (carregado sob demanda pela tela Educação)",
+    "violencia.json": "mortes violentas intencionais e mortes por intervenção policial (FBSP) por UF e Brasil: número, taxa por 100 mil, edição de origem e revisão (carregado pela tela Violência)",
     "gabarito.json": "só para teste do front; não exibir"
   },
   "pib": {
@@ -349,6 +350,22 @@
           2025
         ],
         "extraido_em": "2026-10-14"
+      },
+      "fbsp_anuario": {
+        "nome": "Fórum Brasileiro de Segurança Pública: Anuário Brasileiro de Segurança Pública",
+        "pagina_oficial": "https://forumseguranca.org.br/anuario-brasileiro-seguranca-publica/",
+        "edicoes": [
+          2018,
+          2026
+        ],
+        "anos": [
+          2016,
+          2025
+        ],
+        "quebras_taxa": [
+          2021,
+          2023
+        ]
       }
     },
     "exemplo": {

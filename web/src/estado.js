@@ -13,7 +13,8 @@ export const VALORES = ['corrigidos', 'epoca']
 // O menu e as URLs saem de navegacao.config.js e rotas.js; aqui fica só a lista das telas, para validar o estado.
 export const VIEWS = {
   inicio: 'Início', painel: 'Visão geral do estado', estado: 'Orçamento', comparar: 'Orçamento: os 27 estados',
-  pib: 'PIB', inovacao: 'Pesquisa e Inovação', educacao: 'Educação', metodo: 'Metodologia', naoEncontrada: 'Não encontrada',
+  pib: 'PIB', inovacao: 'Pesquisa e Inovação', educacao: 'Educação', violencia: 'Violência', metodo: 'Metodologia',
+  naoEncontrada: 'Não encontrada',
 }
 
 /** Tela aberta quando a URL não diz qual (a "página inicial"). É o único lugar que define isso. */

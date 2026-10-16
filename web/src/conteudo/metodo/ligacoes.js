@@ -48,6 +48,11 @@ export const ENTENDA = {
   ideb_nota_medias_do_saeb_2009_e_ideb_2009_calculados_somente: 'limite-ideb-notas-planilha',
   ideb_nota_medias_do_saeb_2009_e_ideb_2009_nao_calculados: 'limite-ideb-notas-planilha',
   ideb_nota_medias_do_saeb_2011_e_ideb_2011_calculados_sem: 'limite-ideb-notas-planilha',
+  // violencia.json → ressalvas
+  mvi_edicao_mais_recente: 'fonte-fbsp',
+  mvi_sujeito_a_revisao: 'fonte-fbsp',
+  mvi_quebra_taxa: 'fonte-fbsp',
+  mdip_dentro_das_mvi: 'fonte-fbsp',
   // avisos gerados nas telas (estatais e quebras de série)
   aviso_estatal: 'decisao-estatais',
   sem_info_estatais: 'decisao-estatais-edicao',

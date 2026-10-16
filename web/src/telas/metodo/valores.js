@@ -73,6 +73,11 @@ export function valoresDoMetodo(dados) {
         pagina: f.inep_ideb.pagina_oficial, edicao: f.inep_ideb.edicao, primeiro: f.inep_ideb.anos[0], ultimo: f.inep_ideb.anos[1],
         extraido_em: data(`${f.inep_ideb.extraido_em}T12:00:00Z`),
       },
+      fbsp: f.fbsp_anuario && {
+        pagina: f.fbsp_anuario.pagina_oficial, primeira_edicao: f.fbsp_anuario.edicoes[0], ultima_edicao: f.fbsp_anuario.edicoes[1],
+        primeiro: f.fbsp_anuario.anos[0], ultimo: f.fbsp_anuario.anos[1],
+        quebras: f.fbsp_anuario.quebras_taxa.map((a) => `${a - 1} e ${a}`).join(' e entre '),
+      },
       ibid: {
         pagina: f.inpi_ibid.pagina_oficial, planilha: f.inpi_ibid.planilha, sha256: f.inpi_ibid.arquivo_sha256,
         primeiro: f.inpi_ibid.anos[0], ultimo: f.inpi_ibid.anos[1], extraido_em: data(`${f.inpi_ibid.extraido_em}T12:00:00Z`),

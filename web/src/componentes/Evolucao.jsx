@@ -15,7 +15,12 @@ const MARGEM = { topo: 12, direita: 92, base: 28, esquerda: 58 }
 // legenda: itens próprios [{classe, rotulo}] no lugar da legenda padrão (destaque, pares, mediana).
 // escala (opcional): {min, max, marcas, invertido} fixa o eixo vertical; invertido põe o min no topo (posição
 // em ranking: 1º em cima). Sem ela, o eixo vai de 0 ao maior valor.
-export default function Evolucao({ series, anos, metrica, anoSelecionado, destaque, quebras = [], compacto = false, referencias = [], legenda, escala }) {
+// rotuloQuebra: texto das linhas de quebra. anoProvisorio: ano ainda sujeito a revisão (ponto vazado do destaque,
+// com o aviso no gráfico e na tabela).
+export default function Evolucao({
+  series, anos, metrica, anoSelecionado, destaque, quebras = [], compacto = false, referencias = [], legenda, escala,
+  rotuloQuebra = 'mudança de classificação', anoProvisorio = null,
+}) {
   const ref = useRef(null)
   const largura = useLargura(ref)
   const [anoDica, setAnoDica] = useState(null)
@@ -94,7 +99,7 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
             return (
               <g key={`quebra-${a}`} className="quebra">
                 <line x1={xq} x2={xq} y1={area.y1} y2={area.y0} />
-                <text x={xq} y={area.y1} dy="0.9em" textAnchor="middle">mudança de classificação</text>
+                <text x={xq} y={area.y1} dy="0.9em" textAnchor="middle">{rotuloQuebra}</text>
               </g>
             )
           })}
@@ -105,8 +110,14 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
           ))}
           {series.filter((s) => s.tipo === 'destaque').flatMap((s) => s.pontos.filter((p) => p.valor !== null).map((p) => (
             <circle key={p.ano} cx={x(p.ano)} cy={y(p.valor)} r={p.ano === anoSelecionado ? 5.5 : 3.5}
-              fill="var(--destaque)" stroke="var(--fundo)" strokeWidth="2" />
+              fill={p.ano === anoProvisorio ? 'var(--fundo)' : 'var(--destaque)'}
+              stroke={p.ano === anoProvisorio ? 'var(--destaque)' : 'var(--fundo)'} strokeWidth="2" />
           )))}
+          {series.filter((s) => s.tipo === 'destaque').map((s) => s.pontos.find((p) => p.ano === anoProvisorio && p.valor !== null))
+            .filter(Boolean).map((p) => (
+              <text key={`provisorio-${p.ano}`} className="provisorio" x={x(p.ano)} y={y(p.valor)} dy="-1.1em" textAnchor="end"
+                fontSize="11">sujeito a revisão</text>
+            ))}
           {series.map((s, i) => finais[i] && (
             <text key={s.id} x={area.x1 + 8} y={yRotulos[i]} dy="0.32em" fontSize="12"
               fontWeight={s.tipo === 'destaque' ? 700 : 400}
@@ -132,7 +143,7 @@ export default function Evolucao({ series, anos, metrica, anoSelecionado, destaq
             <tbody>
               {anos.map((a) => (
                 <tr key={a}>
-                  <td>{a}</td>
+                  <td>{a}{a === anoProvisorio ? ' (sujeito a revisão)' : ''}</td>
                   {series.map((s) => <td key={s.id}>{valorDaMetrica(s.pontos.find((p) => p.ano === a)?.valor ?? null, metrica)}</td>)}
                 </tr>
               ))}

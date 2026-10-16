@@ -20,6 +20,7 @@ Arquivos gerados:
     despesa_ensino_superior.json  subfunção 364 (Ensino Superior) em Educação, 27 UFs, R$ nominais (mesma tela)
     ideb.json          IDEB (Inep) das UFs, regiões e Brasil, sem metas, aprovação só total (tela "Educação")
     ideb/<UF>.json     aprovação por série da UF (tela "Educação", sob demanda)
+    violencia.json     mortes violentas intencionais (FBSP) das UFs e do Brasil, número e taxa (tela "Violência")
     gabarito.json      só para TESTE do front: per capita real e % da despesa total da saúde,
                        calculados por analytics/. Não é para exibição.
 
@@ -41,6 +42,7 @@ from publicacao import ibid as ibid_mod
 from publicacao import ideb as ideb_mod
 from publicacao import og as og_mod
 from publicacao import pib as pib_mod
+from publicacao import violencia as violencia_mod
 from publicacao import receita as receita_mod
 from analytics import (
     agregar, completar_com_zero, deflacionar, edicao_para_ano, estatais_fora_das_contas, funcao_das_estatais, mudancas_de_dependencia, nomes_de_exibicao,
@@ -193,6 +195,9 @@ FONTES_DOCUMENTACAO = {
     },
     "inep_ideb": {
         "nome": "Inep: Índice de Desenvolvimento da Educação Básica (IDEB)",
+    },
+    "fbsp_anuario": {
+        "nome": "Fórum Brasileiro de Segurança Pública: Anuário Brasileiro de Segurança Pública",
     },
     "ibge_contas_regionais": {
         "nome": "IBGE: Contas Regionais do Brasil (PIB dos estados)",
@@ -462,7 +467,7 @@ def montar_divida_json(registros, extraido_em):
 
 
 def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_totais=None, pib=None, ensino_superior=False,
-                    ideb=None):
+                    ideb=None, violencia=None):
     """Gabarito de teste do front: todas as funções, liquidado, sem intra, com a regra do zero."""
     df = indicadores_por_funcao(despesa, populacao, ipca, ano_base)
     medidas = ["per_capita_real", "per_capita_nominal", "pct_despesa_total"]
@@ -517,6 +522,7 @@ def montar_gabarito(despesa, populacao, ipca, ano_base, divida=None, receita_tot
         **({} if not ensino_superior else {"ensino_superior": registros(indicadores_da_subfuncao(
             despesa, populacao, ipca, ano_base, ibid_mod.FUNCAO_EDUCACAO, ibid_mod.SUBFUNCAO_ENSINO_SUPERIOR))}),
         **({} if ideb is None else {"ideb": ideb}),
+        **({} if violencia is None else {"violencia": violencia}),
     }
 
 
@@ -622,7 +628,7 @@ def ler_site(ufs, caminho=CAMINHO_SITE):
 
 
 def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_fonte, exemplo=None, pib=None, ibid=None,
-                        ideb=None):
+                        ideb=None, violencia=None):
     """Bloco "documentacao" do meta.json: fichas das fontes com a data da última extração de cada uma
     (lida das tabelas processadas) e o exemplo da seção "Refaça a conta".
 
@@ -667,7 +673,11 @@ def montar_documentacao(despesa, demonstrativo, anp, url_base_siconfi, ipca_font
                    **({} if ideb is None else {"inep_ideb": {
                        **FONTES_DOCUMENTACAO["inep_ideb"], "pagina_oficial": ideb["fonte"]["pagina"],
                        "arquivos": [a["url"] for a in ideb["fonte"]["arquivos"]], "edicao": ideb["fonte"]["edicao"],
-                       "anos": [ideb["anos"][0], ideb["anos"][-1]], "extraido_em": ideb["fonte"]["extraido_em"]}})},
+                       "anos": [ideb["anos"][0], ideb["anos"][-1]], "extraido_em": ideb["fonte"]["extraido_em"]}}),
+                   **({} if violencia is None else {"fbsp_anuario": {
+                       **FONTES_DOCUMENTACAO["fbsp_anuario"], "pagina_oficial": violencia["pagina"],
+                       "edicoes": [violencia["edicoes"][0], violencia["edicoes"][-1]],
+                       "anos": [violencia["anos"][0], violencia["anos"][-1]], "quebras_taxa": violencia["quebras_taxa"]}})},
         "exemplo": exemplo,
     }
 
@@ -700,6 +710,8 @@ def montar_meta(despesa, ipca, ano_base, gerado_em, atribuicoes=(), site=None, d
                                             "(carregado pela tela Pesquisa e Inovação)",
             "ideb.json": "IDEB (Inep) por UF, região e Brasil, etapa e rede, sem metas (carregado pela tela Educação)",
             "ideb/<UF>.json": "aprovação por série da UF (carregado sob demanda pela tela Educação)",
+            "violencia.json": "mortes violentas intencionais e mortes por intervenção policial (FBSP) por UF e Brasil: "
+                              "número, taxa por 100 mil, edição de origem e revisão (carregado pela tela Violência)",
             "gabarito.json": "só para teste do front; não exibir",
         },
         # PIB dos estados (pib.json): anos e território do país, para a URL da tela antes de o arquivo chegar
@@ -844,8 +856,10 @@ def main(dir_saida=DIR_SAIDA):
         ideb_tabela, json.loads(ideb_mod.CAMINHO_FONTE.read_text(encoding="utf-8")), carregar_dicionario("nacional/ufs.csv"),
         pd.concat([carregar_dicionario("nacional/regioes.csv"), carregar_dicionario("nacional/territorios.csv")]))
     ideb_site = ideb_mod.montar_ideb_site(ideb_json)
+    mvi, mdip = carregar("fbsp_mvi"), carregar("fbsp_mdip")
+    violencia_json = violencia_mod.montar_violencia_json(mvi, carregar_dicionario("nacional/ufs.csv"), territorios, mdip)
     documentacao = montar_documentacao(despesa, demonstrativo, anp, url_base, ipca_fonte, site["exemplo_metodo"], pib_json,
-                                       (ibid_json, ibid_meta), ideb_json)
+                                       (ibid_json, ibid_meta), ideb_json, violencia_json)
     dir_saida = Path(dir_saida)
     arquivos = [
         gravar_json(montar_meta(tabela, ipca, ano_base, gerado_em,
@@ -874,10 +888,13 @@ def main(dir_saida=DIR_SAIDA):
         gravar_json(ibid_json, dir_saida / "ibid.json", compacto=True),
         *[gravar_json(objeto, dir_saida / caminho, compacto=True) for caminho, objeto in ideb_site.items()],
         gravar_json(registros(ibid_mod.linhas_ensino_superior(tabela)), dir_saida / "despesa_ensino_superior.json", compacto=True),
+        gravar_json(violencia_json, dir_saida / "violencia.json", compacto=True),
         gravar_json(montar_gabarito(despesa, populacao, ipca, ano_base, divida, receita_totais,
                                     pib_mod.gabarito_pib(pib_uf, pib_atividades, dicionario_atividades, pib_json["pais"]),
                                     ensino_superior=True,
-                                    ideb=ideb_mod.gabarito_ideb(ideb_tabela, carregar_dicionario("nacional/ufs.csv")["uf"])),
+                                    ideb=ideb_mod.gabarito_ideb(ideb_tabela, carregar_dicionario("nacional/ufs.csv")["uf"]),
+                                    violencia=violencia_mod.gabarito_violencia(mvi, carregar_dicionario("nacional/ufs.csv"),
+                                                                               violencia_json["pais"], mdip)),
                     dir_saida / "gabarito.json"),
     ]
     antigo = dir_saida / "despesa.json"  # antes da divisão por UF (2026-10-10): não é mais lido

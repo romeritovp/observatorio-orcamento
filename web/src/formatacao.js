@@ -46,6 +46,8 @@ export const valorDaMetrica = (valor, metrica) => {
   if (metrica === 'indice') return numero(valor, 1)
   if (metrica === 'posicao') return valor === null || valor === undefined ? '–' : `${valor}º`
   if (metrica === 'escore') return numero(valor, 3)
+  if (metrica === 'contagem') return numero(valor, 0)
+  if (metrica === 'taxa') return numero(valor, 1)
   return reais(valor)
 }
 

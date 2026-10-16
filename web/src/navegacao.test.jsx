@@ -39,7 +39,7 @@ describe('configuração única da navegação', () => {
       expect(Object.keys(VIEWS), i.slug).toContain(i.viewNacional)
       expect(i.descricaoCurta.length, i.slug).toBeGreaterThan(10)
     }
-    expect(INDICADORES_POR_EIXO.map((g) => g.eixo.nome)).toEqual(['Finanças públicas', 'Economia', 'Social', 'Ciência'])
+    expect(INDICADORES_POR_EIXO.map((g) => g.eixo.nome)).toEqual(['Finanças públicas', 'Economia', 'Social', 'Segurança pública', 'Ciência'])
     // publicacao/og.py → compartilhar.json: o PHP escolhe os textos de prévia por estes slugs
     expect(Object.keys(lerArquivo('compartilhar.json').indicadores).sort()).toEqual(INDICADORES.map((i) => i.slug).sort())
   })
@@ -179,13 +179,14 @@ describe('páginas novas', () => {
     const pibJson = lerArquivo('pib.json')
     const ibid = lerArquivo('ibid.json')
     const ideb = lerArquivo('ideb.json')
+    const violencia = lerArquivo('violencia.json')
     for (const uf of UFS) {
-      const painel = html(<PainelUF dados={dados} uf={uf} pib={pibJson} ibid={ibid} ideb={ideb} />)
+      const painel = html(<PainelUF dados={dados} uf={uf} pib={pibJson} ibid={ibid} ideb={ideb} violencia={violencia} />)
       expect(painel, uf.sigla).toContain(`${uf.nome}: visão geral`)
       for (const i of INDICADORES) expect(painel, `${uf.sigla} ${i.slug}`).toContain(`href="${caminhoUf(uf, i)}"`)
       expect(painel, uf.sigla).not.toContain('Carregando')
     }
-    expect(html(<PainelUF dados={dados} uf={sp} />)).toContain('Carregando')  // PIB, IBID e IDEB ainda chegando
-    expect(html(<PainelUF dados={dados} uf={sp} pib={pibJson} ibid={ibid} ideb={ideb} />)).toContain('Ver o PIB de São Paulo')
+    expect(html(<PainelUF dados={dados} uf={sp} />)).toContain('Carregando')  // PIB, IBID, IDEB e violência ainda chegando
+    expect(html(<PainelUF dados={dados} uf={sp} pib={pibJson} ibid={ibid} ideb={ideb} violencia={violencia} />)).toContain('Ver o PIB de São Paulo')
   })
 })
